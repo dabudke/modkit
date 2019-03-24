@@ -7,6 +7,6 @@ Ally is a Discord bot (running on JavaScript and discord.js) that is both open s
 # Links
 
 **Link to invite the bot:**
-https://discordapp.com/api/oauth2/authorize?client_id=157730590492196864&scope=bot&permissions=8
+https://discordapp.com/api/oauth2/authorize?client_id=157730590492196864&scope=bot&permissions=8 \n
 **Link to the website:**
 kitachoworkshop.wordpress.com/allydiscord
