@@ -6,15 +6,17 @@ Ally is a Discord bot that runs on discord.js, and is owned and maintained by Li
 
 ## Helping out
 ### Contribute
-If you wanna help out, then create a branch, make your changes, and start a pull request.  The head developers will review them and approve if they approve.
+#### Contribute code
+To contribute without becoming a developer, clone the repository to your computer, make a new branch in your favorite code editor, make your changes, and start a pull request.  The head developers will review them and approve the request if they approve of the changes.
+#### Contribute a bug report
+If you are reporting a bug, then open an issue here, or report it on the bug reports channel of the discord.  All bugs end up on the issues page here, so before opening a report on the discord or here check the issues page to see if it is a duplicate.  No big deal if you don't see one, we will mark it duplicate if there is a duplicate.
 ### Become a developer
-If you wanna become a developer, go the the appropriate form on the website.
+If you want to become a developer and contribute without pull requests, head over to the website (kitachoworkshop.wordpress.com/allydiscord), and click the link to the developer application form.  Once you fill out the form, the head developers will review the applications and email you back once we discuss it.
 ### Become a support member
-If you wanna become a support member (both in the Discord and here) then fill out the appropriate form on the website.
+If you want to become a support member (both in the Discord and here) then head over to the website (kitachoworkshop.wordpress.com/allydiscord) and click the link to the Support team application form.  Fill out the form, and the head developers will get back to you when they can.
 
 # Links
-**Link to invite the bot:**
-https://discordapp.com/api/oauth2/authorize?client_id=157730590492196864&scope=bot&permissions=8
-
-**Link to the website:**
+## The website for Ally
 kitachoworkshop.wordpress.com/allydiscord
+## Invite Ally to your server
+https://discordapp.com/api/oauth2/authorize?client_id=157730590492196864&scope=bot&permissions=8
