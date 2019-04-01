@@ -8,7 +8,15 @@ client.on('ready',() => {
 
 client.on('message',msg => {
   if(msg.author != self) {
-    if(msg.content)
+    if(msg.content.startsWith(config.prefix)) {
+      let args = message.content.slice(prefix.length).trim().split(/ +/g);
+      let command = args.shift().toLowerCase();
+      if (command = help) {
+        msg.channel.send(`Get ${msg.user.tag} some help!`)
+      } else {
+        msg.reply("Whoops, it looks like Ally doesn't have that command.  Use `a!help` for commands.")
+      }
+    }
   }
 });
 
