@@ -1,4 +1,4 @@
 {
-    prefix : "a!"
-    token : "token"
+    "prefix" : "a!",
+    "token" : "token"
 }
