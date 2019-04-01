@@ -7,8 +7,9 @@ client.on('ready',() => {
 });
 
 client.on('message',msg => {
-  if (msg.author.bot) return;
-  if (msg.content.startsWith(config.prefix)
+    if (msg.author.bot) { return; }
+    if (config.prefix !== msg.content.slice(0, config.prefix.len - 1)) { return; }
+    
 });
 
 client.login(config.token);
