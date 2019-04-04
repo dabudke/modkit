@@ -13,4 +13,3 @@ client.on('message',msg => {
 });
 
 client.login(config.token);
-// this item was added on gitpod.io
