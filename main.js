@@ -9,7 +9,8 @@ client.on('ready',() => {
 client.on('message',msg => {
     if (msg.author.bot) { return; }
     if (config.prefix !== msg.content.slice(0, config.prefix.len - 1)) { return; }
-    
+
 });
 
 client.login(config.token);
+// this item was added on gitpod.io
