@@ -24,9 +24,12 @@ client.on('message',msg => {
           msg.channel.send("Silly goose, you need to be in a server to do that!");
         }
         if (msg.guild.channels.indexOf(args[1]) !== 0) {
-          msg.channel.send("Oof, looks like that channel doesn't exist in this server")
+          msg.channel.send("Oof, looks like that channel doesn't exist in this server");
+          break;
         }
-        if (msg.channel)
+        if (msg.channel) {
+            msg.channel.send("Alright, who you tryna fool?  ***You don't have permission to send messages in that channel.***");
+        }
     }
 });
 

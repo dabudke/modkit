@@ -17,6 +17,6 @@ If you want to become a support member (both in the Discord and here) then head 
 
 # Links
 ## The website for Ally
-kitachoworkshop.wordpress.com/allydiscord
+allydevs.github.io/allydiscord
 ## Invite Ally to your server
 https://discordapp.com/api/oauth2/authorize?client_id=157730590492196864&scope=bot&permissions=8
