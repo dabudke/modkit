@@ -9,7 +9,10 @@ client.on('ready',() => {
 
 client.on('message',msg => {
     if (msg.author.bot) { return; }
-    if (msg.content.indexOf(config.prefix) !== 0) { return; }
+    if (msg.content.indexOf(config.prefix) !== 0 ) { return; }
+    if (!msg.content.guild) {
+        msg.channel.reply("Whaddaya doing, tryna slide me into DM's?  ***NO WAY JOSE.***")
+    }
     let args = msg.content.slice(config.prefix.len).trim().split(/ +/g);
     let cmd = args.shift().toLowerCase();
     switch(cmd) {
@@ -22,13 +25,13 @@ client.on('message',msg => {
       case "say" :
         if (msg.guild == false) {
           msg.channel.send("Silly goose, you need to be in a server to do that!");
-        }
-        if (msg.guild.channels.indexOf(args[1]) !== 0) {
+        } else if (msg.guild.channels.indexOf(args[1]) !== 0) {
           msg.channel.send("Oof, looks like that channel doesn't exist in this server");
           break;
-        }
-        if (msg.channel) {
-            msg.channel.send("Alright, who you tryna fool?  ***You don't have permission to send messages in that channel.***");
+        } else if (msg.channel.memberPermissions(msg.author).indexOf("SEND_MESSAGES") == -1) {
+            msg.channel.send("Huh.  Guess I can't do that, cause you dont have chat permissions there.");
+        } else {
+            args[1].send(args[2]);
         }
     }
 });
