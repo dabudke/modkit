@@ -32,13 +32,10 @@ client.on('message', msg => {
                 msg.channel.send("Huh.  Guess I can't do that, \'cause you dont have chat permissions there.");
             } else {
                 args[1].send(args[2]);
+                msg.channel.send("Message Sent.  **Let LittleKitacho#4507 know if an error occoured.**")
             } break;
         default:
-            msg.channel.send(`Sorry, that command doesn't exist.  Say \`${config.prefix}help\` for help.`)
-    }.then(catch (error) {
-        console.log(error);
-        msg.reply(`Sorry, an error occoured.\nDetails: \`\`\`${error}\`\`\``);
-    });
-});
+            msg.channel.send(`Sorry, that command doesn't exist.  Say \`${config.prefix}help\` for help.`);
+    }
 
 client.login(token);
