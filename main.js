@@ -23,13 +23,15 @@ client.on('message', msg => {
             msg.channel.send("Ah, so you wanna turn the tables.  ***I see what you did there.***");
             break;
         case "say":
-            if (msg.guild === false) {
+            if (!msg.guild) {
                 msg.channel.send("Silly goose, you need to be in a server to do that!");
-            } else if (msg.guild.channels.indexOf(args[1]) !== 0) {
+                break;
+            } else if (msg.guild.channels.indexOf(args[1]) === -1) {
                 msg.channel.send("Oof, looks like that channel doesn't exist in this server");
                 break;
             } else if (msg.channel.memberPermissions(msg.author).indexOf("SEND_MESSAGES") === -1) {
                 msg.channel.send("Huh.  Guess I can't do that, \'cause you dont have chat permissions there.");
+                break;
             } else {
                 args[1].send(args[2]);
                 msg.channel.send("Message Sent.  **Let LittleKitacho#4507 know if an error occoured.**")
@@ -37,5 +39,6 @@ client.on('message', msg => {
         default:
             msg.channel.send(`Sorry, that command doesn't exist.  Say \`${config.prefix}help\` for help.`);
     }
+});
 
 client.login(token);
