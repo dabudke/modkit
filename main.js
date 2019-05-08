@@ -17,21 +17,10 @@ client.on('message', msg => {
     const args = msg.content.slice(config.prefix.len).trim().split(/ +/g);
     const cmd = args.shift().toLowerCase();
     if (cmd = "help") {
-        if (args[0] === "commands") {
-            const helpCommands = new Discord.RichEmbed()
-                .setTitle("Ally Help - Commands")
-                .setColor("#299FFF")
-                .addField("Admin")
-            msg.channel.send(helpEmbed)
-        } else {
-            const helpMaster = new Discord.RichEmbed()
-                .setTitle("Ally - Help")
-                .setColor("#299FFF")
-                .addField("Commands",`${config.prefix}help commands`)
-                .addField("Developers",`${config.prefix}help devs`)
-                .addField("Owner",`${config.prefix}help owner`)
-                .addField("GitHub Repository",`${config.prefix}help ghrepo`);
-            msg.channel.send(helpMaster);
+        if (args[0] === "cmds" || args[0] === "commands") {
+            msg.channel.send(new Discord.RichEmbed()
+                .setTitle("Command Categories")
+            )
         }
     } else if (cmd === "say") {
         if (!msg.guild) {
