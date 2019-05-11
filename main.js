@@ -20,7 +20,14 @@ client.on('message', msg => {
         if (args[0] === "cmds" || args[0] === "commands") {
             msg.channel.send(new Discord.RichEmbed()
                 .setTitle("Command Categories")
+                .setURL('allydevs.github.io/allydocs/commands/index.md')
+                .setDescription('To see all commands in a category, use `$help cmds [category]`')
+                .addField('Utility',"$ping | $pong")
+                .addField('Fun',"$say")
+                .setAuthor(msg.author.tag, msg.author.tag)
             )
+        } else {
+            msg.reply('This path has not been configured yet in beta testing.');
         }
     } else if (cmd === "say") {
         if (!msg.guild) {
@@ -31,12 +38,13 @@ client.on('message', msg => {
             msg.channel.send("POLICE!  SOMEONE TRYNA CHAT WHERE THEY CAN'T");
         } else {
             if (args[2] === undefined || args[2] === false) {
-                const sayEmbed = new Discord.RichEmbed
-                    .setTitle(msg.author.username)
-                    .setDescription(args[1])
-                    .setAuthor(msg.author.tag, msg.author.avatarURL);
-            } else if (args[2] === true) {
                 args[0].send(args[1]);
+            } else if (args[2] === true) {
+                args[0].send(new Discord.RichEmbed()
+                    .setTitle(args[1])
+                    .setDescription(`Sent by ${msg.author} in ${msg.channel}`)
+                    .setImage
+                );
             } else {
                 msg.reply("On the last argument, use either 'true' or 'false'.")
             }
