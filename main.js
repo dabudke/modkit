@@ -36,21 +36,15 @@ client.on('message', msg => {
         } else if (args[0].memberPermissions(msg.author).indexOf("SEND_MESSAGES") === -1) {
             msg.channel.send("Oops, It looks like you can't talk there, so I can't on your behalf either.");
         } else {
-            if (args[2] === undefined || args[2] === false) {
-                args[0].send(args[1]);
-            } else if (args[2] === true) {
-                args[0].send(new Discord.RichEmbed()
-                    .setTitle(args[1])
-                    .setDescription(`Sent by ${msg.author} in ${msg.channel}`)
-                    .setImage
-                );
-            } else {
-                msg.reply("On the last argument, use either 'true' or 'false'.")
-            }
-            msg.channel.send(`Sent ${args[1].toString} to channel ${args[0]}.`);
+           args[0].send(new Discord.RichEmbed()
+            .setTitle(args[1])
+            .setDescription(`Sent by ${msg.author} in ${msg.channel}`)
+            .setImage
+        );
+        msg.channel.send(`Sent ${args[1].toString} to channel ${args[0]}.`);
         }
     } else {
-        msg.channel.send(`It appears that I do not have that command.  For a complete list of commands, run ${`)
+        msg.channel.send(`It appears that I do not have that command.  For a complete list of commands, run \`${config.prefix}help\``)
     }
 });
 
