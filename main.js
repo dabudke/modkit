@@ -34,6 +34,7 @@ client.on('message', msg => {
                 .setURL(config.website)
                 .setDescription('Ally is a kind and humble Discord bot, written in Discord.js.')
                 .addField('Commands', 'Run `a?help commands`')
+                .addField('Developers', 'Run `a?help developers`')
             )
         }
     } else if (cmd === 'ping') {
