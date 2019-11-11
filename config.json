@@ -1,4 +1,10 @@
 {
   "prefix": "a?",
-  "website": "https://sites.google.com/view/allydiscord"
+  "version": "pre-0.1",
+  "token": "./token.json",
+  "databases": {
+    "container": "./databases/",
+    "user": "users.json",
+    "guild": "guilds.json"
+  }
 }
