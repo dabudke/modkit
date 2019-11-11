@@ -1,7 +1,8 @@
 {
-  "prefix": "a?",
-  "version": "pre-0.1",
-  "token": "./token.json",
+  "container": "../",
+  "prefix": "prefix.json",
+  "version": "version.json",
+  "token": "token.json",
   "databases": {
     "container": "./databases/",
     "user": "users.json",
