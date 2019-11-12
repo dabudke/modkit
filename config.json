@@ -1,11 +1,6 @@
 {
-  "container": "../",
-  "prefix": "prefix.json",
-  "version": "version.json",
-  "token": "token.json",
-  "databases": {
-    "container": "./databases/",
-    "user": "users.json",
-    "guild": "guilds.json"
-  }
+  "prefix": "a!",
+  "version": "non-production",
+  "userDatabase": "./userDatabase.json",
+  "guildDatabase": "./guildDatabase.json"
 }
