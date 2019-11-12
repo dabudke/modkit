@@ -5,7 +5,9 @@ const bot = new Discord.Client();
 // Configuration Setup
 const fs = require("fs");
 const config = require('./config.json');
-
+const token = require(config.tokenRef).release;
+let users = require(config.userDatabase);
+let guilds = require(config.guildDatabase);
 
 bot.on('ready', () => {
     console.log(`Registered as ${bot.nick}`)
@@ -25,5 +27,12 @@ bot.on('message', (msg) => {
     }
 });
 
-bot.login(allyToken);
-allySupport.login(allySupportToken)
+// Autosave databases.
+const autoDatabaseSave = require('./databases/autoDatabaseSave');
+autoDatabaseSave.on('save', () => {
+    fs.writeFile(config.userDatabase, JSON.stringify(users, null, 2));
+    fs.writeFile(config.userDatabase, JSON.stringify(users, null, 2));
+    console.log("Saved configuration.")
+});
+
+bot.login(token);
