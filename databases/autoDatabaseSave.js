@@ -1,9 +1,9 @@
 const ms = require('./timeout.json')[1];
-const Events = require('events');
-const Emitter = new Events.EventEmitter();
+const events = require('events');
+const emitter = new events.EventEmitter();
 
 while (true) {
     setTimeout(function() {
-        Emitter.emit('save')
+        emitter.emit('save')
     }, ms)
 }
