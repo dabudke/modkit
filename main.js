@@ -21,7 +21,10 @@ bot.on('message', (msg) => {
     if (cmd == "help") {
         if (args[1] == "cmds") {
             msg.channel.send(new Discord.RichEmbed()
-                .description("Commands for Ally v"+config.version)
+                .setTitle('Ally Commands')
+                .setDescription("Index of commands for Ally v"+config.prefix)
+                .setColor('#0096FF')
+                .setAuthor(msg.author.username, msg.author.avatarURL)
             )
         }
     }
@@ -30,9 +33,9 @@ bot.on('message', (msg) => {
 // Autosave databases.
 const autoDatabaseSave = require('./databases/autoDatabaseSave');
 autoDatabaseSave.on('save', () => {
-    fs.writeFile(config.userDatabase, JSON.stringify(users, null, 2));
-    fs.writeFile(config.userDatabase, JSON.stringify(users, null, 2));
-    console.log("Saved configuration.")
+    fs.writeFileSync(config.userDatabase, JSON.stringify(users, null, 2));
+    fs.writeFileSync(config.userDatabase, JSON.stringify(users, null, 2));
+    console.log("Saved configuration.");
 });
 
 bot.login(token);

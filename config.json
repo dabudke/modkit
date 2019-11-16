@@ -1,7 +1,7 @@
 {
   "prefix": "a!",
   "version": "non-production",
-  "tokenRef": "../token.json",
-  "userDatabase": "./userDatabase.json",
-  "guildDatabase": "./guildDatabase.json"
+  "tokenRef": "./token.json",
+  "userDatabase": "./databases/userDatabase.json",
+  "guildDatabase": "./databases/guildDatabase.json"
 }
