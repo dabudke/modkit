@@ -7,7 +7,7 @@
     "guilds": "./databases/guilds.json"
   },
   "meta": {
-    "info": "./meta/info.json",
-    "help": "./meta/help.json"
+    "people": "./meta/people.json",
+    "commands": "./meta/commands.json"
   }
 }
