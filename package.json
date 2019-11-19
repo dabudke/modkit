@@ -1,0 +1,22 @@
+{
+  "name": "ally",
+  "version": "1.0.0",
+  "description": "The open source discord.js bot made by LittleKitacho",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/allydiscord/ally.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/allydiscord/ally/issues"
+  },
+  "homepage": "https://github.com/allydiscord/ally#readme",
+  "devDependencies": {
+    "eslint": "^6.6.0"
+  }
+}

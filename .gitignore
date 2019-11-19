@@ -2,4 +2,5 @@
 .vs
 node_modules
 token.json
-.token.json
+package-lock.json
+.eslintrc.json
