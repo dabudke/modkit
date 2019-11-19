@@ -1,0 +1,7 @@
+[
+    ["help","Shows this help dialouge."],
+    ["say","Tell me to say something, somewhere."],
+    ["tempban","Temporarily ban someone."],
+    ["warn","Warn a user."],
+    ["settings","Change guild/user settings."]
+]
