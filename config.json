@@ -1,8 +1,13 @@
 {
   "prefix": "a!",
   "version": "non-production",
-  "tokenRef": "./token.json",
-  "userDatabase": "./databases/userDatabase.json",
-  "guildDatabase": "./databases/guildDatabase.json",
-  "commandIndex": "./databases/commands.json"
+  "tokenRef": "../token.json",
+  "databases": {
+    "users": "./databases/users.json",
+    "guilds": "./databases/guilds.json"
+  },
+  "meta": {
+    "info": "./meta/info.json",
+    "help": "./meta/help.json"
+  }
 }
