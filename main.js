@@ -8,6 +8,7 @@ const config = require('./config.json');
 const token = require(config.tokenRef);
 let users = require(config.userDatabase);
 let guilds = require(config.guildDatabase);
+var embed;
 
 bot.on('ready', () => {
     console.log(`Registered as ${bot.nick}`)
@@ -19,18 +20,23 @@ bot.on('message', (msg) => {
     let args = msg.content.slice(config.prefix.length()).split(" ").filter(Boolean),
         cmd = args.shift();
     if (cmd == "help") {
-        if (args[1] == "cmds") {
-            var commands = require(config.commandIndex)
-            var embed = new Discord.RichEmbed()
-                .setTitle('Ally Commands')
-                .setDescription("Index of commands for Ally v"+config.prefix)
-                .setColor('#0096FF')
-                .setAuthor(msg.author.username, msg.author.avatarURL);
-            for (var i = 0; i <= commands.length(); i++) {
-                embed.addField(commands[i[1]], commands[i[2]]);
-            }
-            msg.channel.send(embed)
+        var commands = require(config.commandIndex)
+        embed = new Discord.RichEmbed()
+            .setTitle('Ally Help')
+            .setDescription("Index of commands for Ally v"+config.prefix)
+            .setColor('#0096FF')
+            .setAuthor(msg.author.username, msg.author.avatarURL);
+        for (var i = 0; i <= commands.length(); i++) {
+            embed.addField(commands[i[1]], commands[i[2]]);
         }
+        msg.channel.send(embed)
+    } else if (cmd == "info") {
+        embed = new Discord.RichEmbed()
+            .setTitle('Info')
+            .setDescription('Information about this build of Ally.')
+            .setAuthor('Requested by: '+msg.author.tag, msg.author.avatarURL)
+            .addField('Developers',"")
+            .addField('Version',config.version)
     }
 });
 
