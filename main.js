@@ -9,8 +9,12 @@ let users = require(config.databases.users);
 let guilds = require(config.databases.guilds);
 const commands = require(config.meta.commands);
 const people = require(config.meta.people)
+const date = new Date;
 
-var embed, i;
+// Unban stuff
+const unban = require("./tempban/tempban.js");
+
+var embed, i, length = [];
 
 bot.on('ready', () => {
     console.log(`Registered as ${bot.nick}`)
@@ -55,8 +59,22 @@ bot.on('message', (msg) => {
             .addField("Contributers:"+ peopleString.contributers)
             .addField("Bug Trackers:"+ peopleString.bugTracker);
         msg.channel.send(embed);
+    } else if (cmd == "say") {
+        // Say command
+    } else if (cmd == "settings") {
+        // Settings
+    } else if (cmd == "tempban") {
+        // Tempban command
+        if (args[1] + date.getHours() > 12) {
+            length.hour = ((args[1] + date.getHours())- 12);
+        } else {
+            length.hour = (args[1] + date.getHours());
+        }
+        if (args[2])
+        unban.addBan(args[0],length.year,length.month,length.day,length.hour);
     } else {
-        msg.reply(`@${msg.author.tag}Unfortunatley, I do not have that command.  Please use `)
+        msg.reply(`@${msg.author.tag}, Unfortunatley, I do not have that command.  Please use \`\
+        ${config.prefix}help\` to see possible commands.`)
     }
 });
 
