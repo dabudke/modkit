@@ -11,8 +11,8 @@ const commands = require(config.meta.commands);
 const people = require(config.meta.people)
 const date = new Date;
 
-// Unban stuff
-const unban = require("./tempban/tempban.js");
+// Tempban stuff
+const tempban = require("./tempban/tempban.js");
 
 var embed, i, length = [];
 
@@ -65,13 +65,8 @@ bot.on('message', (msg) => {
         // Settings
     } else if (cmd == "tempban") {
         // Tempban command
-        if (args[1] + date.getHours() > 12) {
-            length.hour = ((args[1] + date.getHours())- 12);
-        } else {
-            length.hour = (args[1] + date.getHours());
-        }
-        if (args[2])
-        unban.addBan(args[0],length.year,length.month,length.day,length.hour);
+        if (args[1] + date.getMinutes())
+        tempban.addBan(args[0],length.year,length.month,length.day,length.hour);
     } else {
         msg.reply(`@${msg.author.tag}, Unfortunatley, I do not have that command.  Please use \`\
         ${config.prefix}help\` to see possible commands.`)
