@@ -11,13 +11,18 @@ const commands = require(config.meta.commands);
 const people = require(config.meta.people)
 const date = new Date;
 
+const checkType = function(variable, type) {
+    return(typeOf(variable) == type);
+}
+
 // Tempban stuff
-const tempban = require("./tempban/tempban.js");
+const tempban = require("./tempban/tempban");
 
 var embed, i, length = [];
 
 bot.on('ready', () => {
-    console.log(`Registered as ${bot.nick}`)
+    console.log(`Registered as ${bot.nick}`);
+    bot.user.setActivity('Watching the Source.', {type: "WATCHING"});
 });
 
 bot.on('message', (msg) => {
@@ -64,9 +69,11 @@ bot.on('message', (msg) => {
     } else if (cmd == "settings") {
         // Settings
     } else if (cmd == "tempban") {
-        // Tempban command
-        if (args[1] + date.getMinutes())
-        tempban.addBan(args[0],length.year,length.month,length.day,length.hour);
+        if (!checkType(args[1],"int")||!checkType(args[2],"int")||)
+        if (args[1] + date.getMinutes() > 60) {
+            length.
+        }
+        tempban.addBan(args[0],length.year,length.month,length.day,length.hour,length.minute);
     } else {
         msg.reply(`@${msg.author.tag}, Unfortunatley, I do not have that command.  Please use \`\
         ${config.prefix}help\` to see possible commands.`)
