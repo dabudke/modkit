@@ -1,13 +1,7 @@
 {
   "prefix": "a!",
   "version": "non-production",
-  "tokenRef": "../token.json",
-  "databases": {
-    "users": "./databases/users.json",
-    "guilds": "./databases/guilds.json"
-  },
-  "meta": {
-    "people": "./meta/people.json",
-    "commands": "./meta/commands.json"
-  }
+  "token": "./token.json",
+  "databases": "./databases/",
+  "metaData": "./meta/"
 }
