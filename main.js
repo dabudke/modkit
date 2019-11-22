@@ -4,15 +4,14 @@ const bot = new Discord.Client();
 
 // Configuration Setup
 const config = require('./config.json');
-const token = require(config.tokenRef);
-let users = require(config.databases.users);
-let guilds = require(config.databases.guilds);
-const commands = require(config.meta.commands);
-const people = require(config.meta.people)
-const date = new Date;
+const token = require(config.token);
+const commands = require(config.meta+"commands.json");
+const people = require(config.meta+"people.json");
+let users = require(config.databases+"users.json");
+let guilds = require(config.databases+"guilds.json");
 
 // Tempban stuff
-const tempban = require("./tempban/tempban.js");
+const tempban = require("./tempban/unban");
 
 var embed, i, length = [];
 
@@ -65,8 +64,7 @@ bot.on('message', (msg) => {
         // Settings
     } else if (cmd == "tempban") {
         // Tempban command
-        if (args[1] + date.getMinutes())
-        tempban.addBan(args[0],length.year,length.month,length.day,length.hour);
+        
     } else {
         msg.reply(`@${msg.author.tag}, Unfortunatley, I do not have that command.  Please use \`\
         ${config.prefix}help\` to see possible commands.`)
@@ -75,7 +73,7 @@ bot.on('message', (msg) => {
 
 // Autosave databases.
 const fs = require("fs");
-const autoDatabaseSave = require('./databases/autoDatabaseSave');
+const autoDatabaseSave = require('./databases/saveTimer');
 autoDatabaseSave.on('save', () => {
     fs.writeFileSync(config.userDatabase, JSON.stringify(users, null, 2));
     fs.writeFileSync(config.guildDatabase, JSON.stringify(guilds, null, 2));
