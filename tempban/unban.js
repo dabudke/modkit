@@ -1,7 +1,7 @@
 // Get event emmitter.
 const events = require('events'), emitter = new events.EventEmitter;
-// Get ban database.
-let database = require("./database.json"), date = new Date, i;
+// Get ban database and date.
+let database = require('./database'), date = new Date, i;
 
 // Check for expired bans.
 for (i = 0; i <= database.length(); i++) {
@@ -9,8 +9,8 @@ for (i = 0; i <= database.length(); i++) {
         if (database[i].month >= date.getMonth()) {
             if (database[i].day >= date.getDate()) {
                 if (database[i].hour >= date.getHours()) {
-                    if (database[i].minute >=date.getMinutes()) {
-                        emitter.emit('unban', (database[i].id));
+                    if (database[i].minute >= date.getMinutes()) {
+                        emitter.emit('unban', (database[i].ban));
                     }
                 }
             }
@@ -21,19 +21,21 @@ for (i = 0; i <= database.length(); i++) {
 // Check for expired bans every minute.
 for (;;) {
     setTimeout(() => {
-        date = new Date;
+        // Refresh date and database.
+        date = new Date, database = require('./database.json');
+        // Check for expired bans.
         for (i = 0; i <= database.length(); i++) {
             if (database[i].year >= date.getFullYear()) {
                 if (database[i].month >= date.getMonth()) {
                     if (database[i].day >= date.getDate()) {
                         if (database[i].hour >= date.getHours()) {
                             if (database[i].minute >=date.getMinutes()) {
-                                emitter.emit('unban', (database[i].id));
+                                emitter.emit('unban', (database[i].user));
                             }
                         }
                     }
                 }
             }
         }
-    }, 60000);
+    }, 30000);
 }

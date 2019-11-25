@@ -3,13 +3,13 @@ const Discord = require('discord.js');
 const bot = new Discord.Client();
 
 // Configuration Setup
-const config = require('./config.json');
-const token = require(config.token);
-const commands = require(config.meta+"commands.json");
-const people = require(config.meta+"people.json");
-let users = require(config.databases+"users.json");
-let guilds = require(config.databases+"guilds.json");
-var embed, i;
+const config = require('./config.json'); // Get config
+const token = require(config.token); // Get token
+const commands = require(config.meta+"commands.json"); // Get command database
+const people = require(config.meta+"people.json"); // Get people database
+let users = require(config.databases+"users.json"); // Get user database
+let guilds = require(config.databases+"guilds.json"); // Get guild database
+var embed, i, date; // Declare variables (because eslint keeps screaming at me)
 
 // When registerd on Discord
 bot.on('ready', () => {
@@ -62,12 +62,46 @@ bot.on('message', (msg) => {
     } else if (cmd == "settings") { // Settings command
         // Settings
     } else if (cmd == "tempban") { // Tempban command
-        // Tempban command
-        i = []
+        date = new Date();
+        for (i = 0; i <= args[5]; i++) {
+            if ((date.getFullYear() + i) % 4 == 0) {
+                args[3] += 366;
+            } else {
+                args[3] += 365;
+            }
+        } for (i = 0; i <= args[4]; i++) {
+            if ((date.getMonth() + i) == 1) {
+                if ((date.getFullYear() + args[5]) % 4 == 0) {
+                    args[3] += 29;
+                } else {
+                    args[3] += 28;
+                }
+            } else if ((date.getMonth() + i) % 2 == 0) {
+                args[3] += 31;
+            } else {
+                args[3] += 30;
+            }
+        } for (i = 0; i <= args[3]; i++) {
+            args[2] += 24;
+        } for (i = 0; i <= args[2]; i++) {
+            args[1] += 60;
+        }
+        date = new Date(date.getTime() + (args[1] * 60000)), i = [];
+        i.ban.user = args[0].id, i.ban.guild = msg.guild.id
+        i.year = date.getFullYear(), i.month = date.getMonth(), i.day = date.getDate(),
+        i.hour = date.getHours(), i.minute = date.getMinutes();
+        database.push
     } else {
         msg.reply(`@${msg.author.tag}, Unfortunatley, I do not have that command.  Please use \`\
         ${config.prefix}help\` to see possible commands.`)
     }
+});
+
+// Unban people that were temporarily banned.
+const unban = require("./tempban/unban");
+unban.on('unban', (user) => {
+    if (!user.guild.avaliable) {return;}
+    if (user.) {}
 });
 
 // Autosave databases.
