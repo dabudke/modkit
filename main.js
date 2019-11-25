@@ -11,7 +11,7 @@ let users = require(config.databases+"users.json"); // Get user database
 let guilds = require(config.databases+"guilds.json"); // Get guild database
 var embed, i, date; // Declare variables (because eslint keeps screaming at me)
 
-// When registerd on Discord
+// When registered on Discord
 bot.on('ready', () => {
     console.log(`Registered as ${bot.nick}`)
 });
