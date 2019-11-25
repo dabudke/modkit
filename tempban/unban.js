@@ -1,25 +1,16 @@
-const fs = require('fs');
-const events = require('events');
-const emitter = new events.EventEmitter;
-let database = require("./database.json");
-const date = new Date;
-let i, user;
+// Get event emmitter.
+const events = require('events'), emitter = new events.EventEmitter;
+// Get ban database and date.
+let database = require('./database'), date = new Date, i;
 
-// Function for adding bans to the database.
-exports.addBan = function(userID,length) {
-    length.id = userID;
-    database.push(length);
-    fs.writeFileSync("./database.json", JSON.stringify(database, null, 2));
-};
-
-// Check for expired bans at start.
+// Check for expired bans.
 for (i = 0; i <= database.length(); i++) {
     if (database[i].year >= date.getFullYear()) {
         if (database[i].month >= date.getMonth()) {
             if (database[i].day >= date.getDate()) {
                 if (database[i].hour >= date.getHours()) {
                     if (database[i].minute >= date.getMinutes()) {
-                        emitter.emit('unban', (database[i].id));
+                        emitter.emit('unban', (database[i].ban));
                     }
                 }
             }
@@ -27,21 +18,24 @@ for (i = 0; i <= database.length(); i++) {
     }
 }
 
-// Check for unbans every minute.
+// Check for expired bans every minute.
 for (;;) {
     setTimeout(() => {
+        // Refresh date and database.
+        date = new Date, database = require('./database.json');
+        // Check for expired bans.
         for (i = 0; i <= database.length(); i++) {
             if (database[i].year >= date.getFullYear()) {
                 if (database[i].month >= date.getMonth()) {
                     if (database[i].day >= date.getDate()) {
                         if (database[i].hour >= date.getHours()) {
-                            if (database[i].minute >= date.getMinutes()) {
-                                emitter.emit('unban', (database[i].id));
+                            if (database[i].minute >=date.getMinutes()) {
+                                emitter.emit('unban', (database[i].user));
                             }
                         }
                     }
                 }
             }
         }
-    }, 60000);
+    }, 30000);
 }
