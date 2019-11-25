@@ -15,7 +15,7 @@
   "bugs": {
     "url": "https://github.com/allydiscord/ally/issues"
   },
-  "homepage": "https://github.com/allydiscord/ally#readme",
+  "homepage": "https://allydiscord.github.io/",
   "devDependencies": {
     "eslint": "^6.6.0"
   }
