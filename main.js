@@ -63,6 +63,12 @@ bot.on('message', (msg) => {
     } else if (cmd == "settings") { // Settings command
         // Settings
     } else if (cmd == "tempban") { // Tempban command
+        if (!msg.guild) {
+            msg.reply('Unless you want to ban yourself, please use this in a server.')
+        } else if (!args[0].id) {
+            msg.reply('you need to mention someone to ban them!')
+            return;
+        }
         date = new Date();
         for (i = 0; i <= args[5]; i++) {
             if ((date.getFullYear() + i) % 4 == 0) {
@@ -88,7 +94,7 @@ bot.on('message', (msg) => {
             args[1] += 60;
         }
         date = new Date(date.getTime() + (args[1] * 60000)), i = [];
-        i.ban.user = args[0].id, i.ban.guild = msg.guild.id
+        i.banData.user = args[0].id, i.ban.guild = msg.guild.id
         i.year = date.getFullYear(), i.month = date.getMonth(), i.day = date.getDate(),
         i.hour = date.getHours(), i.minute = date.getMinutes();
         database.push
@@ -102,7 +108,7 @@ bot.on('message', (msg) => {
 const unban = require("./tempban/unban");
 unban.on('unban', (user) => {
     if (!user.guild.avaliable) {return;}
-    if (user.) {}
+    if (!user.guild.fetchUser(user.user)) {}
 });
 
 // Autosave databases.
