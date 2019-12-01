@@ -9,6 +9,7 @@ const commands = require(config.meta+"commands.json"); // Get command database
 const people = require(config.meta+"people.json"); // Get people database
 let users = require(config.databases+"users.json"); // Get user database
 let guilds = require(config.databases+"guilds.json"); // Get guild database
+let banDatabase = require('./tempban/database.json'); // Get ban database.
 var embed, i, date; // Declare variables (because eslint keeps screaming at me)
 
 // When registered on Discord
@@ -21,7 +22,11 @@ bot.on('ready', () => {
 bot.on('message', (msg) => {
     if (!msg.content.startsWith(config.prefix)) { return; } // Return if not meant for Ally
     if (msg.author.bot) { return; } // Return if author is a bot.
-    let args = msg.content.slice(config.prefix.length()).split(" ").filter(Boolean), // Separate arguments
+    if (!msg.guild) {
+        msg.reply('Hey, I only respond to commands in a guild.  Thx, ttyl.');
+        return;
+    }
+    let args = msg.content.slice(config.prefix.length()).split(/ +/).filter(Boolean), // Separate arguments
         cmd = args.shift(); // Grab command
     if (cmd == "help") { // Help command
         embed = new Discord.RichEmbed()
@@ -59,13 +64,14 @@ bot.on('message', (msg) => {
             .addField("Bug Trackers:"+ peopleString.bugTracker);
         msg.channel.send(embed);
     } else if (cmd == "say") { // Say command
-        // Say command
+        if (!args[0].type) {
+            msg.reply('')
+        }
+        if (!msg.guild.channels.array.indexOf(args[0]))
     } else if (cmd == "settings") { // Settings command
         // Settings
     } else if (cmd == "tempban") { // Tempban command
-        if (!msg.guild) {
-            msg.reply('Unless you want to ban yourself, please use this in a server.')
-        } else if (!args[0].id) {
+        if (!args[0].avatarURL) {
             msg.reply('you need to mention someone to ban them!')
             return;
         }
@@ -94,21 +100,33 @@ bot.on('message', (msg) => {
             args[1] += 60;
         }
         date = new Date(date.getTime() + (args[1] * 60000)), i = [];
-        i.banData.user = args[0].id, i.ban.guild = msg.guild.id
-        i.year = date.getFullYear(), i.month = date.getMonth(), i.day = date.getDate(),
-        i.hour = date.getHours(), i.minute = date.getMinutes();
-        database.push
+        i.user = args[0].id, i.guild = msg.guild.id, i.time = date.getTime();
+        database.push(i); fs.writeFileSync("./tempban/database.json", JSON.stringify(database, null, 2));
+        msg.guild.ban(i.user); msg.channel.send(`User banned for ${args[1]} minutes, \
+        ${args[2]} hours, ${args[3]} days, ${args[4]}`)
     } else {
         msg.reply(`@${msg.author.tag}, Unfortunatley, I do not have that command.  Please use \`\
         ${config.prefix}help\` to see possible commands.`)
     }
 });
 
-// Unban people that were temporarily banned.
+// Receive unbans from './tempban/unban.js'
 const unban = require("./tempban/unban");
-unban.on('unban', (user) => {
-    if (!user.guild.avaliable) {return;}
-    if (!user.guild.fetchUser(user.user)) {}
+unban.on('unban', (user, guild, bid) => {
+    if (!guild.avaliable) {return;}
+    guild.unban(user);
+    database.splice(bid, 1);
+    fs.writeFileSync("./tempban/database.json", JSON.stringify(database, null, 2));
+});
+
+// Supplement for tempbanning, allows for manual, early unbanning.
+bot.on('guildBanRemove',(user, guild) => {
+    for (i = 0; i > database.length(); i++) {
+        if (i.guild == guild.id && i.user == user.id) {
+            database.splice(i, 1);
+            fs.writeFileSync('./tempban/database.json', JSON.stringify(database,null,2));
+        }
+    }
 });
 
 // Autosave databases.
