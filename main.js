@@ -26,18 +26,34 @@ bot.on('message', (msg) => {
         msg.reply('Hey, I only respond to commands in a guild.  Thx, ttyl.');
         return;
     }
-    let args = msg.content.slice(config.prefix.length()).split(/ +/).filter(Boolean), // Separate arguments
+    let args = msg.content.slice(config.prefix.length()).split(/ +/), // Separate arguments
         cmd = args.shift(); // Grab command
     if (cmd == "help") { // Help command
-        embed = new Discord.RichEmbed()
-            .setTitle('Ally Help')
-            .setDescription("Index of commands for Ally v"+config.prefix)
-            .setColor('#0096FF')
-            .setAuthor(msg.author.username, msg.author.avatarURL);
+        if (args[0] === "help") {
+            if (args[1] === 'i'&&args[2]==='am'&&args[3]==='a'&&args[4]==='dingbat') {
+                msg.reply('Okay, here goes.  *dingbat*...');
+                embed = new Discord.RichEmbed();
+                embed.setTitle('Help Command');
+                embed.setDescription('because someone is a dingbat.');
+                embed.addField(`Usage: ${config.prefix}help [command]`);
+                embed.addBlankField();
+                embed.addField('command - Optional','Command to show help for.');
+            } else {
+                msg.channel.send("Thats... pretty much how you use the command.");
+                msg.channel.send("Still want the embed?  Put 'i am a dingbat' after that.  \
+                thx, ttyl.");
+            }
+        } else {
+            embed = new Discord.RichEmbed()
+            embed.setTitle('Ally Help')
+            embed.setDescription("Index of commands for Ally v"+config.prefix)
+            embed.setColor('#0096FF')
+            embed.setAuthor(msg.author.username, msg.author.avatarURL);
         for (i = 0; i <= commands.length(); i++) {
             embed.addField(commands[i[1]], commands[i[2]]); // Add each command found in commands.json
         }
         msg.channel.send(embed)
+        }
     } else if (cmd == "info") { // Info command
         embed = new Discord.RichEmbed()
             .setTitle('Info')
@@ -58,16 +74,16 @@ bot.on('message', (msg) => {
         peopleString.bugTracker = people.bugTracker[1];
         for (i = 1; i <= people.bugTracker.length(); i++) {
             peopleString.bugTracker += (", "+people.bugTracker[i]);
-        } /* End compilating people.json into strings */
-        embed.addField("Developers:"+ peopleString.developers)
-            .addField("Contributers:"+ peopleString.contributers)
-            .addField("Bug Trackers:"+ peopleString.bugTracker);
+        }
+        /* End compilating people.json into strings */
+        embed.addField("Developers:", peopleString.developers)
+            .addField("Contributers:", peopleString.contributers)
+            .addField("Bug Trackers:", peopleString.bugTracker);
         msg.channel.send(embed);
     } else if (cmd == "say") { // Say command
-        if (!args[0].type) {
-            msg.reply('')
-        }
-        if (!msg.guild.channels.array.indexOf(args[0]))
+        if (!args[0].type) { // Check if first argument is a ChannelResolvable (hopefully)
+            msg.reply('the first argument must be a ')
+        } else if (msg.guild.channels.array.indexOf(args[0]))
     } else if (cmd == "settings") { // Settings command
         // Settings
     } else if (cmd == "tempban") { // Tempban command
