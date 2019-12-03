@@ -18,5 +18,8 @@
   "homepage": "https://allydiscord.github.io/",
   "devDependencies": {
     "eslint": "^6.6.0"
+  },
+  "dependencies": {
+    "discord.js": "^11.5.1"
   }
 }
