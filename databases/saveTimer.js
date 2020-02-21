@@ -1,5 +1,5 @@
-const ms = require('./timeout.json')[1];
-const events = require('events');
+import { EventEmitter } from 'events';
+const emitter = new EventEmitter
 
 for (;;) {
     setTimeout(() => {
