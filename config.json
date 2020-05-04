@@ -1,7 +1,0 @@
-{
-  "prefix": "a!",
-  "version": "non-production",
-  "token": "./token.json",
-  "databases": "./databases/",
-  "metaData": "./meta/"
-}
