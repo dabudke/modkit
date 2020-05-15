@@ -62,7 +62,8 @@ file your your OS (Windows uses `.bat`, Linux/MacOS uses `.sh`)
 ## Stale Issues and Pull Requests
 
 Stale issues and pull requests will get an automated message, asking if they
-are resolved or if they need a bump.  Please make sure to close any open pull
+are resolved, and if not, the message 'bumps' theconversation, so everyone
+subscribed are notified of it again.  Please make sure to close any open pull
 requests/issues that are resolved, to keep clutter down.
 
 ## Maintaining an Unsupported Version
