@@ -1,0 +1,11 @@
+{
+    "name": "Ally",
+    "author": "LittleKitacho",
+    "team": {
+        "projectLeads": [ "LittleKitacho" ],
+        "developers": [ "LittleKitacho" ],
+        "supportTeam": [ "LittleKitacho" ],
+        "bugTrackers": []
+    },
+    "prefix": "^"
+}
