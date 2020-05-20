@@ -1,0 +1,23 @@
+{
+  "name": "ally",
+  "version": "0.0.0-nonproduction",
+  "description": "The friendly and open-source Discord.js bot made by LittleKitacho.",
+  "main": "start.js",
+  "scripts": {
+    "start": "node ./start.js",
+    "test": "node ./.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/allydiscord/ally.git"
+  },
+  "author": "LittleKitacho",
+  "license": "AGPL-3.0-only",
+  "bugs": {
+    "url": "https://github.com/allydiscord/ally/issues"
+  },
+  "homepage": "allydiscord.github.io",
+  "dependencies": {
+    "discord.js": "^12.2.0"
+  }
+}
