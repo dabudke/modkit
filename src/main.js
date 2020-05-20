@@ -25,7 +25,7 @@ bot.on("message", (msg) => {
 
     if (cmd === "ping") {
         msg.reply("Pong!");
-    } else if ( cmd === "help" || cmd === "?") {
+    }/* else if ( cmd === "help" || cmd === "?") {
         // help command
     } else if ( cmd === "settings" || cmd === "set" ) {
         // settings command
@@ -35,9 +35,13 @@ bot.on("message", (msg) => {
         // permissions command
     } else if ( cmd === "feedback" || cmd === "fb") {
         // feedback command
-    } else {
-        // unknown command response
+    }*/ else {
+        msg.reply("I didn't understand that command.  Please use `^help` to see all avaliable commands.");
     }
 });
 
-bot.login(token)
+bot.login(token).catch( error => {
+    console.log("There was a problem logging into Discord, most likley a bad token or network connection.\
+\nThis is what we got from Discord.JS:\n\n\"".concat(error).concat("\""));
+    process.exit(-1);
+});
