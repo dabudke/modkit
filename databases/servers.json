@@ -1,1 +1,29 @@
-{}
+{
+    "default": {
+        "settings": {
+            "points": {
+                "announcementChannel": null
+            },
+            "channels": {
+                "announcements": null,
+                "logging": {
+                    "join": null,
+                    "leave": null,
+                    "nickChange": null,
+                    "ban": null,
+                    "unban": null,
+                    "kick": null
+                },
+                "modlogging": {
+                    "join": null,
+                    "leave": null,
+                    "nickChange": null,
+                    "ban": null,
+                    "unban": null,
+                    "kick": null
+                }
+            }
+        },
+        "warnings": {}
+    }
+}
