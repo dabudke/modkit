@@ -3,7 +3,7 @@ const Discord = require("discord.js");
 
 // get meta files
 const token = require(require.main.filename).token;
-const about = require("../meta/about.json")
+const about = require("../meta/about.json");
 
 // declare clients
 const bot = new Discord.Client();
@@ -12,6 +12,7 @@ const bot = new Discord.Client();
 
 bot.on("ready", () => {
     console.log(`Logged in and connected to Discord (Username: ${bot.user.tag})`)
+    bot.user.setPresence( require(require.main.filename).presence );
 })
 
 bot.on("message", (msg) => {
@@ -24,7 +25,7 @@ bot.on("message", (msg) => {
     const cmd = args.shift().slice(about.prefix.length).toLowerCase();
 
     if (cmd === "ping") {
-        msg.reply("Pong!");
+        msg.reply("pong!");
     }/* else if ( cmd === "help" || cmd === "?") {
         // help command
     } else if ( cmd === "settings" || cmd === "set" ) {
