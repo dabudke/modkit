@@ -6,21 +6,22 @@ let serverDb = require("./servers.json");
 let feedbackDb = require("./feedback.json");
 
 setInterval( () => {
-    fs.writeFile( "./users.json", userDb );
-    fs.writeFile( "./servers.json", serverDb );
+    fs.writeFile( "./users.json", JSON.stringify( userDb, 2, null ) );
+    fs.writeFile( "./servers.json", JSON.stringify( serverDb, 2, null ) );
     fs.writeFile( "./feedback.json", feedbackDb );
 }, 30000 );
 
 // user database functions
-exports.users = {}; // don't reference the database object here to keep integrity of database// default user object
-exports.users.default = { points: { global: { level: 1, points: 0 } }, settings: { points: { announceGlobal: false, announceDM: true } } }
-exports.users.add = ( userId, data ) => {
-    let dataObj = { [userId]: exports.users.default };
-    userDb[userDb.length] = dataObj;
-    exports.users.modify( userId, data );
+exports.users = {}; // don't reference the database object here to keep integrity of database
+exports.users.add = userId => {
+    userDb[String(userId)] = userDb.default;
 };
-exports.users.modify = ( userId, data ) => {};
-exports.users.delete = userId => {};
+exports.users.modify = ( userId, data ) => {
+    Object.assign( userDb[String(userId)], data );
+};
+exports.users.delete = userId => {
+    userDb[String(userId)] = {};
+};
 
 // server database functions
 exports.servers = {}; // don't reference the database object here to keep integrity of database
