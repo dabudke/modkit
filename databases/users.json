@@ -1,1 +1,19 @@
-{}
+{
+    "default": {
+        "points": {
+            "global": {
+                "level": 0,
+                "points": 0,
+                "toLvlUp": 15
+            }
+        },
+        "settings": {
+            "points": {
+                "announceDM": {
+                    "serverLevel": false,
+                    "globalLevel": true
+                }
+            }
+        }
+    }
+}
