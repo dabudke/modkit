@@ -33,15 +33,31 @@ and the [security policy](./SECURITY.md).
 To self-host Ally, you don't need a very good computer.  Any Raspberry Pi
 will do.
 
-To begin self-hosting, followthese steps:
+To begin self-hosting, follow these steps:
 
 1. Go to the [Discord Developer Portal](https://discordapp.com/developers)
  and log in with your account.
 2. Create a new application, such as `My Awesome Bot`.
-3. Go to the bot tab, and create a bot user.
-4. Go to the `Ally_vX.X.X` folder and edit the files in the `meta` folder
- with the information required.
-5. Run the command `npm install` to install all dependencies.
-6. Run `npm start` to start the bot.
+3. Go to the bot tab, and create a bot user.'
+4. Go to the releases tab of the Ally GitHub repository (found [here](https://github.com/allydiscord/ally/releases)).
+5. Download the latest release archive and extract the `.zip` file.
+6. Navigate to the `Ally-vX.X.X` (with the `X`es signifying a number) and edit
+ these files:
+   - `meta/about.json`
+      - `name`
+      - `author`
+      - `team`
+         - `projectLeads`
+         - `developers`
+         - `supportTeam`
+         - `bugTrackers`
+      - `prefix` (optional)
+   - `meta/token.json`
+      - `token`
+      - `testToken` (optional)
+7. Run the command `npm install` from the `Ally_vX.X.X` folder to install all
+ dependencies.
+8. Run `npm test` to test the bot and make sure it works.
+9. Run `npm start` to start the bot.
 
 *Non-release Codebase.*
