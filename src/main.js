@@ -9,6 +9,8 @@ const about = require("../meta/about.json");
 const bot = new Discord.Client();
 
 // declare variables
+const quitPIN = Math.floor( Math.random() * 9999 )
+console.log( "The quit PIN is ".concat( String(quitPIN) ) )
 
 bot.on("ready", () => {
     console.log(`Logged in and connected to Discord (Username: ${bot.user.tag})`)
@@ -26,9 +28,12 @@ bot.on("message", (msg) => {
 
     if (cmd === "ping") {
         msg.reply("pong!");
-    }/* else if ( cmd === "help" || cmd === "?") {
-        // help command
-    } else if ( cmd === "settings" || cmd === "set" ) {
+    } else if ( cmd === "help" || cmd === "?") {
+        switch (args[1]) { // TODO: create embeds and add responses
+            default:
+                msg.channel.send(/* TODO */)
+        }
+    }/* else if ( cmd === "settings" || cmd === "set" ) {
         // settings command
     } else if ( cmd === "warn" ) {
         // warn command
@@ -36,8 +41,16 @@ bot.on("message", (msg) => {
         // permissions command
     } else if ( cmd === "feedback" || cmd === "fb") {
         // feedback command
-    }*/ else {
-        msg.reply("I didn't understand that command.  Please use `^help` to see all avaliable commands.");
+    }*/ else if ( cmd === "quit" ) {
+        if ( args[0] === String(quitPIN) ) {
+            console.log("Quit command executed, quitting bot.")
+            process.exit(0)
+        } else {
+            msg.reply("please enter the PIN, it has been put in the console if you need it.")
+            console.log(String(quitPIN))
+        }
+    } else {
+        msg.reply(`I didn't understand that command.  Please use \`${about.prefix}help\` to see all avaliable commands.`);
     }
 });
 
