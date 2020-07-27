@@ -9,8 +9,6 @@ const about = require("../meta/about.json");
 const bot = new Discord.Client();
 
 // declare variables
-const quitPIN = Math.floor( Math.random() * 9999 )
-console.log( "The quit PIN is ".concat( String(quitPIN) ) )
 
 bot.on("ready", () => {
     console.log(`Logged in and connected to Discord (Username: ${bot.user.tag})`)
@@ -41,15 +39,7 @@ bot.on("message", (msg) => {
         // permissions command
     } else if ( cmd === "feedback" || cmd === "fb") {
         // feedback command
-    }*/ else if ( cmd === "quit" ) {
-        if ( args[0] === String(quitPIN) ) {
-            console.log("Quit command executed, quitting bot.")
-            process.exit(0)
-        } else {
-            msg.reply("please enter the PIN, it has been put in the console if you need it.")
-            console.log(String(quitPIN))
-        }
-    } else {
+    }*/  else {
         msg.reply(`I didn't understand that command.  Please use \`${about.prefix}help\` to see all avaliable commands.`);
     }
 });
