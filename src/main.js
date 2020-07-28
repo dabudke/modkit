@@ -27,19 +27,21 @@ bot.on("message", (msg) => {
     if (cmd === "ping") {
         msg.reply("pong!");
     } else if ( cmd === "help" || cmd === "?") {
-        switch (args[1]) { // TODO: create embeds and add responses
+        switch (args[0]) { // TODO: create embeds and add responses
             default:
                 msg.channel.send(/* TODO */)
         }
+    }/* else if ( cmd === "about" ) {
+        //about command
     }/* else if ( cmd === "settings" || cmd === "set" ) {
         // settings command
-    } else if ( cmd === "warn" ) {
+    }/* else if ( cmd === "warn" ) {
         // warn command
-    } else if ( cmd === "permissions" || cmd === "perms" ) {
+    }/* else if ( cmd === "permissions" || cmd === "perms" ) {
         // permissions command
-    } else if ( cmd === "feedback" || cmd === "fb") {
+    }/* else if ( cmd === "feedback" || cmd === "fb") {
         // feedback command
-    }*/  else {
+    }*/ else {
         msg.reply(`I didn't understand that command.  Please use \`${about.prefix}help\` to see all avaliable commands.`);
     }
 });
