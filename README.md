@@ -4,11 +4,11 @@ Ally is an open-source, totally free, Discord bot.  She is currently under
 active development, and updates will come every so often (check the projects
 page [here](https://github.com/orgs/allydiscord/projects/)).
 
-Come join our Discord server here: [discord.gg/dbXzRek](https://discord.gg/dbXzRek)
-
-Check out the source code here: [github.com/orgs/allydiscord](https://github.com/orgs/allydiscord)
-
-Check out the official website here: [allydiscord.github.io](https://allydiscord.github.io/index.html)
+![Website](https://img.shields.io/badge/website-allydiscord.github.io-informational?link=https://github.com/allydiscord/ally)
+![Discord](https://img.shields.io/discord/457326122066116609?color=7289da&label=discord%20server&logo=discord)
+![GitHub](https://img.shields.io/badge/source-github.com%2Fallydiscord%2Fally-lightgrey?logo=github)
+![GitHub contributors](https://img.shields.io/github/contributors/allydiscord/ally?color=informational&logo=github)
+![Latest release](https://img.shields.io/github/v/release/allydiscord/ally?label=latest%20release&logo=github)
 
 - [About Ally](#about-ally)
 - [Information about Self-Hosting](#information-about-self-hosting)
