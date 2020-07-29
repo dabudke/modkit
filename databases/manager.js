@@ -24,9 +24,9 @@ let userDb = require("./users.json");
 let serverDb = require("./servers.json");
 let feedbackDb = require("./feedback.json");
 
-setInterval( writeDatabases() , 30000 );
+setInterval( writeDatabases , 30000 );
 
-exports.writeDbs() = writeDatabases();
+exports.writeDbs = writeDatabases();
 exports.userDb = userDb;
 exports.serverDb = serverDb;
 exports.feedbackDb = feedbackDb;
