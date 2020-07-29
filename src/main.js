@@ -1,9 +1,11 @@
 // get libraries and modules
 const Discord = require("discord.js");
+const db = require("../databases/manager");
 
 // get meta files
 const token = require(require.main.filename).token;
 const about = require("../meta/about.json");
+const embeds = require("../meta/embeds");
 
 // declare clients
 const bot = new Discord.Client();
@@ -11,7 +13,7 @@ const bot = new Discord.Client();
 // declare variables
 
 bot.on("ready", () => {
-    console.log(`Logged in and connected to Discord (Username: ${bot.user.tag})`)
+    console.log(`Logged in and connected to Discord (Username: ${bot.user.tag})`);
     bot.user.setPresence( require(require.main.filename).presence );
 })
 
@@ -29,7 +31,7 @@ bot.on("message", (msg) => {
     } else if ( cmd === "help" || cmd === "?") {
         switch (args[0]) { // TODO: create embeds and add responses
             default:
-                msg.channel.send(/* TODO */)
+                msg.channel.send(/* TODO */);
         }
     }/* else if ( cmd === "about" ) {
         //about command
@@ -39,9 +41,21 @@ bot.on("message", (msg) => {
         // warn command
     }/* else if ( cmd === "permissions" || cmd === "perms" ) {
         // permissions command
-    }/* else if ( cmd === "feedback" || cmd === "fb") {
-        // feedback command
-    }*/ else {
+    }*/ else if ( cmd === "feedback" || cmd === "fb") {
+        if ( args[0] === undefined ) {
+            msg.reply("you can submit feedback to the developers of Ally!  Put your feedback after `feedback` or `fb` to submit feedback.");
+        } else {
+            let feedback = args[0];
+            let i = false;
+            for (arg in args) {
+                if (!i) { i = true; } else {
+                    feedback = feedback.concat(" ").concat(args[arg]);
+                }
+            }
+            console.log(feedback);
+            msg.reply("thanks for submitting feedback!  Your feedback is important, so keep submitting feedback as needed!");
+        }
+     } else {
         msg.reply(`I didn't understand that command.  Please use \`${about.prefix}help\` to see all avaliable commands.`);
     }
 });
