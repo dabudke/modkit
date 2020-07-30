@@ -9,11 +9,17 @@ page [here](https://github.com/orgs/allydiscord/projects/)).
 ![GitHub](https://img.shields.io/badge/source-github.com%2Fallydiscord%2Fally-lightgrey?logo=github)
 ![GitHub contributors](https://img.shields.io/github/contributors/allydiscord/ally?color=informational&logo=github)
 ![Latest release](https://img.shields.io/github/v/release/allydiscord/ally?label=latest%20release&logo=github)
+![Current release](https://img.shields.io/badge/current%20release-none-inactive)
 
 - [About Ally](#about-ally)
 - [Information about Self-Hosting](#information-about-self-hosting)
 
 ## About Ally
+
+![License](https://img.shields.io/github/license/allydiscord/ally)
+![GitHub stars](https://img.shields.io/github/stars/allydiscord/ally)
+![GitHub All Releases](https://img.shields.io/github/downloads/allydiscord/ally/total)
+![Invite Ally](https://img.shields.io/badge/invite--blue)
 
 Ally is a Discord bot that is programed in JavaScript.  She uses the library
 Discord.js to communicate with the Discord API, and has lots of fun and
