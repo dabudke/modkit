@@ -26,7 +26,7 @@ let feedbackDb = require("./feedback.json");
 
 setInterval( writeDatabases , 30000 );
 
-exports.writeDbs = ( include ) => { this.writeDatabases(include) };
+exports.writeDbs = ( include ) => { writeDatabases(include) };
 exports.userDb = userDb;
 exports.serverDb = serverDb;
 exports.feedbackDb = feedbackDb;
