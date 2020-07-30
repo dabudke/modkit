@@ -53,7 +53,7 @@ const { prefix, name } = require("../meta/about.json");
 exports.help = function(message) {
 	return ({
 		title: "Help",
-		description: `Use \`${about.prefix}help (category)\` to see all commands in category.`,
+		description: `Use \`${prefix}help (category)\` to see all commands in category.`,
 		url: "https://allydiscord.github.io/",
 		author: {
 			name: message.author.name,
