@@ -30,9 +30,10 @@ are being added all the time!
 Invite Ally to your server by clicking [this link](todo) or running the
 command `^invite`.
 
-Ally is licenced under the [`AGPL-3.0-only`](./LICENSE.txt) license.  
-Check the [changelog](./CHANGELOG.md) for changes to Ally, the license
-and the [security policy](./SECURITY.md).
+Ally is licenced under the [`GPL-3.0-or-later`](./LICENSE.txt) license.  
+Check the [changelog](./CHANGELOG.md) for changes to Ally and the
+[security policy](./SECURITY.md) for information about security
+vulnerabililties.
 
 ## Information about Self-Hosting
 

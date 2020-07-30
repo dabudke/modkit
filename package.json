@@ -12,7 +12,7 @@
     "url": "git+https://github.com/allydiscord/ally.git"
   },
   "author": "LittleKitacho",
-  "license": "AGPL-3.0-only",
+  "license": "GPL-3.0-or-later",
   "bugs": {
     "url": "https://github.com/allydiscord/ally/issues"
   },
