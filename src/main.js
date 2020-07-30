@@ -29,9 +29,9 @@ bot.on("message", (msg) => {
     if (cmd === "ping") {
         msg.reply("pong!");
     } else if ( cmd === "help" || cmd === "?") {
-        switch (args[0]) { // TODO: create embeds and add responses
+        switch (args[0]) {
             default:
-                msg.channel.send(/* TODO */);
+                msg.channel.send({ embed: embeds.help(msg) });
         }
     }/* else if ( cmd === "about" ) {
         //about command
