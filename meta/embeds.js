@@ -48,7 +48,7 @@
 	},
 }
 */
-const { prefix, name } = require("../meta/about.json");
+const { prefix } = require("../meta/about.json");
 
 exports.help = function(message) {
 	return ({
@@ -57,8 +57,8 @@ exports.help = function(message) {
 		url: "https://allydiscord.github.io/",
 		author: {
 			name: message.author.name,
-			icon_url: msg.author.avatarURL({ dynamic: true }),
-			url: msg.url
+			icon_url: message.author.avatarURL({ dynamic: true }),
+			url: message.url
 		},
 		fields: [
 			{
