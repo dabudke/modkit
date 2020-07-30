@@ -1,20 +1,10 @@
-function writeDatabases(include) {
+function writeDatabases() {
     console.log("Writing databases, please wait...");
-    if ( include === null ) {
-        include = [ "users", "servers", "feedback" ];
-    }
-    for (i in include) {
-        switch(i) {
-            case "users":
-                fs.writeFile( "./users.json", JSON.stringify( userDb, 2, null ) );
     
-            case "servers":
-                fs.writeFile( "./servers.json", JSON.stringify( serverDb, 2, null ) );
+    fs.writeFile( "./users.json", JSON.stringify( userDb, 2, null ) );
+    fs.writeFile( "./servers.json", JSON.stringify( serverDb, 2, null ) );
+    fs.writeFile( "./feedback.json", JSON.stringify( feedbackDb, 2, null ) );
     
-            case "feedback":
-                fs.writeFile( "./feedback.json", JSON.stringify( feedbackDb, 2, null ) );
-        }
-    }
     console.log("Writing complete.");
 }
 
@@ -24,9 +14,9 @@ let userDb = require("./users.json");
 let serverDb = require("./servers.json");
 let feedbackDb = require("./feedback.json");
 
-setInterval( writeDatabases , 30000 );
+setInterval( writeDatabases , 60000 );
 
-exports.writeDbs = ( include ) => { writeDatabases(include) };
+exports.writeDbs = () => { writeDatabases() };
 exports.userDb = userDb;
 exports.serverDb = serverDb;
 exports.feedbackDb = feedbackDb;
