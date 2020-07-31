@@ -61,7 +61,6 @@ bot.on("message", (msg) => {
                 }
             }
             db.feedbackDb.push(feedback);
-            db.writeDbs(["feedback"]);
             msg.reply("thanks for submitting feedback!  Your feedback is important, so keep submitting feedback as needed!");
         }
      } else {
