@@ -22,6 +22,9 @@
                     "unban": null,
                     "kick": null
                 }
+            },
+            "responses": {
+                "help": true
             }
         },
         "warnings": {}
