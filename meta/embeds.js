@@ -48,18 +48,20 @@
 	},
 }
 */
-const { prefix } = require("../meta/about.json");
+const { prefix, name } = require("../meta/about.json");
 
-exports.help = function(message) {
+exports.help = (message) => {
 	return ({
 		title: "Help",
-		description: `Use \`${prefix}help (category)\` to see all commands in category.`,
-		url: "https://allydiscord.github.io/",
+        description: `Use \`${prefix}help (category)\` to see all commands in category, or use \
+${prefix}help (command) to see the usage of a command.`,
+		url: "https://allydiscord.github.io/commands/",
+        color: 0x0099FF,
 		author: {
 			name: message.author.name,
-			icon_url: message.author.avatarURL({ dynamic: true }),
+			icon_url: message.author.avatarURL(),
 			url: message.url
-		},
+        },
 		fields: [
 			{
 				name: "Moderation",
@@ -78,4 +80,39 @@ ${prefix}feedback (${prefix}fb) - Send feedback to the developers.`
 			text: "Ally v(non-production)"
 		}
 	});
+}
+
+exports.utility = ( message ) => {
+    return({
+        title: "Utility Commands - Help",
+        description: `Use ${prefix}help (command) to see help about a command.`,
+        url: "allydiscord.github.io/commands/category/utility.html",
+        color: 0x0099FF,
+        author: {
+            name: message.author.name,
+            icon_url: message.author.avatarURL(),
+            url: message.url
+        },
+        fields: [
+            {
+                name: `${prefix}help/? [category|command]`,
+                value: "Send an embed that gives information about commands."
+            },
+            {
+                name: `${prefix}about [info]`,
+                value: `Send an embed that gives information about ${name}.`
+            },
+            {
+                name: `${prefix}settings/sets/set (user|server) (setting) [value]`,
+                value: "Change settings for yourself or the current server."
+            },
+            {
+                name: `${prefix}feedback/fb (feedback)`,
+                value: `Send feedback to the developers of ${name}.`
+            }
+        ],
+        footer: {
+            name: `${name} v(non-production)`
+        }
+    })
 }
