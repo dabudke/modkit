@@ -31,7 +31,7 @@ bot.on("message", (msg) => {
     } else if ( cmd === "help" || cmd === "?") {
         switch (args[0]) {
             case("utility"):
-                console.log("utility");
+                msg.channel.send({ embed: embeds.utility(msg) });
                 break;
 
             case("moderation"):
