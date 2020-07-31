@@ -55,16 +55,11 @@ exports.help = (message) => {
 		title: "Help",
         description: `Use \`${prefix}help (category)\` to see all commands in category, or use \
 ${prefix}help (command) to see the usage of a command.`,
-		url: "https://allydiscord.github.io/commands/",
+		url: "https://allydiscord.github.io/commands/index.html",
 		color: 0x0099FF,
 		thumbnail: {
 			url: "https://imgur.com/YVRMcUD.png"
 		},
-		author: {
-			name: message.author.name,
-			icon_url: message.author.avatarURL(),
-			url: message.url
-        },
 		fields: [
 			{
 				name: "Moderation",
@@ -79,9 +74,11 @@ ${prefix}settings (${prefix}sets/${prefix}set) - Change server/user settings.
 ${prefix}feedback (${prefix}fb) - Send feedback to the developers.`
 			}
 		],
-		footer: {
-			text: "Ally v(non-production)"
-		}
+		timestamp: new Date(),
+        footer: {
+			text: `Requested by ${message.author.username} | ${name} v(non-production)`,
+			icon_url: message.author.avatarURL()
+        }
 	});
 }
 
@@ -89,20 +86,15 @@ exports.utility = ( message ) => {
     return({
         title: "Utility Commands - Help",
         description: `Use ${prefix}help (command) to see help about a command.`,
-        url: "https://allydiscord.github.io/commands/category/utility.html",
+        url: "https://allydiscord.github.io/commands/utility.html",
 		color: 0x0099FF,
 		thumbnail: {
 			url: "https://imgur.com/YVRMcUD.png"
 		},
-        author: {
-            name: message.author.name,
-            icon_url: message.author.avatarURL(),
-            url: message.url
-        },
         fields: [
             {
                 name: `${prefix}help/? [category|command]`,
-                value: "Send an embed that gives information about commands."
+				value: "Send an embed that gives information about commands."
             },
             {
                 name: `${prefix}about [info]`,
@@ -116,9 +108,11 @@ exports.utility = ( message ) => {
                 name: `${prefix}feedback/fb (feedback)`,
                 value: `Send feedback to the developers of ${name}.`
             }
-        ],
+		],
+		timestamp: new Date(),
         footer: {
-            name: `${name} v(non-production)`
+			text: `Requested by ${message.author.username} | ${name} v(non-production)`,
+			icon_url: message.author.avatarURL()
         }
     })
 }
