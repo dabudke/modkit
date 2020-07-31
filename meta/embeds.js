@@ -84,7 +84,7 @@ ${prefix}feedback (${prefix}fb) - Send feedback to the developers.`
 
 exports.utility = ( message ) => {
     return({
-        title: "Utility Commands - Help",
+        title: "Utility Commands | Help",
         description: `Use ${prefix}help (command) to see help about a command.`,
         url: "https://allydiscord.github.io/commands/utility.html",
 		color: 0x0099FF,
@@ -114,5 +114,32 @@ exports.utility = ( message ) => {
 			text: `Requested by ${message.author.username} | ${name} v(non-production)`,
 			icon_url: message.author.avatarURL()
         }
-    })
+    });
+}
+
+exports.moderation = (message) => {
+	return({
+        title: "Moderation Commands | Help",
+        description: `Use ${prefix}help (command) to see help about a command.`,
+        url: "https://allydiscord.github.io/commands/moderation.html",
+		color: 0x0099FF,
+		thumbnail: {
+			url: "https://imgur.com/YVRMcUD.png"
+		},
+        fields: [
+            {
+                name: `${prefix}warn/! (user) (reason)`,
+				value: "Warn a user for something, such as breaking a rule."
+            },
+            {
+                name: `${prefix}permissions/perms/perm (user|role) (permission) [value]`,
+                value: "Manage permissions for a server's roles/users."
+            }
+		],
+		timestamp: new Date(),
+        footer: {
+			text: `Requested by ${message.author.username} | ${name} v(non-production)`,
+			icon_url: message.author.avatarURL()
+        }
+	})
 }

@@ -35,7 +35,7 @@ bot.on("message", (msg) => {
                 break;
 
             case("moderation"):
-                console.log("moderation");
+                msg.channel.send({ embed: embeds.moderation(msg) })
                 break;
             
             default:
