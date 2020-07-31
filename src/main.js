@@ -30,6 +30,14 @@ bot.on("message", (msg) => {
         msg.reply("pong!");
     } else if ( cmd === "help" || cmd === "?") {
         switch (args[0]) {
+            case("utility"):
+                console.log("utility");
+                break;
+
+            case("moderation"):
+                console.log("moderation");
+                break;
+            
             default:
                 msg.channel.send({ embed: embeds.help(msg) });
         }
