@@ -56,7 +56,10 @@ exports.help = (message) => {
         description: `Use \`${prefix}help (category)\` to see all commands in category, or use \
 ${prefix}help (command) to see the usage of a command.`,
 		url: "https://allydiscord.github.io/commands/",
-        color: 0x0099FF,
+		color: 0x0099FF,
+		thumbnail: {
+			url: "https://imgur.com/YVRMcUD.png"
+		},
 		author: {
 			name: message.author.name,
 			icon_url: message.author.avatarURL(),
@@ -86,8 +89,11 @@ exports.utility = ( message ) => {
     return({
         title: "Utility Commands - Help",
         description: `Use ${prefix}help (command) to see help about a command.`,
-        url: "allydiscord.github.io/commands/category/utility.html",
-        color: 0x0099FF,
+        url: "https://allydiscord.github.io/commands/category/utility.html",
+		color: 0x0099FF,
+		thumbnail: {
+			url: "https://imgur.com/YVRMcUD.png"
+		},
         author: {
             name: message.author.name,
             icon_url: message.author.avatarURL(),
