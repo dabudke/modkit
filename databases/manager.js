@@ -1,26 +1,17 @@
 function writeDatabases() {
     console.log("Writing databases, please wait...");
 
-    fs.writeFileSync( "./users.json", JSON.stringify( userDb, 0, 2, null) );
-    fs.writeFileSync( "./servers.json", JSON.stringify( serverDb, 0, 2, null) );
-    fs.writeFileSync( "./feedback.json", JSON.stringify( feedbackDb, 0, 2, null) );
-    
-    /*fs.writeFile( "./users.json", JSON.stringify( userDb, 2, null ) );
-    fs.writeFile( "./servers.json", JSON.stringify( serverDb, 2, null ) );
-    fs.writeFile( "./feedback.json", JSON.stringify( feedbackDb, 2, null ) );*/
+    fs.writeFileSync( "./databases/users.json", JSON.stringify( exports.userDb, 0, 4, null) );
+    fs.writeFileSync( "./databases/servers.json", JSON.stringify( exports.serverDb, 0, 4, null) );
+    fs.writeFileSync( "./databases/feedback.json", JSON.stringify( exports.feedbackDb, 0, 4, null) );
     
     console.log("Writing complete.");
 }
 
 const fs = require("fs");
 
-let userDb = require("./users.json");
-let serverDb = require("./servers.json");
-let feedbackDb = require("./feedback.json");
-
 setInterval( writeDatabases , 60000 );
 
-//exports.writeDbs = () => { writeDatabases() };
-exports.userDb = userDb;
-exports.serverDb = serverDb;
-exports.feedbackDb = feedbackDb;
+exports.userDb = require("./users.json");
+exports.serverDb = require("./servers.json");
+exports.feedbackDb = require("./feedback.json");
