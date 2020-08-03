@@ -7,16 +7,7 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Bot",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${workspaceFolder}\\start.js"
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "Test Bot",
+            "name": "Debug Bot (testToken)",
             "skipFiles": [
                 "<node_internals>/**"
             ],
