@@ -53,7 +53,7 @@ exports.utility = ( message ) => {
     return({
         title: "Utility Commands | Help",
         description: `Use ${prefix}help (command) to see help about a command.`,
-        url: "https://allydiscord.github.io/commands/utility.html",
+        url: "https://allydiscord.github.io/commands/categories/utility.html",
 		color: 0x0099FF,
 		thumbnail: {
 			url: "https://imgur.com/YVRMcUD.png"
@@ -88,7 +88,7 @@ exports.moderation = (message) => {
 	return({
         title: "Moderation Commands | Help",
         description: `Use ${prefix}help (command) to see help about a command.`,
-        url: "https://allydiscord.github.io/commands/moderation.html",
+        url: "https://allydiscord.github.io/commands/moderation/index.html",
 		color: 0x0099FF,
 		thumbnail: {
 			url: "https://imgur.com/YVRMcUD.png"
@@ -108,5 +108,32 @@ exports.moderation = (message) => {
 			text: `Requested by ${message.author.username} | ${name} v(non-production)`,
 			icon_url: message.author.avatarURL()
         }
+	})
+}
+
+exports.command.warn = (message) => {
+	return({
+		title: `${prefix}warn/! (user) (reason)`,
+		description: `Warn, or strike, a user (mentioned in the command) for a reason (such as breaking a rule).`,
+		url: "https://allydiscord.github.io/commands/moderation/warn.html",
+		color: 0x0099FF,
+		thumbnail: {
+			url: "https://imgur.com/YVRMcUD.png"
+		},
+		fields: [
+			{
+				name: `user - User in your Discord server.`,
+				value: "**Required.**  The user to warn.  *Must be in the channel the command is run in.*"
+			},
+			{
+				name: `reason - Reason for the strike.`,
+				value: `**Required**  The reason for the strike against the user.`
+			}
+		],
+		timestamp: new Date(),
+		footer: {
+			text: `Requested by ${message.author.name} | Ally v(non-production)`,
+			icon_url: message.author.avatarURL()
+		}
 	})
 }
