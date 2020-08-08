@@ -17,7 +17,7 @@
 */
 const { prefix, name } = require("../meta/about.json");
 
-exports.help = (message) => {
+exports.help = message => {
 	return ({
 		title: "Help",
         description: `Use \`${prefix}help (category)\` to see all commands in category, or use \
@@ -49,7 +49,7 @@ ${prefix}feedback (${prefix}fb) - Send feedback to the developers.`
 	});
 }
 
-exports.utility = ( message ) => {
+exports.utility = message => {
     return({
         title: "Utility Commands | Help",
         description: `Use ${prefix}help (command) to see help about a command.`,
@@ -84,7 +84,7 @@ exports.utility = ( message ) => {
     });
 }
 
-exports.moderation = (message) => {
+exports.moderation = message => {
 	return({
         title: "Moderation Commands | Help",
         description: `Use ${prefix}help (command) to see help about a command.`,
@@ -111,9 +111,10 @@ exports.moderation = (message) => {
 	})
 }
 
-exports.command.warn = (message) => {
+exports.command = {}
+exports.command.warn = message => {
 	return({
-		title: `${prefix}warn/! (user) (reason)`,
+		title: `${prefix}warn (user) (reason) | ${prefix}! (user) (reason)`,
 		description: `Warn, or strike, a user (mentioned in the command) for a reason (such as breaking a rule).`,
 		url: "https://allydiscord.github.io/commands/moderation/warn.html",
 		color: 0x0099FF,
