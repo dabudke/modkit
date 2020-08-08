@@ -35,7 +35,11 @@ bot.on("message", (msg) => {
                 break;
 
             case("moderation"):
-                msg.channel.send({ embed: embeds.moderation(msg) })
+                msg.channel.send({ embed: embeds.moderation(msg) });
+                break;
+
+            case("warn"):
+                msg.channel.send({ embed: embeds.command.warn(msg) });
                 break;
             
             default:
