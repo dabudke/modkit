@@ -1,5 +1,6 @@
 {
     "name": "Ally",
+    "version": "nonproduction",
     "author": "LittleKitacho",
     "team": {
         "projectLeads": [ "LittleKitacho" ],
