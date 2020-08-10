@@ -72,7 +72,7 @@ exports.utility = message => {
                 value: "Change settings for yourself or the current server."
             },
             {
-                name: `${prefix}feedback/fb (feedback)`,
+                name: `${prefix}feedback (feedback) | ${prefix}fb ...`,
                 value: `Send feedback to the developers of ${name}.`
             }
 		],
@@ -95,11 +95,11 @@ exports.moderation = message => {
 		},
         fields: [
             {
-                name: `${prefix}warn/! (user) (reason)`,
+                name: `${prefix}warn (user) (reason) | ${prefix}! ...`,
 				value: "Warn a user for something, such as breaking a rule."
             },
             {
-                name: `${prefix}permissions/perms/perm (user|role) (permission) [value]`,
+                name: `${prefix}permissions (user|role) (permission) [value] | ${prefix}perms ... | ${prefix}perm ...`,
                 value: "Manage permissions for a server's roles/users."
             }
 		],
