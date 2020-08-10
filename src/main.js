@@ -41,6 +41,10 @@ bot.on("message", (msg) => {
             case("warn"):
                 msg.channel.send({ embed: embeds.command.warn(msg) });
                 break;
+
+            case("permissions"):
+                msg.channel.send({ embed: embeds.command.permissions(msg) });
+                break;
             
             default:
                 msg.channel.send({ embed: embeds.help(msg) });

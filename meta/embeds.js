@@ -138,3 +138,34 @@ exports.command.warn = message => {
 		}
 	})
 }
+
+exports.command.permissions = message => {
+	return({
+		title: `${prefix}permissions (user|role) (permission) [value]`,
+		description: `Manage permissions for a user or role.`,
+		url: "https://allydiscord.github.io/commands/moderation/permissions.html",
+		color: 0x0099FF,
+		thumbnail: {
+			url: "https://imgur.com/YVRMcUD.png"
+		},
+		fields: [
+			{
+				title: "user|role - User or role in the server.",
+				value: "**Required.**  The user or role to manage the permission of."
+			},
+			{
+				title: "permission - Permission to change.",
+				value: "**Required.** The permission to change (found at permissions page)"
+			},
+			{
+				title: "value - The value to set the permission to.",
+				value: "**Optional.**  Omit to see the value the permission is currently set to."
+			}
+		],
+		timestamp: new Date(),
+		footer: {
+			text: `Requested by ${message.author.username} | ${name} v(non-production)`,
+			icon_url: message.author.avatarURL()
+		}
+	})
+}
