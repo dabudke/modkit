@@ -30,19 +30,22 @@ bot.on("message", (msg) => {
         msg.reply("pong!");
     } else if ( cmd === "help" || cmd === "?") {
         switch (args[0]) {
-            case("utility"):
+            case "utility":
                 msg.channel.send({ embed: embeds.utility(msg) });
                 break;
 
-            case("moderation"):
+            case "moderation":
                 msg.channel.send({ embed: embeds.moderation(msg) });
                 break;
 
-            case("warn"):
+            case "warn":
+            case "!":
                 msg.channel.send({ embed: embeds.command.warn(msg) });
                 break;
 
-            case("permissions"):
+            case "permissions":
+            case "perms":
+            case "perm":
                 msg.channel.send({ embed: embeds.command.permissions(msg) });
                 break;
             
