@@ -15,13 +15,13 @@
 	}
 }
 */
-const { prefix, name } = require("../meta/about.json");
+const { prefix: pfx, name: nme } = require("../meta/about.json");
 
 exports.help = message => {
 	return ({
 		title: "Help",
-        description: `Use \`${prefix}help (category)\` to see all commands in category, or use \
-${prefix}help (command) to see the usage of a command.`,
+        description: `Use \`${pfx}help (category)\` to see all commands in category, or use \
+${pfx}help (command) to see the usage of a command.`,
 		url: "https://allydiscord.github.io/commands/index.html",
 		color: 0x0099FF,
 		thumbnail: {
@@ -30,20 +30,20 @@ ${prefix}help (command) to see the usage of a command.`,
 		fields: [
 			{
 				name: "Moderation",
-				value: `${prefix}warn - Warn a user.
-${prefix}permissions (${prefix}perms/${prefix}perm) - Manage server permissions`
+				value: `${pfx}warn - Warn a user.
+${pfx}permissions (${pfx}perms/${pfx}perm) - Manage server permissions`
 			},
 			{
 				name: "Utility",
-				value: `${prefix}help (${prefix}?) - Sends this embed.
-${prefix}about - Returns information about Ally.
-${prefix}settings (${prefix}sets/${prefix}set) - Change server/user settings.
-${prefix}feedback (${prefix}fb) - Send feedback to the developers.`
+				value: `${pfx}help (${pfx}?) - Sends this embed.
+${pfx}about - Returns information about Ally.
+${pfx}settings (${pfx}sets/${pfx}set) - Change server/user settings.
+${pfx}feedback (${pfx}fb) - Send feedback to the developers.`
 			}
 		],
 		timestamp: new Date(),
         footer: {
-			text: `Requested by ${message.author.username} | ${name} v(non-production)`,
+			text: `Requested by ${message.author.username} | ${nme} v(non-production)`,
 			icon_url: message.author.avatarURL()
         }
 	});
@@ -52,7 +52,7 @@ ${prefix}feedback (${prefix}fb) - Send feedback to the developers.`
 exports.utility = message => {
     return({
         title: "Utility Commands | Help",
-        description: `Use ${prefix}help (command) to see help about a command.`,
+        description: `Use ${pfx}help (command) to see help about a command.`,
         url: "https://allydiscord.github.io/commands/categories/utility.html",
 		color: 0x0099FF,
 		thumbnail: {
@@ -60,25 +60,25 @@ exports.utility = message => {
 		},
         fields: [
             {
-                name: `${prefix}help/? [category|command]`,
+                name: `${pfx}help/? [category|command]`,
 				value: "Send an embed that gives information about commands."
             },
             {
-                name: `${prefix}about [info]`,
-                value: `Send an embed that gives information about ${name}.`
+                name: `${pfx}about [info]`,
+                value: `Send an embed that gives information about ${nme}.`
             },
             {
-                name: `${prefix}settings/sets/set (user|server) (setting) [value]`,
+                name: `${pfx}settings/sets/set (user|server) (setting) [value]`,
                 value: "Change settings for yourself or the current server."
             },
             {
-                name: `${prefix}feedback (feedback) | ${prefix}fb ...`,
-                value: `Send feedback to the developers of ${name}.`
+                name: `${pfx}feedback (feedback) | ${pfx}fb ...`,
+                value: `Send feedback to the developers of ${nme}.`
             }
 		],
 		timestamp: new Date(),
         footer: {
-			text: `Requested by ${message.author.username} | ${name} v(non-production)`,
+			text: `Requested by ${message.author.username} | ${nme} v(non-production)`,
 			icon_url: message.author.avatarURL()
         }
     });
@@ -87,7 +87,7 @@ exports.utility = message => {
 exports.moderation = message => {
 	return({
         title: "Moderation Commands | Help",
-        description: `Use ${prefix}help (command) to see help about a command.`,
+        description: `Use ${pfx}help (command) to see help about a command.`,
         url: "https://allydiscord.github.io/commands/moderation/index.html",
 		color: 0x0099FF,
 		thumbnail: {
@@ -95,17 +95,17 @@ exports.moderation = message => {
 		},
         fields: [
             {
-                name: `${prefix}warn (user) (reason) | ${prefix}! ...`,
+                name: `${pfx}warn (user) (reason) | ${pfx}! ...`,
 				value: "Warn a user for something, such as breaking a rule."
             },
             {
-                name: `${prefix}permissions (user|role) (permission) [value] | ${prefix}perms ... | ${prefix}perm ...`,
+                name: `${pfx}permissions (user|role) (permission) [value] | ${pfx}perms ... | ${pfx}perm ...`,
                 value: "Manage permissions for a server's roles/users."
             }
 		],
 		timestamp: new Date(),
         footer: {
-			text: `Requested by ${message.author.username} | ${name} v(non-production)`,
+			text: `Requested by ${message.author.username} | ${nme} v(non-production)`,
 			icon_url: message.author.avatarURL()
         }
 	})
@@ -114,7 +114,7 @@ exports.moderation = message => {
 exports.command = {}
 exports.command.warn = message => {
 	return({
-		title: `${prefix}warn (user) (reason) | ${prefix}! (user) (reason)`,
+		title: `${pfx}warn (user) (reason) | ${pfx}! (user) (reason)`,
 		description: `Warn, or strike, a user (mentioned in the command) for a reason (such as breaking a rule).`,
 		url: "https://allydiscord.github.io/commands/moderation/warn.html",
 		color: 0x0099FF,
@@ -141,7 +141,7 @@ exports.command.warn = message => {
 
 exports.command.permissions = message => {
 	return({
-		title: `${prefix}permissions (user|role) (permission) [value]`,
+		title: `${pfx}permissions (user|role) (permission) [value]`,
 		description: `Manage permissions for a user or role.`,
 		url: "https://allydiscord.github.io/commands/moderation/permissions.html",
 		color: 0x0099FF,
@@ -150,21 +150,21 @@ exports.command.permissions = message => {
 		},
 		fields: [
 			{
-				title: "user|role - User or role in the server.",
+				name: "user|role - User or role in the server.",
 				value: "**Required.**  The user or role to manage the permission of."
 			},
 			{
-				title: "permission - Permission to change.",
+				name: "permission - Permission to change.",
 				value: "**Required.** The permission to change (found at permissions page)"
 			},
 			{
-				title: "value - The value to set the permission to.",
+				name: "value - The value to set the permission to.",
 				value: "**Optional.**  Omit to see the value the permission is currently set to."
 			}
 		],
 		timestamp: new Date(),
 		footer: {
-			text: `Requested by ${message.author.username} | ${name} v(non-production)`,
+			text: `Requested by ${message.author.username} | ${nme} v(non-production)`,
 			icon_url: message.author.avatarURL()
 		}
 	})
