@@ -71,7 +71,7 @@ bot.on("message", (msg) => {
         } else {
             let feedback = args[0];
             let i = false;
-            for (arg in args) {
+            for (const arg in args) {
                 if (!i) { i = true; } else {
                     feedback = feedback.concat(" ").concat(args[arg]);
                 }
@@ -84,8 +84,11 @@ bot.on("message", (msg) => {
     }
 });
 
+bot.on( "error", error => {
+    console.error(`An error occoured, here's what happened:\n\n${error}`);
+});
+
 bot.login(token).catch( error => {
-    console.log("There was a problem logging into Discord, most likley a bad token or network connection.\
+    console.error("There was a problem logging into Discord, most likley a bad token or network connection.\
 \nThis is what we got from Discord.JS:\n\n\"".concat(error).concat("\""));
-    process.exit(-1);
 });
