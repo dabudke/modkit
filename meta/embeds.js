@@ -202,5 +202,28 @@ exports.command.help = message => {
 			text: `Requested by ${message.author.username} | ${nme} v(non-production)`,
 			icon_url: message.author.avatarURL()
 		}
-	})
+	});
+}
+
+exports.command.about = message => {
+	return({
+		title: `${pfx}about [meta]`,
+		description: `Get information about ${nme} and the developers.`,
+		url: "https://allydiscord.github.io/commands/utility/about.html",
+		color: 0x0099FF,
+		thumbnail: {
+			url: "https://imgur.com/YVRMcUD.png"
+		},
+		fields: [
+			{
+				name: 'meta - Meta to get information about.',
+				value: '**Optional**  Type a category of meta information to get more information on the topic.'
+			}
+		],
+		timestamp: new Date(),
+		footer: {
+			text: `Requested by ${message.author.username} | ${nme} v(non-production)`,
+			icon_url: message.author.avatarURL()
+		}
+	});
 }

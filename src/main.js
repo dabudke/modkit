@@ -54,6 +54,10 @@ bot.on("message", (msg) => {
                 msg.channel.send({ embed: embeds.command.help(msg) });
                 break;
             
+            case "about":
+                msg.channel.send({ embed: embeds.command.about(msg) });
+                break;
+            
             default:
                 msg.channel.send({ embed: embeds.help(msg) });
         }
