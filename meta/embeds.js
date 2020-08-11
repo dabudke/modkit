@@ -114,7 +114,7 @@ exports.moderation = message => {
 exports.command = {}
 exports.command.warn = message => {
 	return({
-		title: `${pfx}warn (user) (reason) | ${pfx}! (user) (reason)`,
+		title: `${pfx}warn (user) (reason)`,
 		description: `Warn, or strike, a user (mentioned in the command) for a reason (such as breaking a rule).`,
 		url: "https://allydiscord.github.io/commands/moderation/warn.html",
 		color: 0x0099FF,
@@ -129,6 +129,10 @@ exports.command.warn = message => {
 			{
 				name: `reason - Reason for the strike.`,
 				value: `**Required**  The reason for the strike against the user.`
+			},
+			{
+				name: "Shorthand Commands:",
+				value: `${pfx}?`
 			}
 		],
 		timestamp: new Date(),
@@ -160,6 +164,10 @@ exports.command.permissions = message => {
 			{
 				name: "value - The value to set the permission to.",
 				value: "**Optional.**  Omit to see the value the permission is currently set to."
+			},
+			{
+				name: "Shorthands:",
+				value: `${pfx}perms, ${pfx}perm`
 			}
 		],
 		timestamp: new Date(),
@@ -172,7 +180,7 @@ exports.command.permissions = message => {
 
 exports.command.help = message => {
 	return({
-		title: `${pfx}help [command|category] | ${pfx}? [command|category]`,
+		title: `${pfx}help [command|category]`,
 		description: `Get help for different commands, or command categories.`,
 		url: "https://allydiscord.github.io/commands/utility/help.html",
 		color: 0x0099FF,
@@ -183,6 +191,10 @@ exports.command.help = message => {
 			{
 				name: "value - The value to set the permission to.",
 				value: "**Optional.**  Omit to see the value the permission is currently set to."
+			},
+			{
+				name: "Shorthand Command:",
+				value: `${pfx}?`
 			}
 		],
 		timestamp: new Date(),
