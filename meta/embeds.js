@@ -38,7 +38,7 @@ ${pfx}permissions (${pfx}perms/${pfx}perm) - Manage server permissions`
 				value: `${pfx}help (${pfx}?) - Sends this embed.
 ${pfx}about - Returns information about Ally.
 ${pfx}settings (${pfx}sets/${pfx}set) - Change server/user settings.
-${pfx}feedback (${pfx}fb) - Send feedback to the developers.`
++2 commands`
 			}
 		],
 		timestamp: new Date(),
