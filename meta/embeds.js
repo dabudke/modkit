@@ -169,3 +169,26 @@ exports.command.permissions = message => {
 		}
 	})
 }
+
+exports.command.help = message => {
+	return({
+		title: `${pfx}help [command|category] | ${pfx}? [command|category]`,
+		description: `Get help for different commands, or command categories.`,
+		url: "https://allydiscord.github.io/commands/utility/help.html",
+		color: 0x0099FF,
+		thumbnail: {
+			url: "https://imgur.com/YVRMcUD.png"
+		},
+		fields: [
+			{
+				name: "value - The value to set the permission to.",
+				value: "**Optional.**  Omit to see the value the permission is currently set to."
+			}
+		],
+		timestamp: new Date(),
+		footer: {
+			text: `Requested by ${message.author.username} | ${nme} v(non-production)`,
+			icon_url: message.author.avatarURL()
+		}
+	})
+}

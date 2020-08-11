@@ -49,6 +49,11 @@ bot.on("message", (msg) => {
                 msg.channel.send({ embed: embeds.command.permissions(msg) });
                 break;
             
+            case "help":
+            case "?":
+                msg.channel.send({ embed: embeds.command.help(msg) });
+                break;
+            
             default:
                 msg.channel.send({ embed: embeds.help(msg) });
         }
