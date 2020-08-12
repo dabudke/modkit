@@ -131,7 +131,7 @@ exports.command.warn = message => {
 				value: `**Required**  The reason for the strike against the user.`
 			},
 			{
-				name: "Shorthand Commands:",
+				name: "Alternate Commands:",
 				value: `${pfx}?`
 			}
 		],
@@ -166,7 +166,7 @@ exports.command.permissions = message => {
 				value: "**Optional.**  Omit to see the value the permission is currently set to."
 			},
 			{
-				name: "Shorthands:",
+				name: "Alternate Commands:",
 				value: `${pfx}perms, ${pfx}perm`
 			}
 		],
@@ -193,7 +193,7 @@ exports.command.help = message => {
 				value: "**Optional.**  Omit to see the value the permission is currently set to."
 			},
 			{
-				name: "Shorthand Command:",
+				name: "Alternate Command:",
 				value: `${pfx}?`
 			}
 		],
