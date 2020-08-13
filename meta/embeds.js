@@ -276,6 +276,10 @@ exports.command.feedback = message => {
 			{
 				name: "feedback - Feedback to give.",
 				value: "**Required.**  Feedback to send to the authors."
+			},
+			{
+				name: "Alternate Command:",
+				value: `${pfx}fb`
 			}
 		],
 		timestamp: new Date(),
