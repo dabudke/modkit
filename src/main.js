@@ -69,6 +69,10 @@ bot.on("message", (msg) => {
             case "fb":
                 msg.channel.send({ embed: embeds.command.feedback(msg) });
                 break;
+
+            case "ping":
+                msg.channel.send({ embed: embeds.command.ping(msg) });
+                break;
             
             default:
                 msg.channel.send({ embed: embeds.help(msg) });
