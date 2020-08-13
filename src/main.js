@@ -64,6 +64,11 @@ bot.on("message", (msg) => {
             case "set":
                 msg.channel.send({ embed: embeds.command.settings(msg) });
                 break;
+
+            case "feedback":
+            case "fb":
+                msg.channel.send({ embed: embeds.command.feedback(msg) });
+                break;
             
             default:
                 msg.channel.send({ embed: embeds.help(msg) });
