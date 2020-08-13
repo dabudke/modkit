@@ -66,5 +66,3 @@ To begin self-hosting, follow these steps:
  dependencies.
 8. Run `npm test` to test the bot and make sure it works.
 9. Run `npm start` to start the bot.
-
-*Non-release Codebase.*
