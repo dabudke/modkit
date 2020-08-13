@@ -10,7 +10,7 @@
 	fields: [],
 	timestamp: new Date(),
 	footer: {
-		text: `Requested by {message author} | {bot name} v(non-production)`,
+		text: `Requested by {message author} | {bot name} v{version}`,
 		icon_url: {message profile picture link}
 	}
 }
@@ -43,7 +43,7 @@ ${pfx}settings (${pfx}sets/${pfx}set) - Change server/user settings.
 		],
 		timestamp: new Date(),
         footer: {
-			text: `Requested by ${message.author.username} | ${nme} v(non-production)`,
+			text: `Requested by ${message.author.username} | ${nme} v${vrs}`,
 			icon_url: message.author.avatarURL()
         }
 	});
@@ -78,7 +78,7 @@ exports.utility = message => {
 		],
 		timestamp: new Date(),
         footer: {
-			text: `Requested by ${message.author.username} | ${nme} v(non-production)`,
+			text: `Requested by ${message.author.username} | ${nme} v${vrs}`,
 			icon_url: message.author.avatarURL()
         }
     });
@@ -105,7 +105,7 @@ exports.moderation = message => {
 		],
 		timestamp: new Date(),
         footer: {
-			text: `Requested by ${message.author.username} | ${nme} v(non-production)`,
+			text: `Requested by ${message.author.username} | ${nme} v${vrs}`,
 			icon_url: message.author.avatarURL()
         }
 	})
@@ -137,7 +137,7 @@ exports.command.warn = message => {
 		],
 		timestamp: new Date(),
 		footer: {
-			text: `Requested by ${message.author.name} | Ally v(non-production)`,
+			text: `Requested by ${message.author.name} | ${nme} v${vrs}`,
 			icon_url: message.author.avatarURL()
 		}
 	})
@@ -172,7 +172,7 @@ exports.command.permissions = message => {
 		],
 		timestamp: new Date(),
 		footer: {
-			text: `Requested by ${message.author.username} | ${nme} v(non-production)`,
+			text: `Requested by ${message.author.username} | ${nme} v${vrs}`,
 			icon_url: message.author.avatarURL()
 		}
 	})
@@ -199,7 +199,7 @@ exports.command.help = message => {
 		],
 		timestamp: new Date(),
 		footer: {
-			text: `Requested by ${message.author.username} | ${nme} v(non-production)`,
+			text: `Requested by ${message.author.username} | ${nme} v${vrs}`,
 			icon_url: message.author.avatarURL()
 		}
 	});
@@ -222,7 +222,7 @@ exports.command.about = message => {
 		],
 		timestamp: new Date(),
 		footer: {
-			text: `Requested by ${message.author.username} | ${nme} v(non-production)`,
+			text: `Requested by ${message.author.username} | ${nme} v${vrs}`,
 			icon_url: message.author.avatarURL()
 		}
 	});
@@ -257,7 +257,7 @@ exports.command.settings = message => {
 		],
 		timestamp: new Date(),
 		footer: {
-			text: `Requested by ${message.author.username} | ${nme} v(non-production)`,
+			text: `Requested by ${message.author.username} | ${nme} v${vrs}`,
 			icon_url: message.author.avatarURL()
 		}
 	});
