@@ -15,7 +15,7 @@
 	}
 }
 */
-const { prefix: pfx, name: nme } = require("../meta/about.json");
+const { prefix: pfx, name: nme, version: vrs } = require("../meta/about.json");
 
 exports.help = message => {
 	return ({
@@ -261,4 +261,27 @@ exports.command.settings = message => {
 			icon_url: message.author.avatarURL()
 		}
 	});
+}
+
+exports.command.feedback = message => {
+	return({
+		title: `${pfx}feedback (feedback)`,
+		description: `Send feedback to the developers of ${nme}.`,
+		url: "https://allydiscord.github.io/commands/utility/feedback.html",
+		color: 0x0099FF,
+		thumbnail: {
+			url: "https://imgur.com/YVRMcUD.png"
+		},
+		fields: [
+			{
+				name: "feedback - Feedback to give.",
+				value: "**Required.**  Feedback to send to the authors."
+			}
+		],
+		timestamp: new Date(),
+		footer: {
+			text: `Requested by ${message.author.username} | ${nme} v${vrs}`,
+			icon_url: message.author.avatarURL
+		}
+	})
 }
