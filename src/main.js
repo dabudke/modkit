@@ -12,9 +12,18 @@ const bot = new Discord.Client();
 
 // declare variables
 
-bot.on("ready", () => {
+bot.once("ready", () => {
     console.log(`Logged in and connected to Discord (Username: ${bot.user.tag})`);
     bot.user.setPresence( require(require.main.filename).presence );
+
+    console.log("Adding new servers to database.")
+    for ( var i in bot.guilds.cache.array() ) {
+        if ( !db.serverDb[bot.guilds.cache.array()[i].id] ) {
+            db.serverDb[bot.guilds.cache.array()[i].id] = db.serverDb.default;
+            console.log(`Adding new server ${bot.guilds.cache.array()[i].name} to server database.`)
+        }
+    }
+    console.log("New servers added.");
 })
 
 bot.on("message", (msg) => {
