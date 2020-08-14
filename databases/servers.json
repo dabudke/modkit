@@ -9,24 +9,26 @@
                 "logging": {
                     "join": null,
                     "leave": null,
-                    "nickChange": null,
-                    "ban": null,
-                    "unban": null,
-                    "kick": null
+                    "nickChange": null
                 },
                 "modlogging": {
-                    "join": null,
-                    "leave": null,
                     "nickChange": null,
+                    "msgDelete": null,
+                    "msgEdit": null,
+                    "warn": null,
+                    "mute": null,
+                    "unmute": null,
+                    "kick": null,
+                    "tempban": null,
                     "ban": null,
                     "unban": null,
-                    "kick": null
+                    "historyClear": null
                 }
             },
             "responses": {
                 "help": true
             }
         },
-        "warnings": {}
+        "modHistory": {}
     }
 }
