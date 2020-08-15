@@ -1,11 +1,15 @@
 function writeDatabases() {
-    console.log("Writing databases, please wait...");
+    if ( require('./users.json') !== exports.userDb ) {
+        fs.writeFileSync( "./databases/users.json", JSON.stringify( exports.userDb, 0, 4, null) );
+    }
 
-    fs.writeFileSync( "./databases/users.json", JSON.stringify( exports.userDb, 0, 4, null) );
-    fs.writeFileSync( "./databases/servers.json", JSON.stringify( exports.serverDb, 0, 4, null) );
-    fs.writeFileSync( "./databases/feedback.json", JSON.stringify( exports.feedbackDb, 0, 4, null) );
-    
-    console.log("Writing complete.");
+    if ( require('./servers.json') !== exports.serverDb ) {
+        fs.writeFileSync( "./databases/servers.json", JSON.stringify( exports.serverDb, 0, 4, null) );
+    }
+
+    if ( require('./feedback.json') !== exports.feedbackDb ) {
+        fs.writeFileSync( "./databases/feedback.json", JSON.stringify( exports.feedbackDb, 0, 4, null) );
+    }
 }
 
 const fs = require("fs");
