@@ -103,9 +103,105 @@ bot.on("message", (msg) => {
             break;
         
         case "warn":
-        case "!":
-            // warn command
+        case "!": {
+            /* commented out because role permissions aren't configurable yet. */
+            // i'll do my best to explain
+            // if guild member...                           does not have role permitted to use...                                                                         warn command, then
+            //if ( !msg.guild.members.cache.get(msg.author.id).roles.cache.get( db.serverDb[msg.guild.id].settings.moderation.permissions.modRoles[db.serverDb[msg.guild.id].settings.moderation.permissions.warn] ) ) {
+            // if guild member...                           doesn't have administrator permission, then
+            if ( !msg.guild.members.cache.get(msg.author.id).hasPermission("ADMINISTRATOR") ) {
+                // let user know that they don't have permission to use the command
+                msg.reply("you do not have permission to use this command!");
+                // exit
+                break;
+            }
+            //}
+            
+            // check if first argument is anything
+            if ( !args[0] ) { msg.reply("please mention a user!"); break; }
+            // check if argument 0 is a valid mention
+            if ( !args[0].startsWith('<@') && !args[0].endsWith('>') ) { msg.reply("please mention a user!"); break; }
+
+            // get user GUILD id from mention
+            const fullUserId = args[0].slice(2, -1);
+            // get user id from guild id
+            const userId = fullUserId.startsWith('!') ? fullUserId.slice(1) : fullUserId;
+            // get user cache (unused for now)
+            //const userCache = bot.users.cache;
+
+            // prevent the user from warning themself
+            if ( userId === msg.author.id ) {
+                msg.reply("you can't warn yourself!")
+                break;
+            }
+            // make sure user is in server
+            if ( !bot.guilds.cache.get(msg.guild.id).members.cache.get(userId) ) {
+                msg.reply("that person is not in this server!")
+                break;
+            }
+
+            /* warn user */
+            // if user doesn't have a moderation history
+            if ( !db.serverDb[msg.guild.id].modHistory[userId] ) {
+                // add one
+                db.serverDb[msg.guild.id].modHistory[userId] = {};
+                // go ahead and add a warning history as well
+                db.serverDb[msg.guild.id].modHistory[userId].warnings = [];
+            // if the user just doesn't have a warning history
+            } else if ( !db.serverDb[msg.guild.id].modHistory[userId].warnings ) {
+                // add a warning history
+                db.serverDb[msg.guild.id].modHistory[userId].warnings = [];
+            }
+
+            let reason;
+            if (args[1]) {
+                // concatenate reason
+                for ( var arg in args ) {
+                    if ( !arg == 0 ) {
+                        if ( arg == 1 ) { reason = args[arg] } else {
+                            reason += " ".concat(args[arg]);
+                        }
+                    }
+    
+                }
+            }
+
+
+            // Add a warning
+            db.serverDb[msg.guild.id].modHistory[userId].warnings.push({
+                reason: reason,
+                user: {
+                    name: msg.author.username,
+                    avatar: msg.author.avatarURL()
+                }
+            });
+
+            // send response to user
+            if (reason) {
+                msg.channel.send(`User <@${userId}> has been warned for ${reason} by ${msg.author.username}.`);
+            } else {
+                msg.channel.send(`User <@${fullUserId}> has been warned by ${msg.author.username}`);
+            }
+
+            // send warning log to log channel
+            /* you can't config log channels yet, so commented out.
+            msg.channel.send(new Discord.MessageEmbed()
+                .setAuthor(
+                    userCache.get(userId).username.concat('#').concat(bot.users.cache.get(userId).discriminator).concat(" has been warned."),
+                    bot.users.cache.get(userId).avatarURL()
+                )
+                .setTitle("User has been warned.")
+                .setDescription("warning reason")
+                .setColor("#ff9900")
+                .setFooter(
+                    `Warned by ${msg.author.username} | User has ${db.serverDb[msg.guild.id].modHistory[userId].warnings} warnings.`,
+                    msg.author.avatarURL()
+                )
+                .setTimestamp(new Date())
+            ); */
+
             break;
+        }
 
         case "permissions":
         case "perms":
