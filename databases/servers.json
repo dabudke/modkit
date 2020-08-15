@@ -4,31 +4,78 @@
             "points": {
                 "announcementChannel": null
             },
-            "channels": {
-                "announcements": null,
-                "logging": {
-                    "join": null,
-                    "leave": null,
-                    "nickChange": null
-                },
-                "modlogging": {
-                    "nickChange": null,
-                    "msgDelete": null,
-                    "msgEdit": null,
-                    "warn": null,
-                    "mute": null,
-                    "unmute": null,
-                    "kick": null,
-                    "tempban": null,
-                    "ban": null,
-                    "unban": null,
-                    "historyClear": null
-                }
+            "announcementChannel": null,
+            "usermodChannel": {
+                "join": null,
+                "leave": null,
+                "nickChange": null
             },
-            "responses": {
-                "help": true
+            "moderation": {
+                "logging": {
+                    "nickChange": [
+                        null,
+                        false
+                    ],
+                    "msgDelete": [
+                        null,
+                        false
+                    ],
+                    "msgMassDelete": [
+                        null,
+                        false
+                    ],
+                    "msgEdit": [
+                        null,
+                        false
+                    ],
+                    "warn": [
+                        null,
+                        false
+                    ],
+                    "mute": [
+                        null,
+                        false
+                    ],
+                    "unmute": [
+                        null,
+                        false
+                    ],
+                    "kick": [
+                        null,
+                        false
+                    ],
+                    "tempban": [
+                        null,
+                        false
+                    ],
+                    "ban": [
+                        null,
+                        false
+                    ],
+                    "unban": [
+                        null,
+                        false
+                    ],
+                    "historyClear": [
+                        null,
+                        false
+                    ]
+                },
+                "permissions": {
+                    "modRoles": [],
+                    "massDelete": 1,
+                    "warn": 1,
+                    "mute": 1,
+                    "unmute": 1,
+                    "kick": 1,
+                    "tempban": 1,
+                    "ban": 1,
+                    "unban": 1,
+                    "historyClear": 1
+                }
             }
         },
-        "modHistory": {}
+        "modHistory": {},
+        "tempPunishments": {}
     }
 }
