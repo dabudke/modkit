@@ -166,8 +166,7 @@ bot.on("message", (msg) => {
                 }
             }
 
-
-            // Add a warning
+            // add a warning
             db.serverDb[msg.guild.id].modHistory[userId].warnings.push({
                 reason: reason,
                 user: {
@@ -183,8 +182,8 @@ bot.on("message", (msg) => {
                 msg.channel.send(`User <@${fullUserId}> has been warned by ${msg.author.username}`);
             }
 
+            /* log channels aren't configurable, on hold until settings command is completed
             // send warning log to log channel
-            /* you can't config log channels yet, so commented out.
             msg.channel.send(new Discord.MessageEmbed()
                 .setAuthor(
                     userCache.get(userId).username.concat('#').concat(bot.users.cache.get(userId).discriminator).concat(" has been warned."),
