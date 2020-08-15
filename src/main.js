@@ -202,12 +202,6 @@ bot.on("message", (msg) => {
             break;
         }
 
-        case "permissions":
-        case "perms":
-        case "perm":
-            // permission command
-            break;
-
         case "feedback":
         case "fb":
             if ( args[0] === undefined ) {
