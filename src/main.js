@@ -99,11 +99,18 @@ bot.on("message", (msg) => {
         case "setting":
         case "sets":
         case "set":{
+            // check permissions
+            var perms = db.serverDb.default.settings.moderation.permissions;
+            if ( !msg.guild.members.cache.get(msg.author.id).roles.cache.get( perms.modRoles[perms.viewSettings] ) ) {
+                if ( !msg.guild.members.cache.get(msg.author.id).hasPermission("MANAGE_GUILD") ) {
+                    msg.reply("you do not have permission to use that command.");
+                    break;
+                }
+            }
+
             // parse setting
-            let setting = args[0].split(/\./g);
+            let setting = args[0] ? args[0].split(/\./g) : [];
             let dbObj = db.serverDb[msg.guild.id].settings;
-            console.log(setting);
-            console.log(dbObj);
             for ( var i in setting ) {
                 if ( !dbObj[setting[i]] ) {
                     msg.reply("that setting does not exist.");
