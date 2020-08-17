@@ -98,9 +98,23 @@ bot.on("message", (msg) => {
         case "settings":
         case "setting":
         case "sets":
-        case "set":
-            // settings command
+        case "set":{
+            // parse setting
+            let setting = args[0].split(/\./g);
+            let dbObj = db.serverDb[msg.guild.id].settings;
+            console.log(setting);
+            console.log(dbObj);
+            for ( var i in setting ) {
+                if ( !dbObj[setting[i]] ) {
+                    msg.reply("that setting does not exist.");
+                    return;
+                } else {
+                    dbObj = dbObj[setting[i]];
+                }
+            }
+
             break;
+        }
         
         case "warn":
         case "!": {
