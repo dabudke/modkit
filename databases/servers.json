@@ -71,7 +71,10 @@
                     "tempban": 1,
                     "ban": 1,
                     "unban": 1,
-                    "historyClear": 1
+                    "viewHistory": 1,
+                    "clearHistory": 1,
+                    "viewSettings": 1,
+                    "editSettings": 1
                 }
             }
         },
