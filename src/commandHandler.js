@@ -4,7 +4,7 @@ let commands = require("./commands/index");
 exports.handle = ( cmd, args, bot, msg, db, embeds ) => {
     switch (cmd) {
         case "ping":
-            commands.ping.execute(bot, msg);
+            commands.ping.execute(msg);
             break;
 
         case "help":
