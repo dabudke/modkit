@@ -1,81 +1,150 @@
 {
     "default": {
         "settings": {
-            "points": {
-                "announcementChannel": null
+            "pointNotifications": {
+                "value": null,
+                "type": "CHANNEL",
+                "description": "Where to announce level-ups in the server."
             },
-            "announcementChannel": null,
-            "usermodChannel": {
-                "join": null,
-                "leave": null,
-                "nickChange": null
+            "announcementChannel": {
+                "value": null,
+                "type": "CHANNEL",
+                "description": "Where announcements using `^announce` will go."
             },
-            "moderation": {
-                "logging": {
-                    "nickChange": [
-                        null,
-                        false
-                    ],
-                    "msgDelete": [
-                        null,
-                        false
-                    ],
-                    "msgMassDelete": [
-                        null,
-                        false
-                    ],
-                    "msgEdit": [
-                        null,
-                        false
-                    ],
-                    "warn": [
-                        null,
-                        false
-                    ],
-                    "mute": [
-                        null,
-                        false
-                    ],
-                    "unmute": [
-                        null,
-                        false
-                    ],
-                    "kick": [
-                        null,
-                        false
-                    ],
-                    "tempban": [
-                        null,
-                        false
-                    ],
-                    "ban": [
-                        null,
-                        false
-                    ],
-                    "unban": [
-                        null,
-                        false
-                    ],
-                    "historyClear": [
-                        null,
-                        false
-                    ]
-                },
-                "permissions": {
-                    "modRoles": [],
-                    "massDelete": 1,
-                    "warn": 1,
-                    "mute": 1,
-                    "unmute": 1,
-                    "kick": 1,
-                    "tempban": 1,
-                    "ban": 1,
-                    "unban": 1,
-                    "viewHistory": 1,
-                    "clearHistory": 1,
-                    "viewSettings": 1,
-                    "editSettings": 1
-                }
+            "userJoinNotifications": {
+                "value": null,
+                "type": "CHANNEL",
+                "description": "Where to send user join notifications."
+            },
+            "userLeaveNotifications": {
+                "value": null,
+                "type": "CHANNEL",
+                "description": "Where to send user leave notifications."
+            },
+            "userNickChangeNotifications": {
+                "value": null,
+                "type": "CHANNEL",
+                "description": "Where to send nickname change notifications."
+            },
+            "userNickChangeLogs": {
+                "value": null,
+                "type": "CHANNEL",
+                "description": "Where to send nickname change logs."
+            },
+            "msgDeleteLogs": {
+                "value": null,
+                "type": "CHANNEL",
+                "description": "Where to send message delete logs."
+            },
+            "msgMassDeleteLogs": {
+                "value": null,
+                "type": "CHANNEL",
+                "description": "Where to send message mass delete logs."
+            },
+            "msgEditLogs": {
+                "value": null,
+                "type": "CHANNEL",
+                "description": "Where to send message edit logs."
+            },
+            "userWarnLogs": {
+                "value": null,
+                "type": "CHANNEL",
+                "description": "Where to send user warn logs."
+            },
+            "userMuteLogs": {
+                "value": null,
+                "type": "CHANNEL",
+                "description": "Where to send user mute logs."
+            },
+            "userUnmuteLogs": {
+                "value": null,
+                "type": "CHANNEL",
+                "description": "Where to send user unmute logs."
+            },
+            "userKickLogs": {
+                "value": null,
+                "type": "CHANNEL",
+                "description": "Where to send user kick logs."
+            },
+            "userBanLogs": {
+                "value": null,
+                "type": "CHANNEL",
+                "description": "Where to send user ban logs."
+            },
+            "userUnbanLogs": {
+                "value": null,
+                "type": "CHANNEL",
+                "description": "Where to send user unban logs."
+            },
+            "userHistoryClearLogs": {
+                "value": null,
+                "type": "CHANNEL",
+                "description": "Where to send user history clear logs."
+            },
+            "permissionTiers": {
+                "value": null,
+                "type": "ROLELIST",
+                "description": "Tier list of role permissions"
+            },
+            "massDeletePermLevel": {
+                "value": null,
+                "type": "PERM",
+                "description": "Permission level required to execute `delete` command."
+            },
+            "warnPermLevel": {
+                "value": null,
+                "type": "PERM",
+                "description": "Permission level requred to execute `warn` command."
+            },
+            "mutePermLevel": {
+                "value": null,
+                "type": "PERM",
+                "description": "Permission level required to execute `mute` command."
+            },
+            "unmute": {
+                "value": null,
+                "type": "PERM",
+                "description": "Permission level required to execute `unmute` command."
+            },
+            "kick": {
+                "value": null,
+                "type": "PERM",
+                "description": "Permission level required to execute `kick` command."
+            },
+            "tempban": {
+                "value": null,
+                "type": "PERM",
+                "description": "Permission level required to execute `tempban` command."
+            },
+            "ban": {
+                "value": null,
+                "type": "PERM",
+                "description": "Permission level required to execute `ban` command."
+            },
+            "unban": {
+                "value": null,
+                "type": "PERM",
+                "description": "Permission level required to execute `unban` command."
+            },
+            "viewHistory": {
+                "value": null,
+                "type": "PERM",
+                "description": "Permission level required to execute `history` command."
+            },
+            "clearHistory": {
+                "value": null,
+                "type": "PERM",
+                "description": "Permission level required to clear history of a user."
+            },
+            "viewSettings": {
+                "value": null,
+                "type": "PERM",
+                "description": "Permission level required to view setting values."
+            },
+            "editSettings": {
+                "value": null,
+                "type": "PERM",
+                "description": "Permission level required to change setting values."
             }
         },
         "modHistory": {},
