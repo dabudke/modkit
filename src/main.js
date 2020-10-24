@@ -1,12 +1,12 @@
 // get libraries and modules
 const Discord = require("discord.js");
-const db = require("../databases/manager");
+const db = require("./databases/manager");
 const cmdHandler = require("./commandHandler");
 
 // get meta files
 const token = require(require.main.filename).token;
-const about = require("../meta/about.json");
-const embeds = require("../meta/embeds");
+const about = require("./meta/about.json");
+const embeds = require("./meta/embeds");
 
 // declare clients
 const bot = new Discord.Client();
