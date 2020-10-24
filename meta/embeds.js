@@ -262,30 +262,3 @@ exports.command.settings = message => {
 		}
 	});
 }
-
-exports.command.feedback = message => {
-	return({
-		title: `${pfx}feedback (feedback)`,
-		description: `Send feedback to the developers of ${nme}.`,
-		url: "https://allydiscord.github.io/docs/commands/utility/feedback/",
-		color: 0x0099FF,
-		thumbnail: {
-			url: "https://imgur.com/YVRMcUD.png"
-		},
-		fields: [
-			{
-				name: "feedback - Feedback to give.",
-				value: "**Required.**  Feedback to send to the authors."
-			},
-			{
-				name: "Alternate Command:",
-				value: `${pfx}fb`
-			}
-		],
-		timestamp: new Date(),
-		footer: {
-			text: `Requested by ${message.author.username} | ${nme} v${vrs}`,
-			icon_url: message.author.avatarURL
-		}
-	})
-}
