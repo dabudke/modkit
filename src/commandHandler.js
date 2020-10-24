@@ -50,7 +50,7 @@ exports.handle = ( cmd, args, bot, msg, db, embeds ) => {
                     break;
 
                 case "ping":
-                    msg.channel.send({ embed: ping.helpEmbed(msg) });
+                    msg.channel.send({ embed: commands.ping.helpEmbed(msg) });
                     break;
                 
                 default:
