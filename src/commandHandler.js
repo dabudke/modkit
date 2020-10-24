@@ -1,3 +1,4 @@
+const about = require("../meta/about.json")
 let commands = require("./commands/index");
 
 exports.handle = ( cmd, args, bot, msg, db, embeds ) => {
@@ -46,7 +47,7 @@ exports.handle = ( cmd, args, bot, msg, db, embeds ) => {
 
                 case "feedback":
                 case "fb":
-                    msg.channel.send({ embed: embeds.command.feedback(msg) });
+                    msg.channel.send({ embed: commands.feedback.helpEmbed(msg) });
                     break;
 
                 case "ping":
@@ -190,19 +191,7 @@ exports.handle = ( cmd, args, bot, msg, db, embeds ) => {
 
         case "feedback":
         case "fb":
-            if ( args[0] === undefined ) {
-                msg.reply("you can submit feedback to the developers of Ally!  Put your feedback after `feedback` or `fb` to submit feedback.");
-            } else {
-                let feedback = args[0];
-                let i = false;
-                for (const arg in args) {
-                    if (!i) { i = true; } else {
-                        feedback = feedback.concat(" ").concat(args[arg]);
-                    }
-                }
-                db.feedbackDb.push(feedback);
-                msg.reply("thanks for submitting feedback!  Your feedback is important, so keep submitting feedback as needed!");
-            }
+            commands.feedback.execute(msg, args, db);
             break;
 
         default:
