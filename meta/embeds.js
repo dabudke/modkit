@@ -22,7 +22,7 @@ exports.help = message => {
 		title: "Help",
         description: `Use \`${pfx}help (category)\` to see all commands in category, or use \
 ${pfx}help (command) to see the usage of a command.`,
-		url: "https://allydiscord.github.io/commands/index.html",
+		url: "https://allydiscord.github.io/docs/commands/",
 		color: 0x0099FF,
 		thumbnail: {
 			url: "https://imgur.com/YVRMcUD.png"
@@ -53,7 +53,7 @@ exports.utility = message => {
     return({
         title: "Utility Commands | Help",
         description: `Use ${pfx}help (command) to see help about a command.`,
-        url: "https://allydiscord.github.io/commands/categories/utility.html",
+        url: "https://allydiscord.github.io/docs/commands/utility/",
 		color: 0x0099FF,
 		thumbnail: {
 			url: "https://imgur.com/YVRMcUD.png"
@@ -88,7 +88,7 @@ exports.moderation = message => {
 	return({
         title: "Moderation Commands | Help",
         description: `Use ${pfx}help (command) to see help about a command.`,
-        url: "https://allydiscord.github.io/commands/moderation/index.html",
+        url: "https://allydiscord.github.io/docs/commands/moderation/",
 		color: 0x0099FF,
 		thumbnail: {
 			url: "https://imgur.com/YVRMcUD.png"
@@ -116,7 +116,7 @@ exports.command.warn = message => {
 	return({
 		title: `${pfx}warn (user) (reason)`,
 		description: `Warn, or strike, a user (mentioned in the command) for a reason (such as breaking a rule).`,
-		url: "https://allydiscord.github.io/commands/moderation/warn.html",
+		url: "https://allydiscord.github.io/docs/commands/moderation/warn/",
 		color: 0x0099FF,
 		thumbnail: {
 			url: "https://imgur.com/YVRMcUD.png"
@@ -147,7 +147,7 @@ exports.command.permissions = message => {
 	return({
 		title: `${pfx}permissions (user|role) (permission) [value]`,
 		description: `Manage permissions for a user or role.`,
-		url: "https://allydiscord.github.io/commands/moderation/permissions.html",
+		url: "https://allydiscord.github.io/docs/commands/moderation/permissions/",
 		color: 0x0099FF,
 		thumbnail: {
 			url: "https://imgur.com/YVRMcUD.png"
@@ -182,7 +182,7 @@ exports.command.help = message => {
 	return({
 		title: `${pfx}help [command|category]`,
 		description: `Get help for different commands, or command categories.`,
-		url: "https://allydiscord.github.io/commands/utility/help.html",
+		url: "https://allydiscord.github.io/docs/commands/utility/help/",
 		color: 0x0099FF,
 		thumbnail: {
 			url: "https://imgur.com/YVRMcUD.png"
@@ -209,7 +209,7 @@ exports.command.about = message => {
 	return({
 		title: `${pfx}about [meta]`,
 		description: `Get information about ${nme} and the developers.`,
-		url: "https://allydiscord.github.io/commands/utility/about.html",
+		url: "https://allydiscord.github.io/docs/commands/utility/about/",
 		color: 0x0099FF,
 		thumbnail: {
 			url: "https://imgur.com/YVRMcUD.png"
@@ -232,7 +232,7 @@ exports.command.settings = message => {
 	return({
 		title: `${pfx}settings (scope) (setting) [value]`,
 		description: `Manage settings for yourself or the server.`,
-		url: "https://allydiscord.github.io/",
+		url: "https://allydiscord.github.io/docs/commands/utility/settings/",
 		color: 0x0099FF,
 		thumbnail: {
 			url: "https://imgur.com/YVRMcUD.png"
@@ -267,7 +267,7 @@ exports.command.feedback = message => {
 	return({
 		title: `${pfx}feedback (feedback)`,
 		description: `Send feedback to the developers of ${nme}.`,
-		url: "https://allydiscord.github.io/commands/utility/feedback.html",
+		url: "https://allydiscord.github.io/docs/commands/utility/feedback/",
 		color: 0x0099FF,
 		thumbnail: {
 			url: "https://imgur.com/YVRMcUD.png"
@@ -294,7 +294,7 @@ exports.command.ping = message => {
 	return({
 		title: `${pfx}ping`,
 		description: `Ping the bot.`,
-		url: "https://allydiscord.github.io/commands/utility/ping.html",
+		url: "https://allydiscord.github.io/docs/commands/utility/ping/",
 		color: 0x0099FF,
 		thumbnail: {
 			url: "https://imgur.com/YVRMcUD.png"
