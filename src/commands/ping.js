@@ -1,6 +1,6 @@
-const pfx = require("../../meta/about.json").prefix;
-const nme = require("../../meta/about.json").name;
-const vrs = require("../../meta/about.json").version;
+const pfx = require("../meta/about.json").prefix;
+const nme = require("../meta/about.json").name;
+const vrs = require("../meta/about.json").version;
 
 exports.execute = ( client, msg ) => {
     msg.reply('pong!');

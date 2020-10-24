@@ -15,7 +15,7 @@
 	}
 }
 */
-const { prefix: pfx, name: nme, version: vrs } = require("../meta/about.json");
+const { prefix: pfx, name: nme, version: vrs } = require("./about.json");
 
 exports.help = message => {
 	return ({

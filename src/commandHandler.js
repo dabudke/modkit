@@ -1,4 +1,4 @@
-const about = require("../meta/about.json")
+const about = require("./meta/about.json")
 let commands = require("./commands/index");
 
 exports.handle = ( cmd, args, bot, msg, db, embeds ) => {
