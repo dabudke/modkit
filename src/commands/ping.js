@@ -1,14 +1,12 @@
-const pfx = require("../meta/about.json").prefix;
-const nme = require("../meta/about.json").name;
-const vrs = require("../meta/about.json").version;
+const about = require('../meta/about.json');
 
-exports.execute = ( client, msg ) => {
-    msg.reply('pong!');
+exports.execute = ( message ) => {
+    message.reply('pong!');
 }
 
-exports.helpEmbed = message => {
+exports.helpEmbed = ( message ) => {
 	return({
-		title: `${pfx}ping`,
+		title: `${about.prefix}ping`,
 		description: `Ping the bot.`,
 		url: "https://allydiscord.github.io/docs/commands/utility/ping/",
 		color: 0x0099FF,
@@ -18,7 +16,7 @@ exports.helpEmbed = message => {
 		fields: [],
 		timestamp: new Date(),
 		footer: {
-			text: `Requested by ${message.author.username} | ${nme} v${vrs}`,
+			text: `Requested by ${message.author.username} | ${about.name} v${about.version}`,
 			icon_url: message.author.avatarURL()
 		}
 	})
