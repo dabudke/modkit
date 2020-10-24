@@ -1,6 +1,8 @@
-exports.execute = ( msg, args, db ) => {
+const about = require("../meta/about.json")
+
+exports.execute = ( message, args, db ) => {
     if ( args[0] === undefined ) {
-    msg.reply("you can submit feedback to the developers of Ally!  Put your feedback after `feedback` or `fb` to submit feedback.");
+		message.reply("you can submit feedback to the developers of Ally!  Put your feedback after `feedback` or `fb` to submit feedback.");
     } else {
         let feedback = args[0];
         let i = false;
@@ -10,14 +12,14 @@ exports.execute = ( msg, args, db ) => {
             }
         }
         db.feedbackDb.push(feedback);
-        msg.reply("thanks for submitting feedback!  Your feedback is important, so keep submitting feedback as needed!");
+        message.reply("thanks for submitting feedback!  Your feedback is important, so keep submitting feedback as needed!");
     }
 }
 
-exports.helpEmbed = ( message, prefix, name, version ) => {
+exports.helpEmbed = ( message ) => {
 	return({
-		title: `${prefix}feedback (feedback)`,
-		description: `Send feedback to the developers of ${name}.`,
+		title: `${about.prefix}feedback (feedback)`,
+		description: `Send feedback to the developers of ${about.name}.`,
 		url: "https://allydiscord.github.io/docs/commands/utility/feedback/",
 		color: 0x0099FF,
 		thumbnail: {
@@ -30,12 +32,12 @@ exports.helpEmbed = ( message, prefix, name, version ) => {
 			},
 			{
 				name: "Alternate Command:",
-				value: `${prefix}fb`
+				value: `${about.prefix}fb`
 			}
 		],
 		timestamp: new Date(),
 		footer: {
-			text: `Requested by ${message.author.username} | ${name} v${version}`,
+			text: `Requested by ${message.author.username} | ${about.name} v${about.version}`,
 			icon_url: message.author.avatarURL
 		}
 	})
