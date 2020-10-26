@@ -1,25 +1,17 @@
 # Ally - The Friendly Discord Bot
 
 Ally is an open-source, totally free, Discord bot.  She is currently under
-active development, and updates will come every so often (check the projects
-page [here](https://github.com/orgs/allydiscord/projects/)).
-
-![Website](https://img.shields.io/badge/website-allydiscord.github.io-informational?link=https://github.com/allydiscord/ally)
-![Discord](https://img.shields.io/discord/457326122066116609?color=7289da&label=discord%20server&logo=discord)
-![GitHub](https://img.shields.io/badge/source-github.com%2Fallydiscord%2Fally-lightgrey?logo=github)
-![GitHub contributors](https://img.shields.io/github/contributors/allydiscord/ally?color=informational&logo=github)
-![Latest release](https://img.shields.io/github/v/release/allydiscord/ally?label=latest%20release&logo=github)
-![Current release](https://img.shields.io/badge/current%20release-none-inactive)
-
-- [About Ally](#about-ally)
-- [Information about Self-Hosting](#information-about-self-hosting)
-
-## About Ally
+active development, and updates will come every so often.
 
 ![License](https://img.shields.io/github/license/allydiscord/ally)
-![GitHub stars](https://img.shields.io/github/stars/allydiscord/ally)
-![GitHub All Releases](https://img.shields.io/github/downloads/allydiscord/ally/total)
-![Invite Ally](https://img.shields.io/badge/invite--blue)
+![Website](https://img.shields.io/badge/website-allydiscord.github.io-informational?link=https://allydiscord.github.io)
+![Discord](https://img.shields.io/discord/457326122066116609?color=7289da&label=discord%20server&logo=discord&link=https://discord.gg/dbXzRek)
+![GitHub](https://img.shields.io/badge/source-github.com/allydiscord/ally-lightgrey?logo=github&link=https://github.com/allydiscord/ally)
+![GitHub contributors](https://img.shields.io/github/contributors/allydiscord/ally?color=informational&logo=github)
+![Latest release](https://img.shields.io/github/v/release/allydiscord/ally?label=latest%20release&logo=github&link=https://github.com/allydiscord/ally/releases)
+![Invite Ally](https://img.shields.io/badge/invite-to_your_server-blue?link=https://discord.com/oauth2/authorize?scope=bot&client_id=643094405514919956&permissions=468741718)
+
+## About Ally
 
 Ally is a Discord bot that is programed in JavaScript.  She uses the library
 Discord.js to communicate with the Discord API, and has lots of fun and
@@ -34,35 +26,3 @@ Ally is licenced under the [`GPL-3.0-or-later`](./LICENSE.txt) license.
 Check the [changelog](./CHANGELOG.md) for changes to Ally and the
 [security policy](./SECURITY.md) for information about security
 vulnerabililties.
-
-## Information about Self-Hosting
-
-To self-host Ally, you don't need a very good computer.  Any Raspberry Pi
-will do.
-
-To begin self-hosting, follow these steps:
-
-1. Go to the [Discord Developer Portal](https://discordapp.com/developers)
- and log in with your account.
-2. Create a new application, such as `My Awesome Bot`.
-3. Go to the bot tab, and create a bot user.'
-4. Go to the releases tab of the Ally GitHub repository (found [here](https://github.com/allydiscord/ally/releases)).
-5. Download the latest release archive and extract the `.zip` file.
-6. Navigate to the `Ally-vX.X.X` (with the `X`es signifying a number) and edit
- these files:
-   - `meta/about.json`
-      - `name`
-      - `author`
-      - `team`
-         - `projectLeads`
-         - `developers`
-         - `supportTeam`
-         - `bugTrackers`
-      - `prefix` (optional)
-   - `meta/token.json`
-      - `token`
-      - `testToken` (optional)
-7. Run the command `npm install` from the `Ally_vX.X.X` folder to install all
- dependencies.
-8. Run `npm test` to test the bot and make sure it works.
-9. Run `npm start` to start the bot.
