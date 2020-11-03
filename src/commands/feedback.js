@@ -1,4 +1,5 @@
-const about = require("../meta/about.json")
+const about = require("../meta/about.json");
+const database = require("../utils/databaseManager");
 
 exports.execute = ( message, args, db ) => {
     if ( args[0] === undefined ) {
