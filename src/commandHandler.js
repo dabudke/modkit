@@ -1,4 +1,5 @@
 const about = require("./meta/about.json");
+const bot = require("./main").bot;
 let commands = require("./commands/index");
 
 exports.handle = ( cmd, args, msg, db, embeds ) => {
@@ -66,30 +67,9 @@ exports.handle = ( cmd, args, msg, db, embeds ) => {
         case "settings":
         case "setting":
         case "sets":
-        case "set": {
-            // check permissions
-            var perms = db.serverDb.default.settings.moderation.permissions;
-            if ( !msg.guild.members.cache.get(msg.author.id).roles.cache.get( perms.modRoles[perms.viewSettings] ) ) {
-                if ( !msg.guild.members.cache.get(msg.author.id).hasPermission("MANAGE_GUILD") ) {
-                    msg.reply("you do not have permission to use that command.");
-                    break;
-                }
-            }
-
-            // parse setting
-            let setting = args[0] ? args[0].split(/\./g) : [];
-            let dbObj = db.serverDb[msg.guild.id].settings;
-            for ( var i in setting ) {
-                if ( !dbObj[setting[i]] ) {
-                    msg.reply("that setting does not exist.");
-                    return;
-                } else {
-                    dbObj = dbObj[setting[i]];
-                }
-            }
-
+        case "set": 
+            commands.settings.execute( msg, args, db );
             break;
-        }
         
         case "warn":
         case "!": {

@@ -227,38 +227,3 @@ exports.command.about = message => {
 		}
 	});
 }
-
-exports.command.settings = message => {
-	return({
-		title: `${pfx}settings (scope) (setting) [value]`,
-		description: `Manage settings for yourself or the server.`,
-		url: "https://allydiscord.github.io/docs/commands/utility/settings/",
-		color: 0x0099FF,
-		thumbnail: {
-			url: "https://imgur.com/YVRMcUD.png"
-		},
-		fields: [
-			{
-				name: "scope - Scope of setting.",
-				value: "**Required.**  Choose whether to manage settings for yourself or the server."
-			},
-			{
-				name: "permission - Setting to manage.",
-				value: "**Optional.**  Omit to see all settings and their values."
-			},
-			{
-				name: "value - Value to set the setting to.",
-				value: "**Optional.**  Omit to see the value of the setting."
-			},
-			{
-				name: "Alternate Commands:",
-				value: `${pfx}setting, ${pfx}sets, ${pfx}set`
-			}
-		],
-		timestamp: new Date(),
-		footer: {
-			text: `Requested by ${message.author.username} | ${nme} v${vrs}`,
-			icon_url: message.author.avatarURL()
-		}
-	});
-}
