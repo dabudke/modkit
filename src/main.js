@@ -35,7 +35,7 @@ bot.on("message", (msg) => {
     const cmd = args.shift().slice(about.prefix.length).toLowerCase();
 
     // message handler
-    cmdHandler.handle(cmd, args, bot, msg, db, embeds);
+    cmdHandler.handle(cmd, args, msg, db, embeds);
 });
 
 bot.on( "error", error => {
