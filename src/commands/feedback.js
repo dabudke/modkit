@@ -1,7 +1,7 @@
 const about = require("../meta/about.json");
 const database = require("../utils/databaseManager");
 
-exports.execute = ( message, args, db ) => {
+exports.execute = ( message, args ) => {
     if ( args[0] === undefined ) {
 		message.reply("you can submit feedback to the developers of Ally!  Put your feedback after `feedback` or `fb` to submit feedback.");
     } else {
@@ -12,7 +12,7 @@ exports.execute = ( message, args, db ) => {
                 feedback = feedback.concat(" ").concat(args[arg]);
             }
         }
-        db.feedbackDb.push(feedback);
+        database.feedbackDb.push(feedback);
         message.reply("thanks for submitting feedback!  Your feedback is important, so keep submitting feedback as needed!");
     }
 }
