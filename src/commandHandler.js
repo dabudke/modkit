@@ -1,7 +1,7 @@
-const about = require("./meta/about.json")
+const about = require("./meta/about.json");
 let commands = require("./commands/index");
 
-exports.handle = ( cmd, args, bot, msg, db, embeds ) => {
+exports.handle = ( cmd, args, msg, db, embeds ) => {
     switch (cmd) {
         case "ping":
             commands.ping.execute(msg);
@@ -191,7 +191,7 @@ exports.handle = ( cmd, args, bot, msg, db, embeds ) => {
 
         case "feedback":
         case "fb":
-            commands.feedback.execute(msg, args, db);
+            commands.feedback.execute(msg, args);
             break;
 
         default:
