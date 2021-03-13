@@ -13,8 +13,7 @@ active development, and updates will come every so often.
 
 ## About Ally
 
-Ally is a Discord bot that is programed in JavaScript.  She uses the library
-Discord.js to communicate with the Discord API, and has lots of fun and
+Ally is a Discord bot that is programed in JavaScript/TypeScript.  She uses the library Discord.js to communicate with the Discord API, and has lots of fun and
 useful functions and commands.  She is fully customizable, and can even set
 settings for a single user!  Her uses are flexible, and more useful commands
 are being added all the time!

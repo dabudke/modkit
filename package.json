@@ -4,8 +4,8 @@
   "description": "The friendly and open-source Discord.js bot made by LittleKitacho.",
   "main": "start.js",
   "scripts": {
-    "start": "node ./start.js",
-    "test": "node ./.test.js"
+    "prestart": "tsc",
+    "start": "start.js"
   },
   "repository": {
     "type": "git",
@@ -18,9 +18,12 @@
   },
   "homepage": "allydiscord.github.io",
   "dependencies": {
-    "discord.js": "^12.4.1"
+    "better-sqlite3": "^7.1.2",
+    "discord.js": "^12.4.1",
+    "node-gyp": "^7.1.2"
   },
   "devDependencies": {
+    "@types/better-sqlite3": "^5.4.1",
     "eslint": "^7.12.0"
   }
 }

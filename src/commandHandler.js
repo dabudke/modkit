@@ -68,7 +68,7 @@ exports.handle = ( cmd, args, msg, db, embeds ) => {
         case "setting":
         case "sets":
         case "set": 
-            commands.settings.execute( msg, args, db );
+            commands.settings.execute( msg, args );
             break;
         
         case "warn":
@@ -124,12 +124,11 @@ exports.handle = ( cmd, args, msg, db, embeds ) => {
             if (args[1]) {
                 // concatenate reason
                 for ( var arg in args ) {
-                    if ( !arg == 0 ) {
-                        if ( arg == 1 ) { reason = args[arg] } else {
-                            reason += " ".concat(args[arg]);
+                    if ( arg != args[0] ) {
+                        if ( arg == args[1] ) { reason = arg } else {
+                            reason += " ".concat(arg);
                         }
                     }
-    
                 }
             }
 
