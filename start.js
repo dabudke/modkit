@@ -1,5 +1,5 @@
 const fs = require("fs");
-const token = fs.readFile("./token.txt", { encoding: "utf-8" });
+const token = fs.readFileSync("./token.txt", { encoding: "utf-8" });
 
 console.log("Starting up the bot...");
 
