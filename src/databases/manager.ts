@@ -9,11 +9,13 @@ function saveDatabases() {
 }
 
 //#region Types
-type GuildId = string;
-type ChannelId = string;
-type RoleId = string;
-type UserId = string;
-type PermIndex = number;
+export type PermIndex = number;
+
+/* Probably should move these to main script. */
+export type GuildId = string;
+export type ChannelId = string;
+export type RoleId = string;
+export type UserId = string;
 
 /* TODO move to central punishments manager */
 enum Punishments {
@@ -76,7 +78,7 @@ interface LocalGuild {
         logUserHistoryClears: boolean,
     },
     permissions: {
-        tiers: Array<RoleId?>,
+        tiers: Array<RoleId> | null,
         delete: PermIndex,
         warn: PermIndex,
         mute: PermIndex,
@@ -137,7 +139,7 @@ const DefaultGuild: LocalGuild = {
         logUserHistoryClears: false
     },
     permissions: {
-        tiers: [],
+        tiers: null,
         delete: 1,
         warn: 1,
         mute: 1,
@@ -155,11 +157,10 @@ const DefaultGuild: LocalGuild = {
 
 //#region Functions
 //#region User Functions
-export function getLocalUser (userid: UserId): LocalUser | false {
+export function getLocalUser (userid: UserId): LocalUser | void {
     if (userDb.has(userid)) {
         return userDb.get(userid);
     }
-    return false;
 }
 
 export function createUser (userid: UserId): void {
@@ -179,12 +180,10 @@ export function deleteLocalUser (userid: UserId): void {
 //#endregion User Functions
 
 //#region Guild Functions
-export function getLocalGuild (guildid: GuildId): LocalGuild | false {
+export function getLocalGuild (guildid: GuildId): LocalGuild | void {
     if (guildDb.has(guildid)) {
         return guildDb.get(guildid);
     }
-
-    return false;
 }
 
 export function createLocalGuild (guildid: GuildId): void {
