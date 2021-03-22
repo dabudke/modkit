@@ -1,7 +1,7 @@
 import { Guild, GuildMember } from "discord.js";
 import * as db from "../databases/manager";
 
-export enum Commands {
+export enum Actions {
     DeleteMessages = "delete",
     WarnUser = "warn",
     KickUser = "kick",
@@ -12,7 +12,7 @@ export enum Commands {
     EditSettings = "settings"
 }
 
-export function hasPermission ( guild: Guild, guildUser: GuildMember, command: Commands): boolean {
+export function hasPermission ( guild: Guild, guildUser: GuildMember, command: Actions): boolean {
     const CurrentGuild = db.getLocalGuild(guild.id);
 
     if (!CurrentGuild) return false;

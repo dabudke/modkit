@@ -4,6 +4,7 @@
         "allowJs": true,
         "checkJs": true,
         "rootDir": "src",
+        "sourceMap": true,
     },
     "include": [
         "src/**/*"

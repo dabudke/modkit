@@ -6,14 +6,14 @@ import { readFileSync } from "fs";
 import { prefix } from "./meta/about";
 
 // get meta files
-const token = readFileSync("../token.txt", { encoding: "utf-8" });
+const token = readFileSync("./token.txt", { encoding: "utf-8" });
 
 // declare client
 const bot = new Discord.Client();
 
 bot.once("ready", () => {
     console.log(`Logged in and connected to Discord (Username: ${bot.user.tag})`);
-    bot.user.setPresence( { status: "online", activity: { name: "people make bad life choices | For help, type ^help.", type: "WATCHING" } } );
+    bot.user.setPresence( { status: "online", activity: { name: "out for ^help", type: "WATCHING" } } );
 
     bot.guilds.cache.forEach(guild => {
         if (!db.getLocalGuild(guild.id)) {
@@ -24,7 +24,13 @@ bot.once("ready", () => {
     });
 });
 
-bot.on("message", msg => commands.handle);
+bot.on("message", msg => {
+    // filters
+    if (msg.author.bot) return;
+    if (!msg.content.startsWith(prefix)) return;
+
+    commands.handle(msg);
+});
 
 bot.on("error", error => {
     console.warn("An error occoured while communicating with Discord, here's what we got:\n\n", error);

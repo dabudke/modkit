@@ -1,12 +1,12 @@
-const about = require('../meta/about.json');
+import { name, prefix, version } from "../meta/about";
 
-exports.execute = ( message ) => {
+export function execute ( message ) {
     message.reply('pong!');
 }
 
-exports.helpEmbed = ( message ) => {
+export function helpEmbed ( message ) {
 	return({
-		title: `${about.prefix}ping`,
+		title: `${prefix}ping`,
 		description: `Ping the bot.`,
 		url: "https://allydiscord.github.io/docs/commands/utility/ping/",
 		color: 0x0099FF,
@@ -16,7 +16,7 @@ exports.helpEmbed = ( message ) => {
 		fields: [],
 		timestamp: new Date(),
 		footer: {
-			text: `Requested by ${message.author.username} | ${about.name} v${about.version}`,
+			text: `Requested by ${message.author.username} | ${name} v${version}`,
 			icon_url: message.author.avatarURL()
 		}
 	})
