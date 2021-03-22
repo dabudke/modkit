@@ -1,6 +1,14 @@
-import { readFileSync, writeFileSync } from "fs";
+import { readFileSync, writeFileSync, existsSync } from "fs";
 
+if (!existsSync("./users.json")) {
+    writeFileSync("./users.json", "{}");
+    console.warn("It appears the users database was missing.  Please check for data loss, unless this is first time startup.");
+}
 const userDb: Map<UserId, LocalUser> = JSON.parse(readFileSync("./users.json", "utf-8"));
+if (!existsSync('./guilds.json')) {
+    writeFileSync("./guilds.json", "{}");
+    console.warn("It appears the guilds database was missing.  Please check for data loss, unless this is first time startup.");
+}
 const guildDb: Map<GuildId, LocalGuild> = JSON.parse(readFileSync("./guilds.json", "utf-8"));
 
 function saveDatabases() {
