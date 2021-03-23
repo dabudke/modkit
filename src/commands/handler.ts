@@ -7,7 +7,7 @@ import * as helpCmd from "./help";
 // import * as aboutCmd from "./about";
 
 export function handle (msg: Message) {
-    const args = msg.content.slice(1).split(/ +/g);
+    const args = msg.content.slice(1).split(/[ \n]+/g);
     const cmd = args.shift();
     
     switch (cmd) {
