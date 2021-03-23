@@ -2,7 +2,7 @@ import { Message } from "discord.js";
 import { prefix } from "../meta/about";
 import * as pingCmd from "./ping";
 import * as settingsCmd from "./settings";
-// import * as helpCmd from "./help";
+import * as helpCmd from "./help";
 // import * as warnCmd from "./warn";
 // import * as aboutCmd from "./about";
 
@@ -17,7 +17,7 @@ export function handle (msg: Message) {
 
         case "help":
         case "?":
-            msg.reply("that command has not been implemented yet.");
+            helpCmd.handle(msg, args);
             break;
 
         case "about":
@@ -71,6 +71,14 @@ export function handle (msg: Message) {
         case "glevel":
         case "glvl":
             msg.reply("that command has not been implemented yet.");
+            break;
+
+        case "permissions":
+        case "permission":
+        case "perms":
+        case "perm":
+            msg.reply("that command has not been implemented yet.");
+            break;
 
         default:
             msg.reply(`I couldn't understand that command.  Try typing it again, or using \`${prefix}help\` for other commands to try.`);
