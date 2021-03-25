@@ -1,24 +1,28 @@
 # Build and test
-name: BUild
+name: Build
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
+    paths: "src/**"
+    
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
+    paths: "src/**"
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout main branch
+        uses: actions/checkout@v2
 
       - name: Setup Node
         uses: actions/setup-node@v2.1.5
         
       - name: Setup TypeScript
-        run: npm i tsc
+        run: npm i typescript
         
       - name: Compile TypeScript
         run: npx tsc --noEmit
