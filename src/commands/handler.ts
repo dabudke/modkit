@@ -7,8 +7,8 @@ import * as helpCmd from "./help";
 // import * as aboutCmd from "./about";
 
 export function handle (msg: Message) {
-    const args = msg.content.slice(1).split(/[ \n]+/g);
-    const cmd = args.shift();
+    const args = msg.content.slice(prefix.length).split(/[ \n]+/g);
+    const cmd = args.shift().toLowerCase();
     
     switch (cmd) {
         case "ping":
@@ -38,6 +38,9 @@ export function handle (msg: Message) {
 
         case "feedback":
         case "fb":
+            msg.reply("head over to our GitHub page to give feedback, please!\nhttps://github.com/allydiscord/ally/issues/");
+            break;
+
         case "bugreport":
         case "reportbug":
         case "bug":
@@ -51,7 +54,7 @@ export function handle (msg: Message) {
             msg.reply("that command has not been implemented yet.");
             break;
 
-        case "modHistory":
+        case "modhistory":
         case "history":
             msg.reply("that command has not been implemented yet.");
             break;
