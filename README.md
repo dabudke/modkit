@@ -4,12 +4,11 @@ Ally is an open-source, totally free, Discord bot.  She is currently under
 active development, and updates will come every so often.
 
 ![License](https://img.shields.io/github/license/allydiscord/ally)
-![Website](https://img.shields.io/badge/website-allydiscord.github.io-informational?link=https://allydiscord.github.io)
-![Discord](https://img.shields.io/discord/457326122066116609?color=7289da&label=discord%20server&logo=discord&link=https://discord.gg/dbXzRek)
-![GitHub](https://img.shields.io/badge/source-github.com/allydiscord/ally-lightgrey?logo=github&link=https://github.com/allydiscord/ally)
-![GitHub contributors](https://img.shields.io/github/contributors/allydiscord/ally?color=informational&logo=github)
+[![Discord](https://img.shields.io/discord/457326122066116609?color=7289da&label=discord&logo=discord&link=https://discord.gg/dbXzRek)](https://discord.gg/dbXzRek)
 ![Latest release](https://img.shields.io/github/v/release/allydiscord/ally?label=latest%20release&logo=github&link=https://github.com/allydiscord/ally/releases)
-![Invite Ally](https://img.shields.io/badge/invite-to_your_server-blue?link=https://discord.com/oauth2/authorize?scope=bot&client_id=643094405514919956&permissions=468741718)
+[![Compile](https://github.com/allydiscord/ally/actions/workflows/buildts.yml/badge.svg?event=push)](https://github.com/allydiscord/ally/actions/workflows/buildts.yml)
+
+[Invite Ally to your server](https://discord.com/oauth2/authorize?scope=bot&client_id=643094405514919956&permissions=468741718)
 
 ## About Ally
 
