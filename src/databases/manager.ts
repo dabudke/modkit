@@ -1,19 +1,19 @@
 import { readFileSync, writeFileSync, existsSync } from "fs";
 
-if (!existsSync("./users.json")) {
-    writeFileSync("./users.json", "{}");
+if (!existsSync("./js/databases/users.json")) {
+    writeFileSync("./js/databases/users.json", "{}");
     console.warn("It appears the users database was missing.  Please check for data loss, unless this is first time startup.");
 }
-const userDb: Map<UserId, LocalUser> = JSON.parse(readFileSync("./users.json", "utf-8"));
-if (!existsSync('./guilds.json')) {
-    writeFileSync("./guilds.json", "{}");
+const userDb: Map<UserId, LocalUser> = new Map(Object.entries(JSON.parse(readFileSync("./js/databases/users.json", "utf-8"))));
+if (!existsSync('./js/databases/guilds.json')) {
+    writeFileSync("./js/databases/guilds.json", "{}");
     console.warn("It appears the guilds database was missing.  Please check for data loss, unless this is first time startup.");
 }
-const guildDb: Map<GuildId, LocalGuild> = JSON.parse(readFileSync("./guilds.json", "utf-8"));
+const guildDb: Map<GuildId, LocalGuild> = new Map(Object.entries(JSON.parse(readFileSync("./js/databases/guilds.json", "utf-8"))));
 
-function saveDatabases() {
-    writeFileSync("./users.json", JSON.stringify(userDb, null, 2));
-    writeFileSync("./guilds.json", JSON.stringify(guildDb, null, 2));
+function saveDatabases() { //FIXME Dirty fix for correct database paths, have to do more research to figure this out.
+    writeFileSync("./js/databases/users.json", JSON.stringify(userDb, null, 2));
+    writeFileSync("./js/databases/guilds.json", JSON.stringify(guildDb, null, 2));
 }
 
 //#region Types
