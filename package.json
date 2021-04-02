@@ -17,7 +17,8 @@
   },
   "homepage": "allydiscord.github.io",
   "dependencies": {
-    "discord.js": "^12.4.1"
+    "discord.js": "^12.4.1",
+    "typescript": "^4.2.3"
   },
   "devDependencies": {
     "eslint": "^7.12.0"
