@@ -5,6 +5,9 @@
         "checkJs": true,
         "rootDir": "src",
         "sourceMap": true,
+        "lib": [
+            "ES2019"
+        ]
     },
     "include": [
         "src/**/*"
