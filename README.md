@@ -6,7 +6,7 @@ active development, and updates will come every so often.
 ![License](https://img.shields.io/github/license/allydiscord/ally)
 [![Discord](https://img.shields.io/discord/457326122066116609?color=7289da&label=discord&logo=discord&link=https://discord.gg/dbXzRek)](https://discord.gg/dbXzRek)
 ![Latest release](https://img.shields.io/github/v/release/allydiscord/ally?label=latest%20release&logo=github&link=https://github.com/allydiscord/ally/releases)
-[![Compile](https://github.com/allydiscord/ally/actions/workflows/buildts.yml/badge.svg?event=push)](https://github.com/allydiscord/ally/actions/workflows/buildts.yml)
+[![Build](https://github.com/allydiscord/ally/actions/workflows/tsbuild.yml/badge.svg?branch=rewrite)](https://github.com/allydiscord/ally/actions/workflows/tsbuild.yml)
 
 [Invite Ally to your server](https://discord.com/oauth2/authorize?scope=bot&client_id=643094405514919956&permissions=468741718)
 
