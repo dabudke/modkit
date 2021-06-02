@@ -1,5 +1,5 @@
 export const name = "Ally";
-export const version = "1.0.0-pre-1";
+export const version = "0.0.0-nonprod";
 export const team = {
     projectLeads: ["LittleKitacho"],
     developers: ["LittleKitacho"],
