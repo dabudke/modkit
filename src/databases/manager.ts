@@ -12,8 +12,8 @@ if (!existsSync('./js/databases/guilds.json')) {
 const guildDb: Map<GuildId, LocalGuild> = new Map(Object.entries(JSON.parse(readFileSync("./js/databases/guilds.json", "utf-8"))));
 
 function saveDatabases() { //FIXME Dirty fix for correct database paths, have to do more research to figure this out.
-    writeFileSync("./js/databases/users.json", JSON.stringify(userDb, null, 2));
-    writeFileSync("./js/databases/guilds.json", JSON.stringify(guildDb, null, 2));
+    writeFileSync("./js/databases/users.json", JSON.stringify(Object.fromEntries(userDb), null, 2));
+    writeFileSync("./js/databases/guilds.json", JSON.stringify(Object.fromEntries(guildDb), null, 2));
 }
 
 //#region Types

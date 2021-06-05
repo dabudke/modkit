@@ -7,49 +7,73 @@ import * as pingCmd from "./ping";
 // import * as aboutCmd from "./about";
 
 export function handle ( msg: Message, args: string[] ) {
-    var embed: MessageEmbed;
     switch (args[0]) {
-        /* //#region Categories
-        case "utility":
-            embed = embeds.helpUtility();
-            break;
-        
+        //#region Categories
         case "moderation":
-            embed = embeds.helpModeration();
+            msg.channel.send({embed: decompEmbed(embeds.helpModeration)});
             break;
-        //#endregion Categories */
+        case "utility":
+            msg.channel.send({embed: decompEmbed(embeds.helpUtility)});
+            break;
+        case "leveling":
+            msg.channel.send({embed: decompEmbed(embeds.helpLeveling)});
+            break;
+        case "other":
+            msg.channel.send({embed: decompEmbed(embeds.helpOther)});
+            break;
+        //#endregion Categories
         
         //#region Commands
-        case "ping":
-            embed = pingCmd.helpEmbed();
-            break;
+        /*case "ping":
+            msg.channel.send({embed: decompEmbed(pingCmd.helpEmbed)});
+            break;*/
         case "help":
         case "?":
-            embed = helpEmbed();
+            msg.channel.send({embed: decompEmbed(helpEmbed)});
             break;
         //#endregion Commands
 
+        case undefined:
+            msg.channel.send({embed: decompEmbed(embeds.helpDefault)});
+            break;
+
         default:
-            embed = embeds.helpDefault();
+            msg.channel.send("I'm sorry, I couldn't find that command or command category.");
             break;
     }
-    embed.setColor(0x0099FF);
-    embed.setTimestamp(new Date());
-    embed.setFooter(`Requested by ${msg.author.username} | ${name} v${version}`, msg.author.avatarURL());
-    msg.channel.send({ embed: embed });
 }
 
-export function helpEmbed (): MessageEmbed {
-    var embed = new MessageEmbed();
-    embed.setTitle(`${prefix}help [category|command]`)
-    embed.setDescription("Get help without even leaving Discord.")
-    embed.setURL("https://allydiscord.github.io/docs/commands/utility/help/");
-    embed.addFields([{
-        name: "[category|command]",
-        value: "**Optional.**  Category or command to pull documentation for."
-    }, {
-        name: "Command Aliases",
-        value: `${prefix}?`
-    }]);
-    return embed;
+function decompEmbed (embeds: embeds.HelpEmbeds, page?: number): MessageEmbed {
+    var decompEmbed: MessageEmbed = new MessageEmbed();
+    if (!page) {
+        page = 1;
+    }
+    var compEmbed = embeds[page -1];
+    decompEmbed.setTitle(compEmbed.title.concat(" - Ally"));
+    decompEmbed.setDescription(compEmbed.description);
+    decompEmbed.setURL(compEmbed.url);
+    decompEmbed.addFields(compEmbed.fields);
+    decompEmbed.setTimestamp(new Date());
+    decompEmbed.setThumbnail("https://i.imgur.com/YVRMcUD.png");
+    decompEmbed.setFooter(`Page ${page}/${embeds.length}`);
+    decompEmbed.setColor(0x0099FF);
+    return decompEmbed;
 }
+
+export const helpEmbed: embeds.HelpEmbeds = [
+    {
+        title: `${prefix}help [command/category] | Help`,
+        description: "Show an index of commands, and how to use them.",
+        url: "https://allydiscord.github.io/docs/commands/utility/help/",
+        fields: [
+            {
+                name: "[command/category]",
+                value: "Optional.  Command or category to recieve documentation for."
+            },
+            {
+                name: "Aliases",
+                value: `${prefix}?`
+            }
+        ]
+    }
+]
