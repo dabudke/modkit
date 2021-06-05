@@ -88,5 +88,3 @@ export function handle (msg: Message) {
             break;
     }
 }
-
-export function getEmbed (command) {/* TODO */}
