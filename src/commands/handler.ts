@@ -1,6 +1,7 @@
 import { Message } from "discord.js";
 import { prefix } from "../meta/about";
 import { execute as ping } from "./ping";
+import { handle as settings } from "./settings";
 import { handle as help } from "./help";
 
 export function handle (msg: Message) {
@@ -25,7 +26,7 @@ export function handle (msg: Message) {
         case "setting":
         case "sets":
         case "set":
-            msg.reply("that command has not been implemented yet.");
+            settings(msg, args);
             break;
 
         case "warn":

@@ -1,4 +1,5 @@
 import { readFileSync, writeFileSync, existsSync } from "fs";
+import { Setting, SettingValues } from "../commands/settings";
 
 if (!existsSync("./js/databases/users.json")) {
     writeFileSync("./js/databases/users.json", "{}");
@@ -24,18 +25,6 @@ export type GuildId = string;
 export type ChannelId = string;
 export type RoleId = string;
 export type UserId = string;
-
-export enum SettingValues {
-    ChannelOrSame = "Channel, `same`",
-    Channel = "Channel",
-    Boolean = "`yes`, `no`"
-}
-
-interface Setting {
-    description: string,
-    allowedValues: SettingValues,
-    value: any
-}
 
 /* TODO move to central punishments manager */
 enum Punishments {
@@ -156,7 +145,7 @@ const DefaultGuild: LocalGuild = {
             value: false
         },
         userLeaveNotification: {
-            description: "Post users leaving to `usermodNotificatoinChannel`",
+            description: "Post users leaving to `usermodNotificationChannel`",
             allowedValues: SettingValues.Boolean,
             value: false
         },
