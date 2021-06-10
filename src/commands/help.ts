@@ -2,6 +2,7 @@ import { Message, MessageEmbed } from "discord.js";
 import { name, prefix, version } from "../meta/about";
 import { HelpEmbeds, helpModeration, helpUtility, helpLeveling, helpOther, helpDefault } from "../meta/embeds";
 import { helpEmbed as ping } from "./ping";
+import { helpEmbed as settings } from "./settings";
 
 export function handle ( msg: Message, args: string[] ) {
     switch (args[0]) {
@@ -27,6 +28,12 @@ export function handle ( msg: Message, args: string[] ) {
         case "help":
         case "?":
             msg.channel.send({embed: decompEmbed(helpEmbed)});
+            break;
+        case "settings":
+        case "setting":
+        case "sets":
+        case "set":
+            msg.channel.send({embed: decompEmbed(settings)});
             break;
         //#endregion Commands
 
