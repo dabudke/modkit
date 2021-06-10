@@ -1,14 +1,14 @@
-import { MessageEmbed } from "discord.js";
 import { prefix } from "../meta/about";
+import { HelpEmbeds } from "../meta/embeds";
 
 export function execute ( message ) {
     message.reply('pong!');
 }
 
-export function helpEmbed (): MessageEmbed {
-	var embed = new MessageEmbed();
-	embed.setTitle(`${prefix}ping`);
-	embed.setDescription("Pings the bot.");
-	embed.setURL("https://allydiscord.github.io/docs/commands/utility/help/");
-	return embed;
-}
+export const helpEmbed: HelpEmbeds = [
+	{
+		title: `${prefix}ping`,
+		description: "Ping the bot.  (pong!)",
+		url: "https://allydiscord.github.io/docs/commands/other/ping/"
+	}
+]

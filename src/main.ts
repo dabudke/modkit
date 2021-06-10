@@ -1,7 +1,7 @@
 // get libraries and modules
-import * as Discord from "discord.js";
-import * as db from "./databases/manager";
-import * as commands from "./commands/handler";
+import { Client } from "discord.js";
+import { getLocalGuild, createLocalGuild } from "./databases/manager";
+import { handle as handleCommand } from "./commands/handler";
 import { readFileSync } from "fs";
 import { prefix } from "./meta/about";
 
@@ -9,15 +9,15 @@ import { prefix } from "./meta/about";
 const token = readFileSync("./token.txt", { encoding: "utf-8" });
 
 // declare client
-const bot = new Discord.Client();
+const bot = new Client();
 
 bot.once("ready", () => {
     console.log(`Logged in and connected to Discord (Username: ${bot.user.tag})`);
     bot.user.setPresence( { status: "online", activity: { name: "out for ^help", type: "WATCHING" } } );
 
     bot.guilds.cache.forEach(guild => {
-        if (!db.getLocalGuild(guild.id)) {
-            db.createLocalGuild(guild.id);
+        if (!getLocalGuild(guild.id)) {
+            createLocalGuild(guild.id);
         }
 
         /* TODO: initial guild join mock event */
@@ -27,9 +27,13 @@ bot.once("ready", () => {
 bot.on("message", msg => {
     // filters
     if (msg.author.bot) return;
+    if (!msg.guild) { msg.reply("I do not accept DM commands as of right now, sorry."); return; /* TODO: DM commands */ }
+
+    // points
+
     if (!msg.content.startsWith(prefix)) return;
 
-    commands.handle(msg);
+    handleCommand(msg);
 });
 
 bot.on("error", error => {

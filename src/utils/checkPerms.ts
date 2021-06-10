@@ -1,5 +1,5 @@
 import { Guild, GuildMember } from "discord.js";
-import * as db from "../databases/manager";
+import { getLocalGuild, PermIndex } from "../databases/manager";
 
 export enum Actions {
     DeleteMessages = "delete",
@@ -9,25 +9,28 @@ export enum Actions {
     MuteAction = "mute",
     ViewHistory = "viewHistory",
     ClearHistory = "clearHistory",
-    EditSettings = "settings"
+    Settings = "settings"
 }
 
 export function hasPermission ( guild: Guild, guildUser: GuildMember, command: Actions): boolean {
-    const CurrentGuild = db.getLocalGuild(guild.id);
+    const CurrentGuild = getLocalGuild(guild.id);
 
     if (!CurrentGuild) return false;
 
     const PermissionTiers = CurrentGuild.permissions.tiers;
-    const NeededPerm: db.PermIndex = CurrentGuild.permissions[command];
-    let hasNeededPerm = false;
+    const NeededPerm: PermIndex = CurrentGuild.permissions[command];
 
-    PermissionTiers.forEach((id, index) => {
-        if (index < NeededPerm) return;
-        if (!guild.roles.resolve(id)) return;
-        if (!guildUser.roles.cache.has(id)) return;
+    if (guildUser.permissions.has("ADMINISTRATOR")) return true;
 
-        hasNeededPerm = true;
-    })
+    if (PermissionTiers) {
+        PermissionTiers.forEach((id, index) => {
+            if (index < NeededPerm) return;
+            if (!guild.roles.resolve(id)) return;
+            if (!guildUser.roles.cache.has(id)) return;
+    
+            return true;
+        });
+    }
 
-    return hasNeededPerm;
+    return false;
 }
