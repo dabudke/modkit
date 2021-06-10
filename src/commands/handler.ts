@@ -1,10 +1,7 @@
 import { Message } from "discord.js";
 import { prefix } from "../meta/about";
-import * as pingCmd from "./ping";
-import * as settingsCmd from "./settings";
-import * as helpCmd from "./help";
-// import * as warnCmd from "./warn";
-// import * as aboutCmd from "./about";
+import { execute as ping } from "./ping";
+import { handle as help } from "./help";
 
 export function handle (msg: Message) {
     const args = msg.content.slice(prefix.length).split(/[ \n]+/g);
@@ -12,12 +9,12 @@ export function handle (msg: Message) {
     
     switch (cmd) {
         case "ping":
-            pingCmd.execute(msg);
+            ping(msg);
             break;
 
         case "help":
         case "?":
-            helpCmd.handle(msg, args);
+            help(msg, args);
             break;
 
         case "about":

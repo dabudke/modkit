@@ -5,7 +5,7 @@ export interface CompressedEmbed {
     title: string,
     description: string,
     url: string,
-    fields: Array<EmbedFieldData>
+    fields?: Array<EmbedFieldData>
 };
 
 export type HelpEmbeds = CompressedEmbed[];

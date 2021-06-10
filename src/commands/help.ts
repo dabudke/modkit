@@ -1,32 +1,29 @@
 import { Message, MessageEmbed } from "discord.js";
 import { name, prefix, version } from "../meta/about";
-import * as embeds from "../meta/embeds";
-import * as pingCmd from "./ping";
-// import * as settingsCmd from "./settings";
-// import * as warnCmd from "./warn";
-// import * as aboutCmd from "./about";
+import { HelpEmbeds, helpModeration, helpUtility, helpLeveling, helpOther, helpDefault } from "../meta/embeds";
+import { helpEmbed as ping } from "./ping";
 
 export function handle ( msg: Message, args: string[] ) {
     switch (args[0]) {
         //#region Categories
         case "moderation":
-            msg.channel.send({embed: decompEmbed(embeds.helpModeration, Number(args[1]), true)});
+            msg.channel.send({embed: decompEmbed(helpModeration, Number(args[1]), true)});
             break;
         case "utility":
-            msg.channel.send({embed: decompEmbed(embeds.helpUtility, Number(args[1]), true)});
+            msg.channel.send({embed: decompEmbed(helpUtility, Number(args[1]), true)});
             break;
         case "leveling":
-            msg.channel.send({embed: decompEmbed(embeds.helpLeveling, Number(args[1]), true)});
+            msg.channel.send({embed: decompEmbed(helpLeveling, Number(args[1]), true)});
             break;
         case "other":
-            msg.channel.send({embed: decompEmbed(embeds.helpOther, Number(args[1]), true)});
+            msg.channel.send({embed: decompEmbed(helpOther, Number(args[1]), true)});
             break;
         //#endregion Categories
         
         //#region Commands
-        /*case "ping":
-            msg.channel.send({embed: decompEmbed(pingCmd.helpEmbed)});
-            break;*/
+        case "ping":
+            msg.channel.send({embed: decompEmbed(ping)});
+            break;
         case "help":
         case "?":
             msg.channel.send({embed: decompEmbed(helpEmbed)});
@@ -34,7 +31,7 @@ export function handle ( msg: Message, args: string[] ) {
         //#endregion Commands
 
         case undefined:
-            msg.channel.send({embed: decompEmbed(embeds.helpDefault)});
+            msg.channel.send({embed: decompEmbed(helpDefault)});
             break;
 
         default:
@@ -43,7 +40,7 @@ export function handle ( msg: Message, args: string[] ) {
     }
 }
 
-function decompEmbed (embeds: embeds.HelpEmbeds, page?: number, paged?: boolean): MessageEmbed {
+function decompEmbed (embeds: HelpEmbeds, page?: number, paged?: boolean): MessageEmbed {
     var decompEmbed: MessageEmbed = new MessageEmbed();
     if (!page || page > embeds.length) {
         page = 1;
@@ -52,7 +49,7 @@ function decompEmbed (embeds: embeds.HelpEmbeds, page?: number, paged?: boolean)
     decompEmbed.setTitle(compEmbed.title.concat(" - Ally"));
     decompEmbed.setDescription(compEmbed.description);
     decompEmbed.setURL(compEmbed.url);
-    decompEmbed.addFields(compEmbed.fields);
+    if (compEmbed.fields) decompEmbed.addFields(compEmbed.fields);
     decompEmbed.setTimestamp(new Date());
     decompEmbed.setThumbnail("https://i.imgur.com/YVRMcUD.png");
     if (paged) decompEmbed.setFooter(`Page ${page}/${embeds.length}`);
@@ -60,7 +57,7 @@ function decompEmbed (embeds: embeds.HelpEmbeds, page?: number, paged?: boolean)
     return decompEmbed;
 }
 
-export const helpEmbed: embeds.HelpEmbeds = [
+export const helpEmbed: HelpEmbeds = [
     {
         title: `${prefix}help [command/category] | Help`,
         description: "Show an index of commands, and how to use them.",
