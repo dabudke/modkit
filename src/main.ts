@@ -38,4 +38,4 @@ bot.on("error", error => {
 
 bot.login(token).catch( error => {
     console.error("There was a problem logging into Discord, most likely a bad token or no network connection.\nThis is what we got from Discord:\n\n", error);
-})
+});
