@@ -10,16 +10,16 @@ export function handle ( msg: Message, args: string[] ) {
     switch (args[0]) {
         //#region Categories
         case "moderation":
-            msg.channel.send({embed: decompEmbed(embeds.helpModeration)});
+            msg.channel.send({embed: decompEmbed(embeds.helpModeration, Number(args[1]), true)});
             break;
         case "utility":
-            msg.channel.send({embed: decompEmbed(embeds.helpUtility)});
+            msg.channel.send({embed: decompEmbed(embeds.helpUtility, Number(args[1]), true)});
             break;
         case "leveling":
-            msg.channel.send({embed: decompEmbed(embeds.helpLeveling)});
+            msg.channel.send({embed: decompEmbed(embeds.helpLeveling, Number(args[1]), true)});
             break;
         case "other":
-            msg.channel.send({embed: decompEmbed(embeds.helpOther)});
+            msg.channel.send({embed: decompEmbed(embeds.helpOther, Number(args[1]), true)});
             break;
         //#endregion Categories
         
@@ -38,14 +38,14 @@ export function handle ( msg: Message, args: string[] ) {
             break;
 
         default:
-            msg.channel.send("I'm sorry, I couldn't find that command or command category.");
+            msg.reply("that command/category does not exist.");
             break;
     }
 }
 
-function decompEmbed (embeds: embeds.HelpEmbeds, page?: number): MessageEmbed {
+function decompEmbed (embeds: embeds.HelpEmbeds, page?: number, paged?: boolean): MessageEmbed {
     var decompEmbed: MessageEmbed = new MessageEmbed();
-    if (!page) {
+    if (!page || page > embeds.length) {
         page = 1;
     }
     var compEmbed = embeds[page -1];
@@ -55,7 +55,7 @@ function decompEmbed (embeds: embeds.HelpEmbeds, page?: number): MessageEmbed {
     decompEmbed.addFields(compEmbed.fields);
     decompEmbed.setTimestamp(new Date());
     decompEmbed.setThumbnail("https://i.imgur.com/YVRMcUD.png");
-    decompEmbed.setFooter(`Page ${page}/${embeds.length}`);
+    if (paged) decompEmbed.setFooter(`Page ${page}/${embeds.length}`);
     decompEmbed.setColor(0x0099FF);
     return decompEmbed;
 }

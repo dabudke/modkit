@@ -1,10 +1,11 @@
+import { EmbedFieldData } from "discord.js";
 import { name, prefix } from "./about";
 
 export interface CompressedEmbed {
     title: string,
     description: string,
     url: string,
-    fields: Array<{ name: string, value: string }>
+    fields: Array<EmbedFieldData>
 };
 
 export type HelpEmbeds = CompressedEmbed[];
@@ -91,6 +92,10 @@ export const helpUtility: HelpEmbeds = [
             {
                 name: `${prefix}delete (${prefix}purge, ${prefix}massdelete)`,
                 value: "Mass delete messages from the current channel."
+            },
+            {
+                name: `${prefix}announce`,
+                value: "Send announcements to a dedicated channel."
             }
         ]
     }
@@ -116,7 +121,7 @@ export const helpLeveling: HelpEmbeds = [
             }
         ]
     }
-]
+];
 
 export const helpOther: HelpEmbeds = [
     {
@@ -142,4 +147,4 @@ export const helpOther: HelpEmbeds = [
             }
         ]
     }
-]
+];
