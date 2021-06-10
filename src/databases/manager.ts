@@ -25,6 +25,18 @@ export type ChannelId = string;
 export type RoleId = string;
 export type UserId = string;
 
+export enum SettingValues {
+    ChannelOrSame = "Channel, `same`",
+    Channel = "Channel",
+    Boolean = "`yes`, `no`"
+}
+
+interface Setting {
+    description: string,
+    allowedValues: SettingValues,
+    value: any
+}
+
 /* TODO move to central punishments manager */
 enum Punishments {
     Warning,
@@ -44,11 +56,8 @@ interface Punishment {
 //#region Interfaces
 interface LocalUser {
     points: {
-        global: {
-            level: number,
-            points: number
-        },
-        guilds: Map<GuildId, {level: number, points: number}> | null,
+        level: number,
+        points: number
     },
     settings: {
         globalLevelUpMessage: boolean,
@@ -67,26 +76,26 @@ interface LocalUser {
 
 interface LocalGuild {
     settings: {
-        pointNotificationChannel: ChannelId | "same" | null,
-        announcementChannel: ChannelId | null,
-        usermodNotificationChannel: ChannelId | null,
-        userAddNotification: boolean,
-        userLeaveNotification: boolean,
-        userNickChangeNotification: boolean,
-        modLogChannel: ChannelId | null,
-        logMessageDelete: boolean,
-        logMessageMassDelete: boolean,
-        logMessageEdits: boolean,
-        logUserWarns: boolean,
-        logUserMutes: boolean,
-        logUserUnmutes: boolean,
-        logUserKicks: boolean,
-        logUserBans: boolean,
-        logUserUnbans: boolean,
-        logUserHistoryClears: boolean,
+        pointNotificationChannel: Setting,
+        announcementChannel: Setting,
+        usermodNotificationChannel: Setting,
+        userAddNotification: Setting,
+        userLeaveNotification: Setting,
+        userNickChangeNotification: Setting,
+        modLogChannel: Setting,
+        logMessageDelete: Setting,
+        logMessageMassDelete: Setting,
+        logMessageEdits: Setting,
+        logUserWarns: Setting,
+        logUserMutes: Setting,
+        logUserUnmutes: Setting,
+        logUserKicks: Setting,
+        logUserBans: Setting,
+        logUserUnbans: Setting,
+        logUserHistoryClears: Setting,
     },
     permissions: {
-        tiers: Array<RoleId> | null,
+        tiers: Array<RoleId>,
         delete: PermIndex,
         warn: PermIndex,
         mute: PermIndex,
@@ -96,20 +105,18 @@ interface LocalGuild {
         clearHistory: PermIndex,
         settings: PermIndex
     },
-    modHistory: Array<Punishment> | null,
-    userModHistory: Map<UserId, Array<PunishmentId>> | null,
-    activePunishments: Array<PunishmentId> | null
+    points: Map<UserId, {level: number, points: number}>,
+    modHistory: Array<Punishment>,
+    userModHistory: Map<UserId, Array<PunishmentId>>,
+    activePunishments: Array<PunishmentId>
 }
 //#endregion Interfaces
 
 //#region Defaults
 const DefaultUser: LocalUser = {
     points: {
-        global: {
-            level: 1,
-            points: 0
-        },
-        guilds: null
+        level: 1,
+        points: 0
     },
     settings: {
         globalLevelUpMessage: true,
@@ -128,26 +135,94 @@ const DefaultUser: LocalUser = {
 
 const DefaultGuild: LocalGuild = {
     settings: {
-        pointNotificationChannel: "same",
-        announcementChannel: null,
-        usermodNotificationChannel: null,
-        userAddNotification: false,
-        userLeaveNotification: false,
-        userNickChangeNotification: false,
-        modLogChannel: null,
-        logMessageDelete: false,
-        logMessageMassDelete: false,
-        logMessageEdits: false,
-        logUserWarns: false,
-        logUserMutes: false,
-        logUserUnmutes: false,
-        logUserKicks: false,
-        logUserBans: false,
-        logUserUnbans: false,
-        logUserHistoryClears: false
+        pointNotificationChannel: {
+            description: "Channel to post point-related notifications to.",
+            allowedValues: SettingValues.ChannelOrSame,
+            value: null
+        },
+        announcementChannel: {
+            description: "Channel to post announcements to using the `announce` command.",
+            allowedValues: SettingValues.Channel,
+            value: null
+        },
+        usermodNotificationChannel: {
+            description: "Channel to post user-facing user changes to (i.e. joins, leaves, nick changes)",
+            allowedValues: SettingValues.Channel,
+            value: null
+        },
+        userAddNotification: {
+            description: "Post users joining to `usermodNotificationChannel`",
+            allowedValues: SettingValues.Boolean,
+            value: false
+        },
+        userLeaveNotification: {
+            description: "Post users leaving to `usermodNotificatoinChannel`",
+            allowedValues: SettingValues.Boolean,
+            value: false
+        },
+        userNickChangeNotification: {
+            description: "Post users changing their nicknames to `usermodNotificationChannel`",
+            allowedValues: SettingValues.Boolean,
+            value: false
+        },
+        modLogChannel: {
+            description: "Channel to post moderator-facing logs to (i.e. kicks, bans, mutes, message modifications",
+            allowedValues: SettingValues.Channel,
+            value: null
+        },
+        logMessageDelete: {
+            description: "Post message deletes to `modLogChannel`",
+            allowedValues: SettingValues.Boolean,
+            value: false
+        },
+        logMessageMassDelete: {
+            description: "Post message mass deletes to `modLogChannel`",
+            allowedValues: SettingValues.Boolean,
+            value: false
+        },
+        logMessageEdits: {
+            description: "Post message edits to `modLogChannel`",
+            allowedValues: SettingValues.Boolean,
+            value: false
+        },
+        logUserWarns: {
+            description: "Post user warnings to `modLogChannel`",
+            allowedValues: SettingValues.Boolean,
+            value: false
+        },
+        logUserMutes: {
+            description: "Post user mutes to `modLogChannel`",
+            allowedValues: SettingValues.Boolean,
+            value: false
+        },
+        logUserUnmutes: {
+            description: "Post user unmutes (including automatic unmutes) to `modLogChannel`",
+            allowedValues: SettingValues.Boolean,
+            value: false
+        },
+        logUserKicks: {
+            description: "Post user kicks to `modLogChannel`",
+            allowedValues: SettingValues.Boolean,
+            value: false
+        },
+        logUserBans: {
+            description: "Post user bans to `modLogChannel`",
+            allowedValues: SettingValues.Boolean,
+            value: false
+        },
+        logUserUnbans: {
+            description: "Post user unbans (including automatic unbans) to `modLogChannel`",
+            allowedValues: SettingValues.Boolean,
+            value: false
+        },
+        logUserHistoryClears: {
+            description: "Post user moderation history clears to `modLogChannel`",
+            allowedValues: SettingValues.Boolean,
+            value: false
+        }
     },
     permissions: {
-        tiers: null,
+        tiers: [],
         delete: 1,
         warn: 1,
         mute: 1,
@@ -157,54 +232,57 @@ const DefaultGuild: LocalGuild = {
         clearHistory: 1,
         settings: 1
     },
-    modHistory: null,
-    userModHistory: null,
-    activePunishments: null
+    points: new Map(),
+    modHistory: [],
+    userModHistory: new Map(),
+    activePunishments: []
 }
 //#endregion Defaults
 
 //#region Functions
 //#region User Functions
-export function getLocalUser (userid: UserId): LocalUser | void {
+export function getLocalUser (userid: UserId): LocalUser {
     if (userDb.has(userid)) {
         return userDb.get(userid);
     }
 }
 
-export function createUser (userid: UserId): void {
+export function createUser (userid: UserId): LocalUser {
     userDb.set(userid, DefaultUser);
     saveDatabases();
+    return DefaultUser;
 }
 
-export function updateLocalUser (userid: UserId, newuser: LocalUser): void {
+export function updateLocalUser (userid: UserId, newuser: LocalUser) {
     userDb.set(userid, newuser);
     saveDatabases();
 }
 
-export function deleteLocalUser (userid: UserId): void {
+export function deleteLocalUser (userid: UserId) {
     userDb.delete(userid);
     saveDatabases();
 }
 //#endregion User Functions
 
 //#region Guild Functions
-export function getLocalGuild (guildid: GuildId): LocalGuild | void {
+export function getLocalGuild (guildid: GuildId): LocalGuild {
     if (guildDb.has(guildid)) {
         return guildDb.get(guildid);
     }
 }
 
-export function createLocalGuild (guildid: GuildId): void {
+export function createLocalGuild (guildid: GuildId): LocalGuild {
     guildDb.set(guildid, DefaultGuild);
     saveDatabases();
+    return DefaultGuild;
 }
 
-export function updateLocalGuild (guildid: GuildId, newguild: LocalGuild): void {
+export function updateLocalGuild (guildid: GuildId, newguild: LocalGuild) {
     guildDb.set(guildid, newguild);
     saveDatabases();
 }
 
-export function deleteLocalGuild (guildid: GuildId): void {
+export function deleteLocalGuild (guildid: GuildId) {
     guildDb.delete(guildid);
     saveDatabases();
 }
