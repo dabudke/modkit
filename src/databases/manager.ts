@@ -11,6 +11,10 @@ if (!existsSync('./js/databases/guilds.json')) {
     console.warn("It appears the guilds database was missing.  Please check for data loss, unless this is first time startup.");
 }
 const guildDb: Map<GuildId, LocalGuild> = new Map(Object.entries(JSON.parse(readFileSync("./js/databases/guilds.json", "utf-8"))));
+guildDb.forEach( guild => {
+    guild.points = new Map(Object.entries(guild.points));
+    guild.userModHistory = new Map(Object.entries(guild.userModHistory))
+})
 
 function saveDatabases() { //FIXME Dirty fix for correct database paths, have to do more research to figure this out.
     writeFileSync("./js/databases/users.json", JSON.stringify(Object.fromEntries(userDb), null, 2));
@@ -82,6 +86,8 @@ interface LocalGuild {
         logUserBans: Setting,
         logUserUnbans: Setting,
         logUserHistoryClears: Setting,
+        syncPunishments: Setting,
+        muteRole: Setting,
     },
     permissions: {
         tiers: Array<RoleId>,
@@ -127,7 +133,7 @@ const DefaultGuild: LocalGuild = {
         pointNotificationChannel: {
             description: "Channel to post point-related notifications to.",
             allowedValues: SettingValues.ChannelOrSame,
-            value: null
+            value: "same"
         },
         announcementChannel: {
             description: "Channel to post announcements to using the `announce` command.",
@@ -208,6 +214,16 @@ const DefaultGuild: LocalGuild = {
             description: "Post user moderation history clears to `modLogChannel`",
             allowedValues: SettingValues.Boolean,
             value: false
+        },
+        syncPunishments: {
+            description: "Sync local punishments to global Ally database, assisting with other moderators",
+            allowedValues: SettingValues.Boolean,
+            value: true
+        },
+        muteRole: {
+            description: "Role to be assigned to users using the `mute` command",
+            allowedValues: SettingValues.Role,
+            value: null
         }
     },
     permissions: {

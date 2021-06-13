@@ -1,6 +1,5 @@
 import { Message, MessageEmbed } from "discord.js";
-import { truncate } from "node:fs";
-import { getLocalGuild } from "../databases/manager";
+import { getLocalGuild, updateLocalGuild } from "../databases/manager";
 import { name, prefix } from "../meta/about";
 import { HelpEmbeds } from "../meta/embeds";
 import { hasPermission, Actions } from "../utils/checkPerms";
@@ -8,7 +7,8 @@ import { hasPermission, Actions } from "../utils/checkPerms";
 export enum SettingValues {
     ChannelOrSame = "Channel, `same`",
     Channel = "Channel",
-    Boolean = "`yes`, `no`"
+    Boolean = "`yes`, `no`",
+    Role = "Role"
 }
 
 export interface Setting {
@@ -19,20 +19,21 @@ export interface Setting {
 
 export function handle (msg: Message, args: string[]) {
     if (!hasPermission(msg.guild, msg.member, Actions.Settings)) {
-        msg.reply("you do not have permission to use that command!");
+        msg.reply("you do not have permission to use that command.");
         return;
     }
 
-    const GuildSettings = getLocalGuild(msg.guild.id).settings;
-    if (!GuildSettings) {
+    let lGuild = getLocalGuild(msg.guild.id);
+    var guildSettings = lGuild.settings;
+    if (!guildSettings) {
         msg.reply("an error occoured internally, please try again later.");
     }
 
     if (!args[0]) { // no setting given
         msg.reply("please give a setting to change.  For a full list, see https://allydiscord.github.io/docs/settings/");
         return;
-    } else if (GuildSettings[args[0]]) { // setting given, valid
-        var setting: Setting = GuildSettings[args[0]];
+    } else if (guildSettings[args[0]]) { // setting given, valid
+        var setting: Setting = guildSettings[args[0]];
 
         if (!args[1]) { // no value given
             var embed: MessageEmbed = new MessageEmbed();
@@ -42,7 +43,7 @@ export function handle (msg: Message, args: string[]) {
             embed.addFields([
                 {
                     name: "Current Value",
-                    value: setting.value,
+                    value: renderValue(setting),
                     inline: true
                 },
                 {
@@ -59,10 +60,11 @@ export function handle (msg: Message, args: string[]) {
         } else {
             var valueValid = confirmValue(setting, args[1], msg);
             if ( valueValid ) { // value given, valid
-                var oldValue = setting.value;
+                var oldValue = renderValue(setting);
 
+                if (args[1] == "none") setting.value = null;
                 if (setting.allowedValues == SettingValues.ChannelOrSame) {
-                    if (args[1].toLowerCase() == "same") setting.value == "same";
+                    if (args[1].toLowerCase() == "same") setting.value = "same";
                     if (msg.guild.channels.resolve(args[1].slice(2, -1))) setting.value = args[1].slice(2, -1);
                 }
                 if (setting.allowedValues == SettingValues.Channel) {
@@ -73,17 +75,23 @@ export function handle (msg: Message, args: string[]) {
                     if (args[1].toLowerCase() == "no") setting.value = false;
                 }
 
+                guildSettings[args[0]] = setting;
+                lGuild.settings = guildSettings;
+                updateLocalGuild(msg.guild.id, lGuild);
+
                 var embed = new MessageEmbed();
                 embed.setTitle(`${args[0]} | Settings - ${name}`);
                 embed.setDescription("Value successfully changed!");
                 embed.addFields([
                     {
                         name: "Old Value",
-                        value: oldValue
+                        value: oldValue,
+                        inline: true
                     },
                     {
                         name: "Current Value",
-                        value: setting.value
+                        value: renderValue(setting),
+                        inline: true
                     }
                 ]);
                 embed.setTimestamp(new Date());
@@ -92,7 +100,7 @@ export function handle (msg: Message, args: string[]) {
                 msg.channel.send({embed: embed});
                 return;
             } else { // value given, invalid
-                msg.reply("that setting cannot accept that value.  Accepted types are: "+ GuildSettings[args[0]].allowedValues +".");
+                msg.reply("that setting cannot accept that value.  Accepted types are: "+ guildSettings[args[0]].allowedValues +".");
                 return;
             }
         }
@@ -103,6 +111,7 @@ export function handle (msg: Message, args: string[]) {
 }
 
 function confirmValue (setting: Setting, value: string, message: Message): boolean {
+    if (value.toLowerCase() == "none") return true;
 
     if (setting.allowedValues == SettingValues.ChannelOrSame) {
         if (value.toLowerCase() == "same") return true;
@@ -112,11 +121,27 @@ function confirmValue (setting: Setting, value: string, message: Message): boole
         if (message.guild.channels.resolve(value.slice(2, -1))) return true;
         return false;
     } if (setting.allowedValues == SettingValues.Boolean) {
-        if (value.toLowerCase() == ('yes' || 'no')) return true;
+        if (value.toLowerCase() == 'yes') return true;
+        if (value.toLowerCase() == "no") return true;
         return false;
     }
 
     return false;
+}
+
+function renderValue (setting: Setting): String {
+    if (setting.value === null) return "none";
+
+    if (setting.allowedValues == SettingValues.ChannelOrSame) {
+        if (setting.value == "same") return "same";
+        return `<#${setting.value}>`;
+    }
+    if (setting.allowedValues == SettingValues.Channel) {
+        return `<#${setting.value}>`;
+    }
+    if (setting.allowedValues == SettingValues.Boolean) {
+        return setting.value ? "yes" : "no";
+    }
 }
 
 export const helpEmbed: HelpEmbeds = [{
