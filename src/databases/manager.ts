@@ -132,17 +132,17 @@ const DefaultGuild: LocalGuild = {
     settings: {
         pointNotificationChannel: {
             description: "Channel to post point-related notifications to.",
-            allowedValues: SettingValues.ChannelOrSame,
+            allowedValues: SettingValues.TextChannelorSame,
             value: "same"
         },
         announcementChannel: {
             description: "Channel to post announcements to using the `announce` command.",
-            allowedValues: SettingValues.Channel,
+            allowedValues: SettingValues.TextChannel,
             value: null
         },
         usermodNotificationChannel: {
             description: "Channel to post user-facing user changes to (i.e. joins, leaves, nick changes)",
-            allowedValues: SettingValues.Channel,
+            allowedValues: SettingValues.TextChannel,
             value: null
         },
         userAddNotification: {
@@ -162,7 +162,7 @@ const DefaultGuild: LocalGuild = {
         },
         modLogChannel: {
             description: "Channel to post moderator-facing logs to (i.e. kicks, bans, mutes, message modifications",
-            allowedValues: SettingValues.Channel,
+            allowedValues: SettingValues.TextChannel,
             value: null
         },
         logMessageDelete: {
