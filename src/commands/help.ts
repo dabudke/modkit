@@ -1,8 +1,9 @@
 import { Message, MessageEmbed } from "discord.js";
-import { name, prefix, version } from "../meta/about";
+import { name, prefix } from "../meta/about";
 import { HelpEmbeds, helpModeration, helpUtility, helpLeveling, helpOther, helpDefault } from "../meta/embeds";
 import { helpEmbed as ping } from "./ping";
 import { helpEmbed as settings } from "./settings";
+import { helpEmbed as warn } from "./warn";
 
 export function handle ( msg: Message, args: string[] ) {
     switch (args[0]) {
@@ -35,6 +36,10 @@ export function handle ( msg: Message, args: string[] ) {
         case "set":
             msg.channel.send({embed: decompEmbed(settings)});
             break;
+        case "warn":
+        case "!":
+            msg.channel.send({embed: decompEmbed(warn)});
+            break;
         //#endregion Commands
 
         case undefined:
@@ -53,7 +58,7 @@ function decompEmbed (embeds: HelpEmbeds, page?: number, paged?: boolean): Messa
         page = 1;
     }
     var compEmbed = embeds[page -1];
-    decompEmbed.setTitle(compEmbed.title.concat(" - Ally"));
+    decompEmbed.setTitle(compEmbed.title.concat(` - ${name}`));
     decompEmbed.setDescription(compEmbed.description);
     decompEmbed.setURL(compEmbed.url);
     if (compEmbed.fields) decompEmbed.addFields(compEmbed.fields);

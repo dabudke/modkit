@@ -1,5 +1,6 @@
 import { readFileSync, writeFileSync, existsSync } from "fs";
 import { Setting, SettingValues } from "../commands/settings";
+import { Punishment, PunishmentId } from "../utils/punishmentManager";
 
 if (!existsSync("./js/databases/users.json")) {
     writeFileSync("./js/databases/users.json", "{}");
@@ -29,21 +30,6 @@ export type GuildId = string;
 export type ChannelId = string;
 export type RoleId = string;
 export type UserId = string;
-
-/* TODO move to central punishments manager */
-enum Punishments {
-    Warning,
-    Mute,
-    Kick,
-    Ban
-}
-type PunishmentId = number;
-interface Punishment {
-    type: Punishments,
-    user: UserId,
-    reason: string,
-    endDate?: Date,
-};
 //#endregion Types
 
 //#region Interfaces
@@ -62,8 +48,7 @@ interface LocalUser {
         totalMutes: number,
         kicks: number,
         activeBans: number,
-        totalBans: number,
-        permBans: number
+        totalBans: number
     }
 }
 
@@ -123,8 +108,7 @@ const DefaultUser: LocalUser = {
         totalMutes: 0,
         kicks: 0,
         activeBans: 0,
-        totalBans: 0,
-        permBans: 0
+        totalBans: 0
     }
 }
 
@@ -249,6 +233,8 @@ const DefaultGuild: LocalGuild = {
 export function getLocalUser (userid: UserId): LocalUser {
     if (userDb.has(userid)) {
         return userDb.get(userid);
+    } else {
+        return createUser(userid);
     }
 }
 

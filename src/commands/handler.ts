@@ -3,6 +3,7 @@ import { prefix } from "../meta/about";
 import { execute as ping } from "./ping";
 import { handle as settings } from "./settings";
 import { handle as help } from "./help";
+import { handle as warn } from "./warn";
 
 export function handle (msg: Message) {
     const args = msg.content.slice(prefix.length).split(/[ \n]+/g);
@@ -31,7 +32,7 @@ export function handle (msg: Message) {
 
         case "warn":
         case "!":
-            msg.reply("that command has not been implemented yet.");
+            warn(args, msg);
             break;
 
         case "feedback":
