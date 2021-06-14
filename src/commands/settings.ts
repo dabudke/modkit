@@ -5,8 +5,8 @@ import { HelpEmbeds } from "../meta/embeds";
 import { hasPermission, Actions } from "../utils/checkPerms";
 
 export enum SettingValues {
-    ChannelOrSame = "Channel, `same`",
-    Channel = "Channel",
+    TextChannelorSame = "Text Channel, `same`",
+    TextChannel = "Text Channel",
     Boolean = "`yes`, `no`",
     Role = "Role"
 }
@@ -63,11 +63,11 @@ export function handle (msg: Message, args: string[]) {
                 var oldValue = renderValue(setting);
 
                 if (args[1] == "none") setting.value = null;
-                if (setting.allowedValues == SettingValues.ChannelOrSame) {
+                if (setting.allowedValues == SettingValues.TextChannelorSame) {
                     if (args[1].toLowerCase() == "same") setting.value = "same";
                     if (msg.guild.channels.resolve(args[1].slice(2, -1))) setting.value = args[1].slice(2, -1);
                 }
-                if (setting.allowedValues == SettingValues.Channel) {
+                if (setting.allowedValues == SettingValues.TextChannel) {
                     if (msg.guild.channels.resolve(args[1].slice(2, -1))) setting.value = args[1].slice(2, -1);
                 }
                 if (setting.allowedValues == SettingValues.Boolean) {
@@ -113,12 +113,14 @@ export function handle (msg: Message, args: string[]) {
 function confirmValue (setting: Setting, value: string, message: Message): boolean {
     if (value.toLowerCase() == "none") return true;
 
-    if (setting.allowedValues == SettingValues.ChannelOrSame) {
+    if (setting.allowedValues == SettingValues.TextChannelorSame) {
         if (value.toLowerCase() == "same") return true;
-        if (message.guild.channels.resolve(value.slice(2, -1))) return true;
+        if (message.guild.channels.resolve(value.slice(2, -1)))
+        if (message.guild.channels.resolve(value.slice(2, -1)).isText()) return true;
         return false;
-    } if (setting.allowedValues == SettingValues.Channel) {
-        if (message.guild.channels.resolve(value.slice(2, -1))) return true;
+    } if (setting.allowedValues == SettingValues.TextChannel) {
+        if (message.guild.channels.resolve(value.slice(2, -1)))
+        if (message.guild.channels.resolve(value.slice(2, -1)).isText()) return true;
         return false;
     } if (setting.allowedValues == SettingValues.Boolean) {
         if (value.toLowerCase() == 'yes') return true;
@@ -132,11 +134,11 @@ function confirmValue (setting: Setting, value: string, message: Message): boole
 function renderValue (setting: Setting): String {
     if (setting.value === null) return "none";
 
-    if (setting.allowedValues == SettingValues.ChannelOrSame) {
+    if (setting.allowedValues == SettingValues.TextChannelorSame) {
         if (setting.value == "same") return "same";
         return `<#${setting.value}>`;
     }
-    if (setting.allowedValues == SettingValues.Channel) {
+    if (setting.allowedValues == SettingValues.TextChannel) {
         return `<#${setting.value}>`;
     }
     if (setting.allowedValues == SettingValues.Boolean) {
