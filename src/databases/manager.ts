@@ -2,25 +2,60 @@ import { readFileSync, writeFileSync, existsSync } from "fs";
 import { Setting, SettingValues } from "../commands/settings";
 import { Punishment, PunishmentId } from "../utils/punishmentManager";
 
+//#region Read/Write
 if (!existsSync("./js/databases/users.json")) {
     writeFileSync("./js/databases/users.json", "{}");
     console.warn("It appears the users database was missing.  Please check for data loss, unless this is first time startup.");
 }
-const userDb: Map<UserId, LocalUser> = new Map(Object.entries(JSON.parse(readFileSync("./js/databases/users.json", "utf-8"))));
+const userDb: Map<UserId, LocalUser> = new Map(Object.entries(JSON.parse(readFileSync("./js/databases/users.json", "utf-8"), (key, value) => {
+    if (typeof value === 'object' && value !== null) {
+        if (value.dataType === 'map') {
+            return new Map(value.value);
+        }
+    }
+    return value;
+})));
 if (!existsSync('./js/databases/guilds.json')) {
     writeFileSync("./js/databases/guilds.json", "{}");
     console.warn("It appears the guilds database was missing.  Please check for data loss, unless this is first time startup.");
 }
-const guildDb: Map<GuildId, LocalGuild> = new Map(Object.entries(JSON.parse(readFileSync("./js/databases/guilds.json", "utf-8"))));
-guildDb.forEach( guild => {
-    guild.points = new Map(Object.entries(guild.points));
-    guild.userModHistory = new Map(Object.entries(guild.userModHistory))
-})
+const guildDb: Map<GuildId, LocalGuild> = new Map(Object.entries(JSON.parse(readFileSync("./js/databases/guilds.json", "utf-8"), (key, value) => {
+    if (typeof value === 'object' && value !== null) {
+        if (value.dataType === 'map') {
+            return new Map(value.value);
+        }
+    }
+    return value;
+})));
 
-function saveDatabases() { //FIXME Dirty fix for correct database paths, have to do more research to figure this out.
-    writeFileSync("./js/databases/users.json", JSON.stringify(Object.fromEntries(userDb), null, 2));
-    writeFileSync("./js/databases/guilds.json", JSON.stringify(Object.fromEntries(guildDb), null, 2));
+function saveUserDatabase() { //FIXME Dirty fix for correct database paths, have to do more research to figure this out.
+    var db = JSON.stringify(userDb, (key, value) => {
+        if (value instanceof Map) {
+            return {
+                datatype: 'map',
+                value: Array.from(value.entries()),
+            };
+        } else {
+            return value;
+        }
+    });
+    writeFileSync("./js/databases/users.json", db);
 }
+
+function saveGuildDatabase() {
+    var db = JSON.stringify(guildDb, (key, value) => {
+        if (value instanceof Map) {
+            return {
+                dataType: 'map',
+                value: Array.from(value.entries()),
+            };
+        } else {
+            return value;
+        }
+    });
+    writeFileSync("./js/databases/guilds.json", db);
+}
+//#endregion Read/Write
 
 //#region Types
 export type PermIndex = number;
@@ -240,18 +275,18 @@ export function getLocalUser (userid: UserId): LocalUser {
 
 export function createUser (userid: UserId): LocalUser {
     userDb.set(userid, DefaultUser);
-    saveDatabases();
+    saveUserDatabase();
     return DefaultUser;
 }
 
 export function updateLocalUser (userid: UserId, newuser: LocalUser) {
     userDb.set(userid, newuser);
-    saveDatabases();
+    saveUserDatabase();
 }
 
 export function deleteLocalUser (userid: UserId) {
     userDb.delete(userid);
-    saveDatabases();
+    saveUserDatabase();
 }
 //#endregion User Functions
 
@@ -264,18 +299,18 @@ export function getLocalGuild (guildid: GuildId): LocalGuild {
 
 export function createLocalGuild (guildid: GuildId): LocalGuild {
     guildDb.set(guildid, DefaultGuild);
-    saveDatabases();
+    saveGuildDatabase();
     return DefaultGuild;
 }
 
 export function updateLocalGuild (guildid: GuildId, newguild: LocalGuild) {
     guildDb.set(guildid, newguild);
-    saveDatabases();
+    saveGuildDatabase();
 }
 
 export function deleteLocalGuild (guildid: GuildId) {
     guildDb.delete(guildid);
-    saveDatabases();
+    saveGuildDatabase();
 }
 //#endregion Guild Functions
 //#endregion Functions
