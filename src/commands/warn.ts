@@ -26,7 +26,7 @@ export function handle (args: string[], msg: Message) {
     
     args.shift();
     var reason = args.join(" ");
-    addPunishment(msg, warnedUser, Punishments.Warning, reason);
+    addPunishment(msg, warnedUser, Punishments.Warning, true, reason);
 }
 
 export const helpEmbed: HelpEmbeds = [

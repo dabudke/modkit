@@ -18,7 +18,7 @@ export interface Punishment {
     endDate?: Date,
 };
 
-export function addPunishment (msg: Message, punishedUser: User, punishmentType: Punishments, reason?: string, endDate?: Date) {
+export function addPunishment (msg: Message, punishedUser: User, punishmentType: Punishments, execute: boolean, reason?: string, endDate?: Date) {
     var punishment: Punishment = {
         type: punishmentType,
         user: punishedUser,
