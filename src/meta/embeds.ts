@@ -1,33 +1,33 @@
-import { EmbedFieldData } from "discord.js";
-import { name, prefix } from "./about";
-
-export interface CompressedEmbed {
+//#region Help Embeds
+export type HelpEmbeds = {
     title: string,
     description: string,
     url: string,
-    fields?: Array<EmbedFieldData>
-};
-
-export type HelpEmbeds = CompressedEmbed[];
+    fields?: Array<{
+        name: string,
+        value: string,
+        inline?: boolean
+    }>
+}[];
 
 export const helpDefault: HelpEmbeds = [
     {
         title: `Help`,
-        description: `Use \`${prefix}help\` and include a category or command (listed below) to see all commands in that category, or how to use that command.`,
-        url: "https://allydiscord.github.io/docs/commands/",
+        description: `Use \`@phelp\` and include a category or command (listed below) to see all commands in that category, or how to use that command.`,
+        url: "/docs/commands/",
         fields: [
             {
                 name: "Moderation Commands",
-                value: `${prefix}warn (${prefix}!) - Warn a user.\n${prefix}ban (${prefix}tempban) - Ban a user.\n${prefix}mute (${prefix}tempmute) - Mute a user, preventing them from speaking in text channels.\n**+4 more**`
+                value: `@pwarn (@p!) - Warn a user.\n@pban (@ptempban) - Ban a user.\n@pmute (@ptempmute) - Mute a user, preventing them from speaking in text channels.\n**+4 more**`
             }, {
                 name: "Utility Commands",
-                value: `${prefix}help (${prefix}?) - Show an index of commands, and how to use them.\n${prefix}settings (${prefix}setting, ${prefix}sets, ${prefix}set) - Change and view settings for the current server.\n${prefix}usersettings (${prefix}usersetting, ${prefix}usersets, ${prefix}userset) - Change and view your personal settings.\n**+1 more**`
+                value: `@phelp (@p?) - Show an index of commands, and how to use them.\n@psettings (@psetting, @psets, @pset) - Change and view settings for the current server.\n@pusersettings (@pusersetting, @pusersets, @puserset) - Change and view your personal settings.\n**+1 more**`
             }, {
                 name: "Leveling Commands",
-                value: `${prefix}level (${prefix}lvl) - Check the server level of a user.\n${prefix}setlevel (${prefix}setlvl) - Set the server level of a user.\n${prefix}globallevel (${prefix}globallvl, ${prefix}glevel, ${prefix}glvl) - Check your global ${name} level.`
+                value: `@plevel (@plvl) - Check the server level of a user.\n@psetlevel (@psetlvl) - Set the server level of a user.\n@pgloballevel (@pgloballvl, @pglevel, @pglvl) - Check your global @n level.`
             }, {
                 name: "Other Commands",
-                value: `${prefix}about - Get information about ${name}\n${prefix}feedback (${prefix}fb) - Provide feedback for the developers of ${name}\n${prefix}bugreport (${prefix}reportbug, ${prefix}bug) - Report a bug to the developers of ${name}\n**+1 more**`
+                value: `@pabout - Get information about @n\n@pfeedback (@pfb) - Provide feedback for the developers of @n\n@pbugreport (@preportbug, @pbug) - Report a bug to the developers of @n\n**+1 more**`
             }
         ]
     }
@@ -37,34 +37,34 @@ export const helpModeration: HelpEmbeds = [
     {
         title: `Moderation Commands | Help`,
         description: "Commands to help you moderate your server.",
-        url: "https://allydiscord.github.io/docs/commands/moderation",
+        url: "/docs/commands/moderation",
         fields: [
             {
-                name: `${prefix}warn (${prefix}!)`,
+                name: "@pwarn (@p!)",
                 value: "Warn a user."
             },
             {
-                name: `${prefix}ban (${prefix}tempban)`,
+                name: "@pban (@ptempban)",
                 value: "Ban a user."
             },
             {
-                name: `${prefix}mute (${prefix}tempmute)`,
+                name: "@pmute (@ptempmute)",
                 value: "Mute a user, preventing them from talking in text channels."
             },
             {
-                name: `${prefix}unban (${prefix}removeban, ${prefix}uban)`,
+                name: "@punban (@premoveban, @puban)",
                 value: "Unban a user, regardless of the time left on their ban."
             },
             {
-                name: `${prefix}kick`,
+                name: "@pkick",
                 value: "Kick a user from the server."
             },
             {
-                name: `${prefix}unmute (${prefix}removemute, ${prefix}umute)`,
+                name: "@punmute (@premovemute, @pumute)",
                 value: "Unmute a user, regardless of the time left on their mute."
             },
             {
-                name: `${prefix}modhistory (${prefix}history)`,
+                name: "@pmodhistory (@phistory)",
                 value: "See or clear the moderation history of a user."
             }
         ]
@@ -73,28 +73,28 @@ export const helpModeration: HelpEmbeds = [
 
 export const helpUtility: HelpEmbeds = [
     {
-        title: `Utility Commands | Help`,
-        description: `Commands to configure ${name} and this server to your liking.`,
-        url: "https://allydiscord.github.io/docs/commands/utility/",
+        title: "Utility Commands | Help",
+        description: `Commands to configure @n and this server to your liking.`,
+        url: "/docs/commands/utility/",
         fields: [
             {
-                name: `${prefix}help (${prefix}?)`,
+                name: `@phelp (@p?)`,
                 value: "Show an index of commands, and how to use them."
             },
             {
-                name: `${prefix}settings (${prefix}setting, ${prefix}sets, ${prefix}set)`,
+                name: `@psettings (@psetting, @psets, @pset)`,
                 value: "Change and view settings for the current server."
             },
             {
-                name: `${prefix}usersettings (${prefix}usersetting, ${prefix}usersets, ${prefix}userset)`,
+                name: `@pusersettings (@pusersetting, @pusersets, @puserset)`,
                 value: "Change and view your personal settings."
             },
             {
-                name: `${prefix}delete (${prefix}purge, ${prefix}massdelete)`,
+                name: `@pdelete (@ppurge, @pmassdelete)`,
                 value: "Mass delete messages from the current channel."
             },
             {
-                name: `${prefix}announce`,
+                name: `@pannounce`,
                 value: "Send announcements to a dedicated channel."
             }
         ]
@@ -105,19 +105,19 @@ export const helpLeveling: HelpEmbeds = [
     {
         title: "Leveling Commands | Help",
         description: "Commands for managing your per-server levels and global level.",
-        url: "https://allydiscord.github.io/docs/commands/leveling/",
+        url: "/docs/commands/leveling/",
         fields: [
             {
-                name: `${prefix}level (${prefix}lvl)`,
+                name: `@plevel (@plvl)`,
                 value: "Check the server level of a user."
             },
             {
-                name: `${prefix}setlevel (${prefix}setlvl)`,
+                name: `@psetlevel (@psetlvl)`,
                 value: "Set the server level of a user."
             },
             {
-                name: `${prefix}globallevel (${prefix}globallvl, ${prefix}glevel, ${prefix}glvl)`,
-                value: `Check your global ${name} level.`
+                name: `@pgloballevel (@pgloballvl, @pglevel, @pglvl)`,
+                value: `Check your global @n level.`
             }
         ]
     }
@@ -127,24 +127,25 @@ export const helpOther: HelpEmbeds = [
     {
         title: "Other Commands | Help",
         description: "Commands that only exist for one niche purpose",
-        url: "https://allydiscord.github.io/docs/commands/other/",
+        url: "/docs/commands/other/",
         fields: [
             {
-                name: `${prefix}about`,
-                value: `Displays information about ${name}`
+                name: `@pabout`,
+                value: `Displays information about @n`
             },
             {
-                name: `${prefix}feedback (${prefix}fb)`,
-                value: `Provide feedback to the developers of ${name}`
+                name: `@pfeedback (@pfb)`,
+                value: `Provide feedback to the developers of @n`
             },
             {
-                name: `${prefix}bugreport (${prefix}reportbug, ${prefix}bug)`,
-                value: `Report a bug to the developers of ${name}`
+                name: `@pbugreport (@preportbug, @pbug)`,
+                value: `Report a bug to the developers of @n`
             },
             {
-                name: `${prefix}ping`,
-                value: `Ping ${name}`
+                name: `@pping`,
+                value: `Ping @n`
             }
         ]
     }
 ];
+//#endregion Help Embeds

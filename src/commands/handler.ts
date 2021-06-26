@@ -1,6 +1,6 @@
 import { Message } from "discord.js";
-import { prefix } from "../meta/about";
-import { execute as ping } from "./ping";
+import { prefix } from "../meta/config";
+import { handle as ping } from "./ping";
 import { handle as settings } from "./settings";
 import { handle as help } from "./help";
 import { handle as warn } from "./warn";

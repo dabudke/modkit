@@ -2,11 +2,8 @@
 import { Client } from "discord.js";
 import { getLocalGuild, createLocalGuild } from "./databases/manager";
 import { handle as handleCommand } from "./commands/handler";
-import { readFileSync } from "fs";
-import { prefix } from "./meta/about";
-
-// get meta files
-const token = readFileSync("./token.txt", { encoding: "utf-8" });
+import { readFile } from "fs";
+import { prefix } from "./meta/config";
 
 // declare client
 const bot = new Client();
@@ -38,8 +35,9 @@ bot.on("message", msg => {
 
 bot.on("error", error => {
     console.warn("An error occoured while communicating with Discord, here's what we got:\n\n", error);
-})
+});
 
-bot.login(token).catch( error => {
-    console.error("There was a problem logging into Discord, most likely a bad token or no network connection.\nThis is what we got from Discord:\n\n", error);
+readFile("./token.txt", "utf-8", ( err, token ) => {
+    if (err) console.error("It appears that there is not a token.txt in the bot's root directory.  Please create the file, and paste your bot token into it.")
+    else bot.login(token).catch( err => console.error("There was a problem logging into Discord, most likely a bad token or no network connection.\n\nHere's what was recieved from Discord:\n", err));
 });

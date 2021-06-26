@@ -1,7 +1,6 @@
 import { EmbedFieldData, Guild, Message, MessageEmbed, User } from "discord.js";
 import { getLocalGuild, getLocalUser, updateLocalGuild, updateLocalUser } from "../databases/manager";
 
-type UserId = string;
 export enum Punishments {
     Warning,
     Mute,

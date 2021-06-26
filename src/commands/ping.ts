@@ -1,14 +1,13 @@
-import { prefix } from "../meta/about";
 import { HelpEmbeds } from "../meta/embeds";
 
-export function execute ( message ) {
+export function handle ( message ) {
     message.reply('pong!');
 }
 
 export const helpEmbed: HelpEmbeds = [
 	{
-		title: `${prefix}ping`,
+		title: `ping`,
 		description: "Ping the bot.  (pong!)",
-		url: "https://allydiscord.github.io/docs/commands/other/ping/"
+		url: "/docs/commands/other/ping/"
 	}
 ]

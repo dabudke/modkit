@@ -1,6 +1,6 @@
 import { Message, MessageEmbed } from "discord.js";
 import { getLocalGuild, updateLocalGuild } from "../databases/manager";
-import { name, prefix } from "../meta/about";
+import { name } from "../meta/config";
 import { HelpEmbeds } from "../meta/embeds";
 import { hasPermission, Actions } from "../utils/checkPerms";
 
@@ -147,9 +147,9 @@ function renderValue (setting: Setting): String {
 }
 
 export const helpEmbed: HelpEmbeds = [{
-    title: `${prefix}settings (setting) [value]`,
+    title: `settings (setting) [value]`,
     description: "Change and view settings for the current server.",
-    url: "https://allydiscord.github.io/docs/commands/utility/settings/",
+    url: "/docs/commands/utility/settings/",
     fields: [
         {
             name: "(setting)",
@@ -158,6 +158,10 @@ export const helpEmbed: HelpEmbeds = [{
         {
             name: "[value]",
             value: "**Optional.**  Value to set the setting to.  Omit to see the current value."
+        },
+        {
+            name: "Aliases",
+            value: "@psetting, @psets, @pset"
         }
     ]
 }]

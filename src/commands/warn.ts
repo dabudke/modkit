@@ -1,5 +1,4 @@
 import { Message } from "discord.js";
-import { prefix } from "../meta/about";
 import { HelpEmbeds } from "../meta/embeds";
 import { Actions, hasPermission } from "../utils/checkPerms";
 import { addPunishment, Punishments } from "../utils/punishmentManager";
@@ -31,9 +30,9 @@ export function handle (args: string[], msg: Message) {
 
 export const helpEmbed: HelpEmbeds = [
     {
-        title: `${prefix}warn (user) [reason...]`,
+        title: `warn (user) [reason...]`,
         description: "Warn a user.",
-        url: "https://allydiscord.github.io/docs/commands/moderation/warn/",
+        url: "/docs/commands/moderation/warn/",
         fields: [
             {
                 name: "(user)",
@@ -45,7 +44,7 @@ export const helpEmbed: HelpEmbeds = [
             },
             {
                 name: "Aliases",
-                value: `${prefix}!`
+                value: `@p!`
             }
         ]
     }
