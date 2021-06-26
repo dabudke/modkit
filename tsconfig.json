@@ -5,6 +5,7 @@
         "checkJs": true,
         "rootDir": "src",
         "sourceMap": true,
+        "removeComments": true,
         "lib": [
             "ES2019"
         ]

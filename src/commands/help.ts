@@ -1,5 +1,5 @@
 import { Message, MessageEmbed } from "discord.js";
-import { name, prefix } from "../meta/about";
+import { name, prefix, url } from "../meta/config";
 import { HelpEmbeds, helpModeration, helpUtility, helpLeveling, helpOther, helpDefault } from "../meta/embeds";
 import { helpEmbed as ping } from "./ping";
 import { helpEmbed as settings } from "./settings";
@@ -9,16 +9,16 @@ export function handle ( msg: Message, args: string[] ) {
     switch (args[0]) {
         //#region Categories
         case "moderation":
-            msg.channel.send({embed: decompEmbed(helpModeration, Number(args[1]), true)});
+            msg.channel.send({embed: decompEmbed(helpModeration, Number(args[1]), true, true)});
             break;
         case "utility":
-            msg.channel.send({embed: decompEmbed(helpUtility, Number(args[1]), true)});
+            msg.channel.send({embed: decompEmbed(helpUtility, Number(args[1]), true, true)});
             break;
         case "leveling":
-            msg.channel.send({embed: decompEmbed(helpLeveling, Number(args[1]), true)});
+            msg.channel.send({embed: decompEmbed(helpLeveling, Number(args[1]), true, true)});
             break;
         case "other":
-            msg.channel.send({embed: decompEmbed(helpOther, Number(args[1]), true)});
+            msg.channel.send({embed: decompEmbed(helpOther, Number(args[1]), true, true)});
             break;
         //#endregion Categories
         
@@ -52,28 +52,28 @@ export function handle ( msg: Message, args: string[] ) {
     }
 }
 
-function decompEmbed (embeds: HelpEmbeds, page?: number, paged?: boolean): MessageEmbed {
+function decompEmbed (embeds: HelpEmbeds, page?: number, paged?: boolean, nonCommand?: boolean): MessageEmbed {
     var decompEmbed: MessageEmbed = new MessageEmbed();
     if (!page || page > embeds.length) {
         page = 1;
     }
     var compEmbed = embeds[page -1];
-    decompEmbed.setTitle(compEmbed.title.concat(` - ${name}`));
-    decompEmbed.setDescription(compEmbed.description);
-    decompEmbed.setURL(compEmbed.url);
-    if (compEmbed.fields) decompEmbed.addFields(compEmbed.fields);
+    decompEmbed.setTitle(`${nonCommand ? "" : prefix}${compEmbed.title} - ${name} Help`);
+    decompEmbed.setDescription(compEmbed.description.replace(/@p/g, prefix).replace(/@n/g, name));
+    decompEmbed.setURL(url + compEmbed.url);
+    if (compEmbed.fields) compEmbed.fields.forEach( field => decompEmbed.addField(field.name.replace(/@p/g, prefix).replace(/@n/g, name), field.value.replace(/@p/g, prefix).replace(/@n/g, name), field.inline));
     decompEmbed.setTimestamp(new Date());
     decompEmbed.setThumbnail("https://i.imgur.com/YVRMcUD.png");
     if (paged) decompEmbed.setFooter(`Page ${page}/${embeds.length}`);
-    decompEmbed.setColor(0x0099FF);
+    decompEmbed.setColor("#0099FF");
     return decompEmbed;
 }
 
 export const helpEmbed: HelpEmbeds = [
     {
-        title: `${prefix}help [command/category] | Help`,
+        title: `help [command/category] | Help`,
         description: "Show an index of commands, and how to use them.",
-        url: "https://allydiscord.github.io/docs/commands/utility/help/",
+        url: "/docs/commands/utility/help/",
         fields: [
             {
                 name: "[command/category]",
@@ -81,7 +81,7 @@ export const helpEmbed: HelpEmbeds = [
             },
             {
                 name: "Aliases",
-                value: `${prefix}?`
+                value: `@p?`
             }
         ]
     }
