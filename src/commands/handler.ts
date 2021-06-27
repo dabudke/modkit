@@ -5,7 +5,7 @@ import { handle as settings } from "./settings";
 import { handle as help } from "./help";
 import { handle as warn } from "./warn";
 
-export function handle (msg: Message) {
+export function handle (msg: Message): void {
     const args = msg.content.slice(prefix.length).split(/[ \n]+/g);
     const cmd = args.shift().toLowerCase();
     

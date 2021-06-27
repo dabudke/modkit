@@ -29,7 +29,7 @@ const guildDb: Map<GuildId, LocalGuild> = new Map(Object.entries(JSON.parse(read
 })));
 
 function saveUserDatabase() { //FIXME Dirty fix for correct database paths, have to do more research to figure this out.
-    var db = JSON.stringify(userDb, (key, value) => {
+    const db = JSON.stringify(userDb, (key, value) => {
         if (value instanceof Map) {
             return {
                 datatype: 'map',
@@ -43,7 +43,7 @@ function saveUserDatabase() { //FIXME Dirty fix for correct database paths, have
 }
 
 function saveGuildDatabase() {
-    var db = JSON.stringify(guildDb, (key, value) => {
+    const db = JSON.stringify(guildDb, (key, value) => {
         if (value instanceof Map) {
             return {
                 dataType: 'map',
@@ -279,12 +279,12 @@ export function createUser (userid: UserId): LocalUser {
     return DefaultUser;
 }
 
-export function updateLocalUser (userid: UserId, newuser: LocalUser) {
+export function updateLocalUser (userid: UserId, newuser: LocalUser): void {
     userDb.set(userid, newuser);
     saveUserDatabase();
 }
 
-export function deleteLocalUser (userid: UserId) {
+export function deleteLocalUser (userid: UserId): void {
     userDb.delete(userid);
     saveUserDatabase();
 }
@@ -303,12 +303,12 @@ export function createLocalGuild (guildid: GuildId): LocalGuild {
     return DefaultGuild;
 }
 
-export function updateLocalGuild (guildid: GuildId, newguild: LocalGuild) {
+export function updateLocalGuild (guildid: GuildId, newguild: LocalGuild): void {
     guildDb.set(guildid, newguild);
     saveGuildDatabase();
 }
 
-export function deleteLocalGuild (guildid: GuildId) {
+export function deleteLocalGuild (guildid: GuildId): void {
     guildDb.delete(guildid);
     saveGuildDatabase();
 }

@@ -14,17 +14,17 @@ export enum SettingValues {
 export interface Setting {
     description: string,
     allowedValues: SettingValues,
-    value: any
+    value: unknown
 }
 
-export function handle (msg: Message, args: string[]) {
+export function handle (msg: Message, args: string[]): void {
     if (!hasPermission(msg.guild, msg.member, Actions.Settings)) {
         msg.reply("you do not have permission to use that command.");
         return;
     }
 
-    let lGuild = getLocalGuild(msg.guild.id);
-    var guildSettings = lGuild.settings;
+    const lGuild = getLocalGuild(msg.guild.id);
+    const guildSettings = lGuild.settings;
     if (!guildSettings) {
         msg.reply("an error occoured internally, please try again later.");
     }
@@ -33,10 +33,10 @@ export function handle (msg: Message, args: string[]) {
         msg.reply("please give a setting to change.  For a full list, see https://allydiscord.github.io/docs/settings/");
         return;
     } else if (guildSettings[args[0]]) { // setting given, valid
-        var setting: Setting = guildSettings[args[0]];
+        const setting: Setting = guildSettings[args[0]];
 
         if (!args[1]) { // no value given
-            var embed: MessageEmbed = new MessageEmbed();
+            const embed: MessageEmbed = new MessageEmbed();
             embed.setTitle(args[0] +` | Settings - ${name}`);
             embed.setDescription(setting.description);
             embed.setURL("https://allydiscord.github.io/docs/settings/#"+ args[0]);
@@ -58,9 +58,9 @@ export function handle (msg: Message, args: string[]) {
             msg.channel.send({embed: embed});
             return;
         } else {
-            var valueValid = confirmValue(setting, args[1], msg);
+            const valueValid = confirmValue(setting, args[1], msg);
             if ( valueValid ) { // value given, valid
-                var oldValue = renderValue(setting);
+                const oldValue = renderValue(setting);
 
                 if (args[1] == "none") setting.value = null;
                 if (setting.allowedValues == SettingValues.TextChannelorSame) {
@@ -79,7 +79,7 @@ export function handle (msg: Message, args: string[]) {
                 lGuild.settings = guildSettings;
                 updateLocalGuild(msg.guild.id, lGuild);
 
-                var embed = new MessageEmbed();
+                const embed = new MessageEmbed();
                 embed.setTitle(`${args[0]} | Settings - ${name}`);
                 embed.setDescription("Value successfully changed!");
                 embed.addFields([
@@ -131,7 +131,7 @@ function confirmValue (setting: Setting, value: string, message: Message): boole
     return false;
 }
 
-function renderValue (setting: Setting): String {
+function renderValue (setting: Setting): string {
     if (setting.value === null) return "none";
 
     if (setting.allowedValues == SettingValues.TextChannelorSame) {
