@@ -1,6 +1,7 @@
+import { Message } from "discord.js";
 import { HelpEmbeds } from "../meta/embeds";
 
-export function handle ( message ) {
+export function handle ( message: Message ): void {
     message.reply('pong!');
 }
 

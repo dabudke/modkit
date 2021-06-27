@@ -5,7 +5,7 @@ import { helpEmbed as ping } from "./ping";
 import { helpEmbed as settings } from "./settings";
 import { helpEmbed as warn } from "./warn";
 
-export function handle ( msg: Message, args: string[] ) {
+export function handle ( msg: Message, args: string[] ): void {
     switch (args[0]) {
         //#region Categories
         case "moderation":
@@ -53,11 +53,11 @@ export function handle ( msg: Message, args: string[] ) {
 }
 
 function decompEmbed (embeds: HelpEmbeds, page?: number, paged?: boolean, nonCommand?: boolean): MessageEmbed {
-    var decompEmbed: MessageEmbed = new MessageEmbed();
+    const decompEmbed: MessageEmbed = new MessageEmbed();
     if (!page || page > embeds.length) {
         page = 1;
     }
-    var compEmbed = embeds[page -1];
+    const compEmbed = embeds[page -1];
     decompEmbed.setTitle(`${nonCommand ? "" : prefix}${compEmbed.title} - ${name} Help`);
     decompEmbed.setDescription(compEmbed.description.replace(/@p/g, prefix).replace(/@n/g, name));
     decompEmbed.setURL(url + compEmbed.url);

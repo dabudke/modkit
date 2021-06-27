@@ -3,7 +3,7 @@ import { HelpEmbeds } from "../meta/embeds";
 import { Actions, hasPermission } from "../utils/checkPerms";
 import { addPunishment, Punishments } from "../utils/punishmentManager";
 
-export function handle (args: string[], msg: Message) {
+export function handle (args: string[], msg: Message): void {
     if (!hasPermission(msg.guild, msg.member, Actions.WarnUser)) {
         msg.reply("you do not have permission to use that command.");
         return;
@@ -13,10 +13,11 @@ export function handle (args: string[], msg: Message) {
         msg.reply("you must mention a user.");
         return;
     }
+    let warnedUserID: string;
     if (args[0].startsWith("<@")) {
-        var warnedUserID: string = args[0].slice(2, -1);
+        warnedUserID = args[0].slice(2, -1);
         if (warnedUserID.startsWith("!")) warnedUserID = warnedUserID.slice(1);
-    } else var warnedUserID: string = args[0];
+    } else warnedUserID = args[0];
     const warnedUser = msg.guild.members.resolve(warnedUserID).user;
     if (!warnedUser) {
         msg.reply("you must mention a user.");
@@ -24,7 +25,7 @@ export function handle (args: string[], msg: Message) {
     }
     
     args.shift();
-    var reason = args.join(" ");
+    const reason = args.join(" ");
     addPunishment(msg, warnedUser, Punishments.Warning, true, reason);
 }
 
