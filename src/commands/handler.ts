@@ -46,42 +46,6 @@ export function handle (msg: Message): void {
             msg.reply("please go to our GitHub page to report bugs and submit feedback.  https://github.com/allydiscord/ally/issues");
             break;
 
-        case "usersettings":
-        case "usersetting":
-        case "usersets":
-        case "userset":
-            msg.reply("that command has not been implemented yet.");
-            break;
-
-        case "modhistory":
-        case "history":
-            msg.reply("that command has not been implemented yet.");
-            break;
-        
-        case "clearmodhistory":
-        case "clearhistory":
-            msg.reply("that command has not been implemented yet.");
-            break;
-        
-        case "level":
-        case "lvl":
-            msg.reply("that command has not been implemented yet.");
-            break;
-
-        case "globallevel":
-        case "globallvl":
-        case "glevel":
-        case "glvl":
-            msg.reply("that command has not been implemented yet.");
-            break;
-
-        case "permissions":
-        case "permission":
-        case "perms":
-        case "perm":
-            msg.reply("that command has not been implemented yet.");
-            break;
-
         default:
             msg.reply(`I couldn't understand that command.  Try typing it again, or using \`${prefix}help\` for other commands to try.`);
             break;
