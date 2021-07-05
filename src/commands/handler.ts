@@ -4,6 +4,7 @@ import { handle as ping } from "./ping";
 import { handle as settings } from "./settings";
 import { handle as help } from "./help";
 import { handle as warn } from "./warn";
+import { handle as about } from "./about";
 
 export function handle (msg: Message): void {
     const args = msg.content.slice(prefix.length).split(/[ \n]+/g);
@@ -20,7 +21,7 @@ export function handle (msg: Message): void {
             break;
 
         case "about":
-            msg.reply("that command has not been implemented yet.");
+            about(msg);
             break;
 
         case "settings":

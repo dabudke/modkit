@@ -1,13 +1,15 @@
 {
     "name": "Ally",
     "prefix": "^",
+    "version": "indev",
     "dbpath": "./js/databases",
     "color": "#0099FF",
     "url": "https://allydiscord.github.io",
+    "icon": "/assets/icons/logo.png",
     "team": [
         {
-            "name": "Owner, Project Lead, Developer, Support Team Member",
-            "members": [ "LittleKitacho" ]
+            "name": "LittleKitacho",
+            "members": [ "Owner", "Head Developer", "Support Team Lead" ]
         }
     ]
 }

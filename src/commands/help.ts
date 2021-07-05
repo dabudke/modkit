@@ -4,6 +4,7 @@ import { HelpEmbeds, helpModeration, helpUtility, helpLeveling, helpOther, helpD
 import { helpEmbed as ping } from "./ping";
 import { helpEmbed as settings } from "./settings";
 import { helpEmbed as warn } from "./warn";
+import { helpEmbed as about } from "./about";
 
 export function handle ( msg: Message, args: string[] ): void {
     switch (args[0]) {
@@ -39,6 +40,9 @@ export function handle ( msg: Message, args: string[] ): void {
         case "warn":
         case "!":
             msg.channel.send({embed: decompEmbed(warn)});
+            break;
+        case "about":
+            msg.channel.send({embed: decompEmbed(about)});
             break;
         //#endregion Commands
 
