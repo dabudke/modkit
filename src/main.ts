@@ -1,9 +1,10 @@
 // get libraries and modules
 import { Client } from "discord.js";
-import { getLocalGuild, createLocalGuild } from "./databases/manager";
 import { handle as handleCommand } from "./commands/handler";
 import { readFile } from "fs";
 import { prefix } from "./meta/config";
+import { updateLevel } from "./utils/levelManager";
+
 // common types
 export type GuildId = string;
 export type ChannelId = string;
@@ -16,26 +17,13 @@ const bot = new Client();
 bot.once("ready", () => {
     console.log(`Logged in and connected to Discord (Username: ${bot.user.tag})`);
     bot.user.setPresence( { status: "online", activity: { name: "out for ^help", type: "WATCHING" } } );
-
-    bot.guilds.cache.forEach(guild => {
-        if (!getLocalGuild(guild.id)) {
-            createLocalGuild(guild.id);
-        }
-
-        /* TODO: initial guild join mock event */
-    });
 });
 
 bot.on("message", msg => {
-    // filters
-    if (msg.author.bot) return;
-    if (!msg.guild) { msg.reply("I do not accept DM commands as of right now, sorry."); return; /* TODO: DM commands */ }
-
-    // points
-
-    if (!msg.content.startsWith(prefix)) return;
-
-    handleCommand(msg);
+    if (msg.author.bot) return; // bot exclusion
+    if (!msg.guild) { msg.reply("I do not accept DM commands as of right now, sorry."); return; } // dms
+    if (!msg.content.startsWith(prefix)) updateLevel(msg); // no prefix?  normal message.
+    else handleCommand(msg); // with prefix?  command.
 });
 
 bot.on("error", error => {

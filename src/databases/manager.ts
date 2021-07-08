@@ -114,7 +114,7 @@ interface LocalGuild {
         clearHistory: PermIndex,
         settings: PermIndex
     },
-    points: Map<UserId, {level: number, points: number}>,
+    points: Map<UserId, {level: number, points: number, lastUpdated: number}>,
     modHistory: Array<Punishment>,
     userModHistory: Map<UserId, Array<PunishmentId>>,
     activePunishments: Array<PunishmentId>
