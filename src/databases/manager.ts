@@ -1,10 +1,12 @@
 import { readFileSync, writeFileSync, existsSync } from "fs";
-import { Setting, SettingValues } from "../commands/settings";
+import { Setting, SettingValues } from "../utils/settingManager";
 import { Punishment, PunishmentId } from "../utils/punishmentManager";
+import { UserId, GuildId, RoleId } from "../main";
+import { dbpath } from "../meta/config";
 
 //#region Read/Write
-if (!existsSync("./js/databases/users.json")) {
-    writeFileSync("./js/databases/users.json", "{}");
+if (!existsSync(dbpath.concat("users.json"))) {
+    writeFileSync(dbpath.concat("users.json"), "{}");
     console.warn("It appears the users database was missing.  Please check for data loss, unless this is first time startup.");
 }
 const userDb: Map<UserId, LocalUser> = new Map(Object.entries(JSON.parse(readFileSync("./js/databases/users.json", "utf-8"), (key, value) => {
@@ -15,8 +17,8 @@ const userDb: Map<UserId, LocalUser> = new Map(Object.entries(JSON.parse(readFil
     }
     return value;
 })));
-if (!existsSync('./js/databases/guilds.json')) {
-    writeFileSync("./js/databases/guilds.json", "{}");
+if (!existsSync(dbpath.concat('guilds.json'))) {
+    writeFileSync(dbpath.concat("guilds.json"), "{}");
     console.warn("It appears the guilds database was missing.  Please check for data loss, unless this is first time startup.");
 }
 const guildDb: Map<GuildId, LocalGuild> = new Map(Object.entries(JSON.parse(readFileSync("./js/databases/guilds.json", "utf-8"), (key, value) => {
@@ -57,15 +59,7 @@ function saveGuildDatabase() {
 }
 //#endregion Read/Write
 
-//#region Types
 export type PermIndex = number;
-
-/* Probably should move these to main script. */
-export type GuildId = string;
-export type ChannelId = string;
-export type RoleId = string;
-export type UserId = string;
-//#endregion Types
 
 //#region Interfaces
 interface LocalUser {

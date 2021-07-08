@@ -2,7 +2,7 @@
     "name": "Ally",
     "prefix": "^",
     "version": "indev",
-    "dbpath": "./js/databases",
+    "dbpath": "./js/databases/",
     "color": "#0099FF",
     "url": "https://allydiscord.github.io",
     "icon": "/assets/icons/logo.png",
