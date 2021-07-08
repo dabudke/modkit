@@ -23,6 +23,9 @@ export function handle (args: string[], msg: Message): void {
         msg.reply("you must mention a user.");
         return;
     }
+    if (!msg.guild.members.resolve(warnedUserID).manageable) {
+        msg.reply("I cannot moderate that user.  Please move their roles below mine.")
+    }
     
     args.shift();
     const reason = args.join(" ");

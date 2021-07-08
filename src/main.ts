@@ -4,6 +4,11 @@ import { getLocalGuild, createLocalGuild } from "./databases/manager";
 import { handle as handleCommand } from "./commands/handler";
 import { readFile } from "fs";
 import { prefix } from "./meta/config";
+// common types
+export type GuildId = string;
+export type ChannelId = string;
+export type RoleId = string;
+export type UserId = string;
 
 // declare client
 const bot = new Client();
