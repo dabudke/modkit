@@ -5,56 +5,47 @@ import { UserId, GuildId, RoleId } from "../main";
 import { dbpath } from "../meta/config";
 
 //#region Read/Write
+enum DataType {
+    Map
+}
+
+function replacer(k, v) {
+    if (v instanceof Map) {
+        return {
+            dataType: DataType.Map,
+            value: Array.from(v.entries())
+        };
+    }
+    return v;
+}
+
+function reviver (k, v) {
+    if ( typeof v === "object" && v !== null ) {
+        if (v.dataType == DataType.Map) {
+            return new Map(v.value);
+        }
+    }
+    return v;
+}
+
 if (!existsSync(dbpath.concat("users.json"))) {
     writeFileSync(dbpath.concat("users.json"), "{}");
     console.warn("It appears the users database was missing.  Please check for data loss, unless this is first time startup.");
 }
-const userDb: Map<UserId, LocalUser> = new Map(Object.entries(JSON.parse(readFileSync("./js/databases/users.json", "utf-8"), (key, value) => {
-    if (typeof value === 'object' && value !== null) {
-        if (value.dataType === 'map') {
-            return new Map(value.value);
-        }
-    }
-    return value;
-})));
+const userDb: Map<UserId, LocalUser> = new Map(Object.entries(JSON.parse(readFileSync("./js/databases/users.json", "utf-8"), reviver)));
 if (!existsSync(dbpath.concat('guilds.json'))) {
     writeFileSync(dbpath.concat("guilds.json"), "{}");
     console.warn("It appears the guilds database was missing.  Please check for data loss, unless this is first time startup.");
 }
-const guildDb: Map<GuildId, LocalGuild> = new Map(Object.entries(JSON.parse(readFileSync("./js/databases/guilds.json", "utf-8"), (key, value) => {
-    if (typeof value === 'object' && value !== null) {
-        if (value.dataType === 'map') {
-            return new Map(value.value);
-        }
-    }
-    return value;
-})));
+const guildDb: Map<GuildId, LocalGuild> = JSON.parse(readFileSync("./js/databases/guilds.json", "utf-8"), reviver);
 
 function saveUserDatabase() { //FIXME Dirty fix for correct database paths, have to do more research to figure this out.
-    const db = JSON.stringify(userDb, (key, value) => {
-        if (value instanceof Map) {
-            return {
-                datatype: 'map',
-                value: Array.from(value.entries()),
-            };
-        } else {
-            return value;
-        }
-    });
+    const db = JSON.stringify(userDb, replacer);
     writeFileSync("./js/databases/users.json", db);
 }
 
 function saveGuildDatabase() {
-    const db = JSON.stringify(guildDb, (key, value) => {
-        if (value instanceof Map) {
-            return {
-                dataType: 'map',
-                value: Array.from(value.entries()),
-            };
-        } else {
-            return value;
-        }
-    });
+    const db = JSON.stringify(guildDb, replacer);
     writeFileSync("./js/databases/guilds.json", db);
 }
 //#endregion Read/Write
