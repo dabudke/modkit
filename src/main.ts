@@ -3,7 +3,7 @@ import { Client } from "discord.js";
 import { handle as handleCommand } from "./commands/handler";
 import { readFile } from "fs";
 import { prefix } from "./meta/config";
-import { updateLevel } from "./utils/levelManager";
+import { updatePoints as levelUpdate } from "./utils/levelManager";
 import { createLocalGuild, getLocalGuild } from "./databases/manager";
 
 // common types
@@ -29,7 +29,7 @@ bot.once("ready", () => {
 bot.on("message", msg => {
     if (msg.author.bot) return; // bot exclusion
     if (!msg.guild) { msg.reply("I do not accept DM commands as of right now, sorry."); return; } // dms
-    if (!msg.content.startsWith(prefix)) updateLevel(msg); // no prefix?  normal message.
+    if (!msg.content.startsWith(prefix)) levelUpdate(msg); // no prefix?  normal message.
     else handleCommand(msg); // with prefix?  command.
 });
 
