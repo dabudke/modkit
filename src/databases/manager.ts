@@ -1,10 +1,8 @@
 import { readFileSync, writeFileSync, existsSync } from "fs";
 import { Setting, SettingValues } from "../utils/settingManager";
 import { Punishment, PunishmentId } from "../utils/punishmentManager";
-import { UserId, GuildId, RoleId } from "../main";
-import { dbpath } from "../meta/config";
+import { Snowflake } from "discord.js";
 
-//#region Read/Write
 enum DataType {
     Map
 }
@@ -28,32 +26,67 @@ function reviver (k, v) {
     return v;
 }
 
-if (!existsSync(dbpath.concat("users.json"))) {
-    writeFileSync(dbpath.concat("users.json"), "{}");
-    console.warn("It appears the users database was missing.  Please check for data loss, unless this is first time startup.");
-}
-const userDb: Map<UserId, LocalUser> = new Map(Object.entries(JSON.parse(readFileSync("./js/databases/users.json", "utf-8"), reviver)));
-if (!existsSync(dbpath.concat('guilds.json'))) {
-    writeFileSync(dbpath.concat("guilds.json"), "{}");
-    console.warn("It appears the guilds database was missing.  Please check for data loss, unless this is first time startup.");
-}
-const guildDb: Map<GuildId, LocalGuild> = JSON.parse(readFileSync("./js/databases/guilds.json", "utf-8"), reviver);
+class Database<K extends string, V> {
+    public name: string;
+    public readonly default: V;
 
-function saveUserDatabase() { //FIXME Dirty fix for correct database paths, have to do more research to figure this out.
-    const db = JSON.stringify(userDb, replacer);
-    writeFileSync("./js/databases/users.json", db);
-}
+    protected file: string;
+    protected store: Map<K, V>;
+    
+    constructor(name: string, defaultValue: V) {
+        this.name = name;
+        this.default = defaultValue;
+        this.file = "./".concat(name, ".json");
+        if (!existsSync(this.file)) {
+            console.warn(`Database file ${this.file} does not exist.  Writing blank database before continuing.`);
+            try {
+                writeFileSync(this.file, JSON.stringify(new Map(), replacer));
+            } catch (e) {
+                console.error(`Could not write to database ${this.file}!\n${e}`);
+            }
+        }
+        try {
+            this.store = JSON.parse(readFileSync(this.file, "utf-8"), reviver);
+        } catch (e) {
+            console.warn(`Could not read database ${this.file}!  Using blank database.\n${e}`);
+            this.store = JSON.parse(JSON.stringify(new Map(), replacer), reviver);
+        }
+    }
 
-function saveGuildDatabase() {
-    const db = JSON.stringify(guildDb, replacer);
-    writeFileSync("./js/databases/guilds.json", db);
+    protected verify(key: K): void {
+        if (!this.store.has(key)) {
+            this.store.set(key, this.default);
+        }
+    }
+    
+    public get(key: K): V {
+        this.verify(key);
+        return this.store.get(key);
+    }
+
+    public update(key: K, value: V): void {
+        this.verify(key);
+        this.store.set(key, value);
+    }
+
+    public delete(key: K): void {
+        this.store.delete(key);
+    }
+
+    public save(): boolean {
+        try {
+            writeFileSync(this.file, JSON.stringify(this.store, replacer));
+            return true;
+        } catch (e) {
+            console.error(`Could not write database file ${this.file}!\n${e}`);
+            return false;
+        }
+    }
 }
-//#endregion Read/Write
 
 export type PermIndex = number;
 
-//#region Interfaces
-interface LocalUser {
+export interface LocalUser {
     points: {
         level: number,
         points: number
@@ -72,7 +105,7 @@ interface LocalUser {
     }
 }
 
-interface LocalGuild {
+export interface LocalGuild {
     settings: {
         pointNotificationChannel: Setting,
         announcementChannel: Setting,
@@ -95,7 +128,7 @@ interface LocalGuild {
         muteRole: Setting,
     },
     permissions: {
-        tiers: Array<RoleId>,
+        tiers: Array<Snowflake>,
         delete: PermIndex,
         warn: PermIndex,
         mute: PermIndex,
@@ -105,15 +138,13 @@ interface LocalGuild {
         clearHistory: PermIndex,
         settings: PermIndex
     },
-    points: Map<UserId, {level: number, points: number, lastUpdated: number}>,
+    points: Map<Snowflake, {level: number, points: number, lastUpdated: number}>,
     modHistory: Array<Punishment>,
-    userModHistory: Map<UserId, Array<PunishmentId>>,
+    userModHistory: Map<Snowflake, Array<PunishmentId>>,
     activePunishments: Array<PunishmentId>
 }
-//#endregion Interfaces
 
-//#region Defaults
-const DefaultUser: LocalUser = {
+export const DefaultUser: LocalUser = {
     points: {
         level: 1,
         points: 0
@@ -130,9 +161,9 @@ const DefaultUser: LocalUser = {
         activeBans: 0,
         totalBans: 0
     }
-}
+};
 
-const DefaultGuild: LocalGuild = {
+export const DefaultGuild: LocalGuild = {
     settings: {
         pointNotificationChannel: {
             description: "Channel to post point-related notifications to.",
@@ -245,57 +276,21 @@ const DefaultGuild: LocalGuild = {
     modHistory: [],
     userModHistory: new Map(),
     activePunishments: []
-}
-//#endregion Defaults
+};
 
-//#region Functions
-//#region User Functions
-export function getLocalUser (userid: UserId): LocalUser {
-    if (userDb.has(userid)) {
-        return userDb.get(userid);
-    } else {
-        return createUser(userid);
-    }
-}
+export const UserDb: Database<Snowflake, LocalUser> = new Database("users", DefaultUser);
+export const GuildDb: Database<Snowflake, LocalGuild> = new Database("guilds", DefaultGuild);
 
-export function createUser (userid: UserId): LocalUser {
-    userDb.set(userid, DefaultUser);
-    saveUserDatabase();
-    return DefaultUser;
+function saveDatabases() {
+    let fail = 0;
+    console.log("Saving databases...");
+    if (!UserDb.save()) fail++;
+    if (!GuildDb.save()) fail++;
+    console.log(`Databases saved.  ${fail} failiures.`);
 }
 
-export function updateLocalUser (userid: UserId, newuser: LocalUser): void {
-    userDb.set(userid, newuser);
-    saveUserDatabase();
-}
-
-export function deleteLocalUser (userid: UserId): void {
-    userDb.delete(userid);
-    saveUserDatabase();
-}
-//#endregion User Functions
-
-//#region Guild Functions
-export function getLocalGuild (guildid: GuildId): LocalGuild {
-    if (guildDb.has(guildid)) {
-        return guildDb.get(guildid);
-    }
-}
-
-export function createLocalGuild (guildid: GuildId): LocalGuild {
-    guildDb.set(guildid, DefaultGuild);
-    saveGuildDatabase();
-    return DefaultGuild;
-}
-
-export function updateLocalGuild (guildid: GuildId, newguild: LocalGuild): void {
-    guildDb.set(guildid, newguild);
-    saveGuildDatabase();
-}
-
-export function deleteLocalGuild (guildid: GuildId): void {
-    guildDb.delete(guildid);
-    saveGuildDatabase();
-}
-//#endregion Guild Functions
-//#endregion Functions
+const saveInterval = setInterval(saveDatabases, 300000);
+process.on("exit", () => {
+    clearInterval(saveInterval);
+    saveDatabases();
+});
