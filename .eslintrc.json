@@ -1,13 +1,21 @@
 {
-    "env": {
-        "commonjs": true,
-        "es2020": true,
-        "node": true
-    },
-    "extends": "eslint:recommended",
+    "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaVersion": 11
     },
+    "plugins": [
+        "@typescript-eslint"
+    ],
+    "env": {
+        "es6": true,
+        "node": true
+    },
+    "extends": [
+        "eslint:recommended"
+    ],
     "rules": {
+        "semi": "warn",
+        "no-unused-vars": "off",
+        "no-unreachable": "error"
     }
 }

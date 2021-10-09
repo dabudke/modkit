@@ -1,16 +1,16 @@
 {
     "configurations": [
-
         {
-            "type": "node",
+            "type": "pwa-node",
             "request": "launch",
-            "name": "Start bot",
-            "runtimeExecutable": "npm",
-            "runtimeArgs": [
-                "start"
-            ],
-            "outputCapture": "std"
+            "name": "Launch Bot",
+            "cwd": "${workspaceFolder}",
+            "program": "start.js",
+            "preLaunchTask": "tsc: build",
+            "outputCapture": "std",
+            "console": "internalConsole",
+            "internalConsoleOptions": "openOnSessionStart",
+            "sourceMaps": true
         }
-
     ]
 }

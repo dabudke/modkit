@@ -1,0 +1,35 @@
+{
+    "version":"2.0.0",
+    "tasks": [
+        {
+            "type": "typescript",
+            "tsconfig": "tsconfig.json",
+            "problemMatcher": "$tsc",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "dependsOn": "eslint: lint" ,
+            "label": "tsc: build",
+            "presentation": {
+                "echo": false,
+                "focus": false,
+                "reveal": "silent",
+                "close": true,
+                "revealProblems": "onProblem"
+            }
+        }, {
+            "type": "eslint",
+            "group": "build",
+            "label": "eslint: lint",
+            "problemMatcher": "$eslint-stylish",
+            "presentation": {
+                "echo": false,
+                "focus": false,
+                "reveal": "silent",
+                "revealProblems": "onProblem",
+                "close": true
+            }
+        }
+    ]
+}

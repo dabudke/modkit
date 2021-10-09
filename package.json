@@ -4,7 +4,7 @@
   "description": "The friendly and open-source Discord.js bot made by LittleKitacho.",
   "main": "start.js",
   "scripts": {
-    "start": "node ./start.js"
+    "start": "."
   },
   "repository": {
     "type": "git",
