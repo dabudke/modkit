@@ -7,11 +7,11 @@ import { CommandData } from "./commands/loader";
 const bot = new Client({ intents: [ Intents.FLAGS.GUILDS ] });
 
 bot.once("ready", async () => {
-    console.log(`Logged in and connected to Discord (Username: ${bot.user.tag})`);
-    bot.user.setPresence({ status: "online", activities: [{ name: "all the servers", type: "WATCHING" }] });
+    console.log(`Connected to Discord (${bot.user.tag})`);
+    bot.user.setPresence({ status: "idle", activities: [{ name: "Starting up, please wait.", type: "PLAYING" }] });
 
     // check registered commands
-    const registered = []
+    const registered = [];
     await bot.application.commands.fetch();
     bot.application.commands.cache.forEach( async command => {
         var i = CommandData.findIndex(data => {
@@ -28,21 +28,27 @@ bot.once("ready", async () => {
         const command = await bot.application.commands.create(data);
         CommandData[CommandData.indexOf(data)].id = command.id;
     } );
-    console.log(CommandData);
+    console.log("Commands Registered");
 
     // TODO: user actions
+
     // TODO: message actions
+
+    console.log("All actions registered.");
+    bot.user.setPresence({ status: "online", activities: [{ name: "all the servers", type: "WATCHING" }] });
+    console.log("Ready!");
 });
 
-// TODO: legacy code
-// bot.on("message", msg => {
-//     if (msg.author.bot) return; // bot exclusion
-//     if (!msg.guild) { msg.reply("I do not accept DM commands as of right now, sorry."); return; } // dms
-//     if (!msg.content.startsWith(prefix)) levelUpdate(msg); // no prefix?  normal message.
-//     // else handleLegacyCommand(msg); // with prefix?  command.
-// });
 
-bot.on("error", error => {
+bot.on("interactionCreate", async interaction => {
+    if (interaction.isCommand()) {
+        const cmd = CommandData.find( data => data.id == interaction.commandId );
+        if (cmd) cmd.handler(interaction);
+        else interaction.reply({ content: "An internal error occoured, try again later.", ephemeral: true });
+    }
+});
+
+bot.on("error", async error => {
     console.warn("An error occoured while communicating with Discord, here's what we got:\n\n", error);
 });
 
