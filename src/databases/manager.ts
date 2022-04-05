@@ -1,5 +1,5 @@
 import { readFileSync, writeFileSync, existsSync } from "fs";
-import { Setting, SettingValues } from "../utils/settingManager";
+import { BooleanSetting, RoleSetting, SettingValues, TextChannelSetting } from "../utils/settingManager";
 import { Punishment, PunishmentId } from "../utils/punishmentManager";
 import { Snowflake } from "discord.js";
 
@@ -107,25 +107,21 @@ export interface LocalUser {
 
 export interface LocalGuild {
     settings: {
-        pointNotificationChannel: Setting,
-        announcementChannel: Setting,
-        usermodNotificationChannel: Setting,
-        userAddNotification: Setting,
-        userLeaveNotification: Setting,
-        userNickChangeNotification: Setting,
-        modLogChannel: Setting,
-        logMessageDelete: Setting,
-        logMessageMassDelete: Setting,
-        logMessageEdits: Setting,
-        logUserWarns: Setting,
-        logUserMutes: Setting,
-        logUserUnmutes: Setting,
-        logUserKicks: Setting,
-        logUserBans: Setting,
-        logUserUnbans: Setting,
-        logUserHistoryClears: Setting,
-        syncPunishments: Setting,
-        muteRole: Setting,
+        usermodNotificationChannel: TextChannelSetting,
+        userAddNotification: BooleanSetting,
+        userLeaveNotification: BooleanSetting,
+        userNickChangeNotification: BooleanSetting,
+        modLogChannel: TextChannelSetting,
+        logMessageDelete: BooleanSetting,
+        logMessageMassDelete: BooleanSetting,
+        logMessageEdits: BooleanSetting,
+        logUserWarns: BooleanSetting,
+        logUserMutes: BooleanSetting,
+        logUserUnmutes: BooleanSetting,
+        logUserKicks: BooleanSetting,
+        logUserBans: BooleanSetting,
+        logUserUnbans: BooleanSetting,
+        muteRole: RoleSetting,
     },
     permissions: {
         tiers: Array<Snowflake>,
@@ -165,101 +161,81 @@ export const DefaultUser: LocalUser = {
 
 export const DefaultGuild: LocalGuild = {
     settings: {
-        pointNotificationChannel: {
-            description: "Channel to post point-related notifications to.",
-            allowedValues: SettingValues.TextChannelorSame,
-            value: "same"
-        },
-        announcementChannel: {
-            description: "Channel to post announcements to using the `announce` command.",
-            allowedValues: SettingValues.TextChannel,
-            value: null
-        },
-        usermodNotificationChannel: {
+        usermodNotificationChannel: new TextChannelSetting({
             description: "Channel to post user-facing user changes to (i.e. joins, leaves, nick changes)",
-            allowedValues: SettingValues.TextChannel,
+            type: SettingValues.TextChannel,
             value: null
-        },
-        userAddNotification: {
+        }),
+        userAddNotification: new BooleanSetting({
             description: "Post users joining to `usermodNotificationChannel`",
-            allowedValues: SettingValues.Boolean,
+            type: SettingValues.Boolean,
             value: false
-        },
-        userLeaveNotification: {
+        }),
+        userLeaveNotification: new BooleanSetting({
             description: "Post users leaving to `usermodNotificationChannel`",
-            allowedValues: SettingValues.Boolean,
+            type: SettingValues.Boolean,
             value: false
-        },
-        userNickChangeNotification: {
+        }),
+        userNickChangeNotification: new BooleanSetting({
             description: "Post users changing their nicknames to `usermodNotificationChannel`",
-            allowedValues: SettingValues.Boolean,
+            type: SettingValues.Boolean,
             value: false
-        },
-        modLogChannel: {
-            description: "Channel to post moderator-facing logs to (i.e. kicks, bans, mutes, message modifications",
-            allowedValues: SettingValues.TextChannel,
+        }),
+        modLogChannel: new TextChannelSetting({
+            description: "Channel to post moderator-facing logs to (i.e. kicks, bans, mutes, message modifications)",
+            type: SettingValues.TextChannel,
             value: null
-        },
-        logMessageDelete: {
+        }),
+        logMessageDelete: new BooleanSetting({
             description: "Post message deletes to `modLogChannel`",
-            allowedValues: SettingValues.Boolean,
+            type: SettingValues.Boolean,
             value: false
-        },
-        logMessageMassDelete: {
+        }),
+        logMessageMassDelete: new BooleanSetting({
             description: "Post message mass deletes to `modLogChannel`",
-            allowedValues: SettingValues.Boolean,
+            type: SettingValues.Boolean,
             value: false
-        },
-        logMessageEdits: {
+        }),
+        logMessageEdits: new BooleanSetting({
             description: "Post message edits to `modLogChannel`",
-            allowedValues: SettingValues.Boolean,
+            type: SettingValues.Boolean,
             value: false
-        },
-        logUserWarns: {
+        }),
+        logUserWarns: new BooleanSetting({
             description: "Post user warnings to `modLogChannel`",
-            allowedValues: SettingValues.Boolean,
+            type: SettingValues.Boolean,
             value: false
-        },
-        logUserMutes: {
+        }),
+        logUserMutes: new BooleanSetting({
             description: "Post user mutes to `modLogChannel`",
-            allowedValues: SettingValues.Boolean,
+            type: SettingValues.Boolean,
             value: false
-        },
-        logUserUnmutes: {
+        }),
+        logUserUnmutes: new BooleanSetting({
             description: "Post user unmutes (including automatic unmutes) to `modLogChannel`",
-            allowedValues: SettingValues.Boolean,
+            type: SettingValues.Boolean,
             value: false
-        },
-        logUserKicks: {
+        }),
+        logUserKicks: new BooleanSetting({
             description: "Post user kicks to `modLogChannel`",
-            allowedValues: SettingValues.Boolean,
+            type: SettingValues.Boolean,
             value: false
-        },
-        logUserBans: {
+        }),
+        logUserBans: new BooleanSetting({
             description: "Post user bans to `modLogChannel`",
-            allowedValues: SettingValues.Boolean,
+            type: SettingValues.Boolean,
             value: false
-        },
-        logUserUnbans: {
+        }),
+        logUserUnbans: new BooleanSetting({
             description: "Post user unbans (including automatic unbans) to `modLogChannel`",
-            allowedValues: SettingValues.Boolean,
+            type: SettingValues.Boolean,
             value: false
-        },
-        logUserHistoryClears: {
-            description: "Post user moderation history clears to `modLogChannel`",
-            allowedValues: SettingValues.Boolean,
-            value: false
-        },
-        syncPunishments: {
-            description: "Sync local punishments to global Ally database, assisting with other moderators",
-            allowedValues: SettingValues.Boolean,
-            value: true
-        },
-        muteRole: {
+        }),
+        muteRole: new RoleSetting({
             description: "Role to be assigned to users using the `mute` command",
-            allowedValues: SettingValues.Role,
+            type: SettingValues.Role,
             value: null
-        }
+        })
     },
     permissions: {
         tiers: [],

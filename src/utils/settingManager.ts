@@ -1,31 +1,63 @@
-import { getLocalGuild, updateLocalGuild } from "../databases/manager";
-import { GuildId } from "../main";
+import { GuildResolvable, RoleResolvable, Snowflake, TextChannelResolvable } from "discord.js";
+import { GuildDb, DefaultGuild } from "../databases/manager";
 
 export enum SettingValues {
-    TextChannelorSame = "Text Channel, `same`",
     TextChannel = "Text Channel",
     Boolean = "`yes`, `no`",
     Role = "Role"
 }
 
-export interface Setting {
-    description: string,
-    allowedValues: SettingValues,
+interface PureSetting {
+    readonly description: string,
+    readonly type: SettingValues
     value: unknown
 }
 
-export function getSetting ( guild: GuildId, setting: string ): Setting | undefined {
-    const LGuild = getLocalGuild(guild);
-    return LGuild.settings[setting];
+abstract class Setting implements PureSetting {
+    public readonly description: string;
+    public readonly type: SettingValues;
+    public value: unknown;
+
+    constructor(setting: PureSetting) {
+        this.description = setting.description;
+        this.type = setting.type;
+        this.value = setting.value;
+    }
+
+    isTextChannel(): this is TextChannelSetting {
+        return this.type == SettingValues.TextChannel;
+    }
+    isBoolean(): this is BooleanSetting {
+        return this.type == SettingValues.Boolean;
+    }
+    isRole(): this is RoleSetting {
+        return this.type == SettingValues.Role;
+    }
 }
 
-export function getSettingValue ( guild: GuildId, setting: string ): unknown {
-    const LGuild = getLocalGuild(guild);
-    return LGuild.settings[setting].value;
+export class TextChannelSetting extends Setting {
+    public value: TextChannelResolvable | null
+}
+export class BooleanSetting extends Setting {
+    public value: boolean;
+}
+export class RoleSetting extends Setting {
+    public value: RoleResolvable | null;
 }
 
-export function setSetting ( guild: GuildId, setting: string, value: unknown ): void {
-    const LGuild = getLocalGuild(guild);
-    LGuild.settings[setting].value = value;
-    updateLocalGuild(guild, LGuild);
+export function settingValid( setting: string ): boolean {
+    return DefaultGuild.settings[setting] != undefined;
 }
+
+export async function getSetting( guildid: Snowflake, setting: string ): Promise<Setting> {
+    if (!settingValid(setting)) {
+        return Promise.reject("That setting does not exist!");
+    }
+    const guild = GuildDb.get(guildid);
+    return Promise.resolve(guild.settings[setting]);
+}
+
+// export async function setValue( guildid: GuildResolvable, setting: string, value: unknown ): Promise<boolean> {
+//     if (!settingValid(setting)) return Promise.reject("That setting does not exist!");
+//     if ()
+// }

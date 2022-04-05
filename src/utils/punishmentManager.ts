@@ -1,7 +1,7 @@
 import { EmbedFieldData, Guild, Message, MessageEmbed, User } from "discord.js";
-import { getLocalGuild, getLocalUser, updateLocalGuild, updateLocalUser } from "../databases/manager";
+import { GuildDb, UserDb } from "../databases/manager";
 
-export enum Punishments {
+export enum PunishmentType {
     Warning,
     Mute,
     Kick,
@@ -9,7 +9,7 @@ export enum Punishments {
 }
 export type PunishmentId = number;
 export interface Punishment {
-    type: Punishments,
+    type: PunishmentType,
     user: User,
     date: Date,
     punisher: User,
@@ -17,7 +17,7 @@ export interface Punishment {
     endDate?: Date,
 }
 
-export function addPunishment (msg: Message, punishedUser: User, punishmentType: Punishments, execute: boolean, reason?: string, endDate?: Date): void {
+export function addPunishment (msg: Message, punishedUser: User, punishmentType: PunishmentType, execute: boolean, reason?: string, endDate?: Date): void {
     const Punishment: Punishment = {
         type: punishmentType,
         user: punishedUser,
@@ -27,11 +27,11 @@ export function addPunishment (msg: Message, punishedUser: User, punishmentType:
         endDate: endDate
     };
 
-    const LGuild = getLocalGuild(msg.guild.id);
-    const LPunishedUser = getLocalUser(punishedUser.id);
+    const LGuild = GuildDb.get(msg.guild.id);
+    const LPunishedUser = UserDb.get(punishedUser.id);
 
     switch (punishmentType) {
-        case Punishments.Warning: {
+        case PunishmentType.Warning: {
             const punishmentIndex = LGuild.modHistory.push(Punishment);
             if (!LGuild.userModHistory.has(punishedUser.id)) {
                 LGuild.userModHistory.set(punishedUser.id, []);
@@ -39,11 +39,11 @@ export function addPunishment (msg: Message, punishedUser: User, punishmentType:
             const lguildUser = LGuild.userModHistory.get(punishedUser.id);
             lguildUser.push(punishmentIndex);
             LGuild.userModHistory.set(punishedUser.id, lguildUser);
-            updateLocalGuild(msg.guild.id, LGuild);
+            GuildDb.update(msg.guild.id, LGuild);
             LPunishedUser.modHistory.warnings += 1;
-            updateLocalUser(punishedUser.id, LPunishedUser);
-            if (reason) msg.reply(`${punishedUser.username} has been warned for ${reason}`)
-            else msg.reply(`${punishedUser.username} has been warned.`)
+            UserDb.update(punishedUser.id, LPunishedUser);
+            if (reason) msg.reply(`${punishedUser.username} has been warned for ${reason}`);
+            else msg.reply(`${punishedUser.username} has been warned.`);
             logPunishment(Punishment, msg.guild);
             break;
         }
@@ -51,7 +51,7 @@ export function addPunishment (msg: Message, punishedUser: User, punishmentType:
 }
 
 export function logPunishment (punishment: Punishment, guild: Guild): void {
-    const GuildSettings = getLocalGuild(guild.id).settings;
+    const GuildSettings = GuildDb.get(guild.id).settings;
     if (!GuildSettings.modLogChannel.value) return;
     const LogChannel = guild.channels.resolve(GuildSettings.modLogChannel.value as string);
     if (!LogChannel) return;
@@ -61,7 +61,7 @@ export function logPunishment (punishment: Punishment, guild: Guild): void {
     let extraFields: EmbedFieldData[];
 
     switch (punishment.type) { // punishment-specific fields set in here
-        case Punishments.Warning:
+        case PunishmentType.Warning:
             if (!GuildSettings.logUserWarns.value) return;
             embed = new MessageEmbed();
             embed.setColor(0xFFFF00);
@@ -87,5 +87,5 @@ export function logPunishment (punishment: Punishment, guild: Guild): void {
     ]);
     if (extraFields) embed.addFields(extraFields);
 
-    LogChannel.send({ embed: embed });
+    // LogChannel.send({ embed: embed });
 }

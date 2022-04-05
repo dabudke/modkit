@@ -1,5 +1,5 @@
 import { Guild, GuildMember } from "discord.js";
-import { getLocalGuild, PermIndex } from "../databases/manager";
+import { GuildDb, PermIndex } from "../databases/manager";
 
 export enum Actions {
     DeleteMessages = "delete",
@@ -13,7 +13,7 @@ export enum Actions {
 }
 
 export function hasPermission ( guild: Guild, guildUser: GuildMember, command: Actions): boolean {
-    const CurrentGuild = getLocalGuild(guild.id);
+    const CurrentGuild = GuildDb.get(guild.id);
 
     if (!CurrentGuild) return false;
 
