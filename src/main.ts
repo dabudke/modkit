@@ -1,15 +1,37 @@
 // get libraries and modules
 import { Client, Intents } from "discord.js";
 import { readFile } from "fs";
-// import { handle as handleLegacyCommand } from "./commands/handler";
-import "./commands/loader";
+import { CommandData } from "./commands/loader";
 
 // declare client
 const bot = new Client({ intents: [ Intents.FLAGS.GUILDS ] });
 
-bot.once("ready", () => {
+bot.once("ready", async () => {
     console.log(`Logged in and connected to Discord (Username: ${bot.user.tag})`);
     bot.user.setPresence({ status: "online", activities: [{ name: "all the servers", type: "WATCHING" }] });
+
+    // check registered commands
+    const registered = []
+    await bot.application.commands.fetch();
+    bot.application.commands.cache.forEach( async command => {
+        var i = CommandData.findIndex(data => {
+            if (command.name == data.name) return true;
+        });
+        if (i == -1) {
+            await bot.application.commands.delete(command);
+        } else {
+            CommandData[i].id = command.id;
+            registered.push(command.name);
+        }
+    });
+    CommandData.filter( data => registered.includes(data.name) ).forEach( async data => {
+        const command = await bot.application.commands.create(data);
+        CommandData[CommandData.indexOf(data)].id = command.id;
+    } );
+    console.log(CommandData);
+
+    // TODO: user actions
+    // TODO: message actions
 });
 
 // TODO: legacy code
