@@ -1,35 +1,24 @@
-import { Guild, GuildMember } from "discord.js";
+import { Guild, GuildMember, Permissions, Snowflake } from "discord.js";
 import { GuildDb, PermIndex } from "../databases/manager";
 
 export enum Actions {
-    DeleteMessages = "delete",
+    Purge = "purge",
     WarnUser = "warn",
     KickUser = "kick",
-    BanAction = "ban",
-    MuteAction = "mute",
+    BanUser = "ban",
+    Mute = "mute",
     ViewHistory = "viewHistory",
     ClearHistory = "clearHistory",
     Settings = "settings"
 }
 
-export function hasPermission ( guild: Guild, guildUser: GuildMember, command: Actions): boolean {
-    const CurrentGuild = GuildDb.get(guild.id);
+export function hasPermission ( permissions: Permissions, command: Actions): boolean {
 
-    if (!CurrentGuild) return false;
+    if (permissions.has("ADMINISTRATOR")) return true;
 
-    const PermissionTiers = CurrentGuild.permissions.tiers;
-    const NeededPerm: PermIndex = CurrentGuild.permissions[command];
-
-    if (guildUser.permissions.has("ADMINISTRATOR")) return true;
-
-    if (PermissionTiers) {
-        PermissionTiers.forEach((id, index) => {
-            if (index < NeededPerm) return;
-            if (!guild.roles.resolve(id)) return;
-            if (!guildUser.roles.cache.has(id)) return;
-    
-            return true;
-        });
+    switch (command) {
+        case Actions.WarnUser:
+            if (!permissions.has("MODERATE_MEMBERS")) return false;
     }
 
     return false;
