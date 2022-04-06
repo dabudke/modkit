@@ -1,55 +1,55 @@
-import { Message } from "discord.js";
-import { HelpEmbeds } from "../meta/embeds";
+import { ApplicationCommandData, CommandInteraction, GuildMember } from "discord.js";
 import { Actions, hasPermission } from "../utils/checkPerms";
-import { addPunishment, Punishments } from "../utils/punishmentManager";
+import { addPunishment, PunishmentType } from "../utils/punishmentManager";
+import { displaynameAndTag } from "../utils/userToString";
 
-export function handle (args: string[], msg: Message): void {
-    if (!hasPermission(msg.guild, msg.member, Actions.WarnUser)) {
-        msg.reply("you do not have permission to use that command.");
+export const data: ApplicationCommandData = {
+    name: "warn",
+    description: "Warn a user",
+    options: [
+        {
+            name: "target",
+            description: "User to warn",
+            type: "USER",
+            required: true
+        }, {
+            name: "reason",
+            description: "Reason to warn the target",
+            type: "STRING"
+        }
+    ]
+};
+
+export async function handler (interaction: CommandInteraction): Promise<void> {
+    await interaction.deferReply();
+
+    const user = await interaction.member as GuildMember;
+    const target = await interaction.options.getMember("target") as GuildMember;
+
+    if (!hasPermission(user.permissions, Actions.WarnUser)) {
+        interaction.editReply({ content: ":no_entry_sign: You cannot use that command."});
+        return;
+    }
+
+    if (user === target) {
+        interaction.editReply({ content: ":exclamation: You cannot warn yourself!"});
+        return;
+    }
+
+    if (target.user.bot) {
+        interaction.editReply({ content: ":exclamation: You cannot warn bots!"});
+    }
+
+    if (!target.moderatable) {
+        interaction.editReply({ content: `:warning: I cannot moderate ${displaynameAndTag(target)}, try moving my role(s) above theirs.` });
+        return;
+    }
+    if (user.roles.highest.comparePositionTo(target.roles.highest) <= 0) {
+        interaction.editReply({ content: `:no_entry_sign: You cannot moderate ${displaynameAndTag(target)}.` });
         return;
     }
     
-    if (!args[0]) {
-        msg.reply("you must mention a user.");
-        return;
-    }
-    let warnedUserID: string;
-    if (args[0].startsWith("<@")) {
-        warnedUserID = args[0].slice(2, -1);
-        if (warnedUserID.startsWith("!")) warnedUserID = warnedUserID.slice(1);
-    } else warnedUserID = args[0];
-    const warnedUser = msg.guild.members.resolve(warnedUserID).user;
-    if (!warnedUser) {
-        msg.reply("you must mention a user.");
-        return;
-    }
-    if (!msg.guild.members.resolve(warnedUserID).manageable) {
-        msg.reply("I cannot moderate that user.  Please move their roles below mine.")
-    }
-    
-    args.shift();
-    const reason = args.join(" ");
-    addPunishment(msg, warnedUser, Punishments.Warning, true, reason);
+    const reason = interaction.options.getString("reason",false);
+    const caseId = addPunishment(interaction.guild,user.user,target.user,PunishmentType.Warning,reason);
+    await interaction.editReply({ content: `${displaynameAndTag(target)} has been warned${reason ? ` for '${reason}'` : ""}. (Case #${caseId})`});
 }
-
-export const helpEmbed: HelpEmbeds = [
-    {
-        title: `warn (user) [reason...]`,
-        description: "Warn a user.",
-        url: "/docs/commands/moderation/warn/",
-        fields: [
-            {
-                name: "(user)",
-                value: "**Required.**  User to warn."
-            },
-            {
-                name: "[reason...]",
-                value: "**Optional.  Long-form.**  Reason to warn the user."
-            },
-            {
-                name: "Aliases",
-                value: `@p!`
-            }
-        ]
-    }
-];
