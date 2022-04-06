@@ -36,7 +36,7 @@ class Database<K extends string, V> {
     constructor(name: string, defaultValue: V) {
         this.name = name;
         this.default = defaultValue;
-        this.file = "./".concat(name, ".json");
+        this.file = __dirname.concat("/").concat(name, ".json");
         if (!existsSync(this.file)) {
             console.warn(`Database file ${this.file} does not exist.  Writing blank database before continuing.`);
             try {
