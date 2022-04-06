@@ -1,23 +1,22 @@
-import { Message, MessageEmbed } from "discord.js";
-import { name, prefix, url, team, color, version } from "../meta/config";
-import { HelpEmbeds } from "../meta/embeds";
+import { ApplicationCommandData, CommandInteraction, MessageEmbed } from "discord.js";
+import { isDevelopment } from "../main";
+import { name, url, team, color, version } from "../meta/config";
 
-export function handle ( message: Message ): void {
+export const data: ApplicationCommandData = {
+    name: "about",
+    description: `Get info about ${name} and it's developers`
+};
+
+export function handler ( interaction: CommandInteraction ): void {
     const embed: MessageEmbed = new MessageEmbed();
-    embed.setTitle(`Hi, I'm ${name}`);
-    embed.setDescription(`I am a Discord bot developed by LittleKitacho, and ran by the people below.\nMy global prefix is ${prefix} and my website is at ${url}/.`);
+    embed.setTitle(`${name} - v${version}`);
+    embed.setDescription(`The only Discord bot you'll need.\nDiscord has a lot of features, Discord bots create bloat.  ${name} is the perfect moderator's toolkit, extending Discord's features without covering them.\nOwned/Operated by LittleKitacho`);
     embed.setURL(url);
     embed.setColor(color);
     team.forEach( ( iteam ) => {
         embed.addField(iteam.name, iteam.members.join(", "));
     });
-    embed.setFooter(`${name} v${version}`);
+    if (isDevelopment) embed.setFooter({ text: "DEVELOPMENT" });
     embed.setTimestamp(new Date());
-    message.channel.send(embed);
+    interaction.reply({ embeds: [embed] });
 }
-
-export const helpEmbed: HelpEmbeds = [{
-    title: "about",
-    description: "Get information about @n.",
-    url: "/docs/commands/other/about/"
-}];

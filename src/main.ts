@@ -1,10 +1,13 @@
 // get libraries and modules
 import { Client, Intents } from "discord.js";
 import { readFile } from "fs";
-import { CommandData } from "./commands/loader";
+import { CommandData, CommandHandlers } from "./commands/loader";
+import { server } from "./meta/config";
 
 // declare client
 const bot = new Client({ intents: [ Intents.FLAGS.GUILDS ] });
+
+export const isDevelopment = process.env.ENV.match(/dev(elop(ment)?)?/i);
 
 bot.once("ready", async () => {
     console.log(`Connected to Discord (${bot.user.tag})`);
@@ -12,38 +15,42 @@ bot.once("ready", async () => {
 
     // check registered commands
     const registered = [];
-    await bot.application.commands.fetch();
-    bot.application.commands.cache.forEach( async command => {
-        var i = CommandData.findIndex(data => {
-            if (command.name == data.name) return true;
+    if (isDevelopment) {
+        await bot.guilds.fetch();
+        const commandGuild = await bot.guilds.cache.get(server);
+        await commandGuild.commands.fetch();
+        commandGuild.commands.cache.forEach( async command => {
+            if (!Object.keys(CommandData).includes(command.name)) await command.delete();
+            else registered.push(command.name);
         });
-        if (i == -1) {
-            await bot.application.commands.delete(command);
-        } else {
-            CommandData[i].id = command.id;
-            registered.push(command.name);
-        }
-    });
-    CommandData.filter( data => registered.includes(data.name) ).forEach( async data => {
-        const command = await bot.application.commands.create(data);
-        CommandData[CommandData.indexOf(data)].id = command.id;
-    } );
+    } else {
+        await bot.application.commands.fetch();
+        bot.application.commands.cache.forEach( async command => {
+            if (!Object.keys(CommandData).includes(command.name)) await command.delete();
+            else registered.push(command.name);
+        });
+    }
+    for (let command in CommandData) {
+        if (registered.includes(command)) continue;
+        await bot.application.commands.create(CommandData[command], isDevelopment ? server : undefined).catch(() => console.warn(`Could not create command '${command}'`));
+    }
     console.log("Commands Registered");
 
     // TODO: user actions
 
     // TODO: message actions
 
-    console.log("All actions registered.");
-    bot.user.setPresence({ status: "online", activities: [{ name: "all the servers", type: "WATCHING" }] });
+    console.log("All actions registered");
+    await bot.user.setPresence({ status: "online", activities: [{ name: "all the servers", type: "WATCHING" }] });
     console.log("Ready!");
 });
 
 
 bot.on("interactionCreate", async interaction => {
+    if (interaction.channel.isVoice()) return;
     if (interaction.isCommand()) {
-        const cmd = CommandData.find( data => data.id == interaction.commandId );
-        if (cmd) cmd.handler(interaction);
+        const handler = CommandHandlers[interaction.commandName];
+        if (handler) handler(interaction);
         else interaction.reply({ content: "An internal error occoured, try again later.", ephemeral: true });
     }
 });

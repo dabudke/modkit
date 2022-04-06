@@ -1,36 +1,16 @@
-import { ApplicationCommandOptionData, CommandInteraction, Interaction, Snowflake } from "discord.js";
+import { ApplicationCommandData, CommandInteraction } from "discord.js";
 import { readdirSync } from "fs";
 
-export interface Command {
-    name: string;
-    description: string;
-    options?: ApplicationCommandOptionData[]
-    handler(interaction: Interaction): void;
-}
-
-export interface CommandDataObj extends Command {
-    name: string;
-    description: string;
-    options?: ApplicationCommandOptionData[];
-    handler(interacton: CommandInteraction): void;
-
-    id: Snowflake;
-}
-
-export const CommandData: CommandDataObj[] = [];
+export const CommandData: Record<string, ApplicationCommandData> = {};
+export const CommandHandlers: Record<string, (interaction: CommandInteraction) => void> = {};
 
 readdirSync(__dirname).forEach(async file => {
     if (file === __filename.split(/[\\/]/g).pop()) return;
-    if (file.endsWith(".map")) return;
+    if (!file.endsWith(".js")) return;
 
-    const data: Partial<CommandDataObj> = {};
-    data.name = file.slice(0,file.indexOf(".js"));
+    const data = await import(__dirname + "/" + file);
+    const name = file.slice(0, file.indexOf(".js"));
 
-    const importedData = await import(__dirname + "/" + file);
-
-    data.description = importedData.description;
-    data.options = importedData.options;
-    data.handler = importedData.handler;
-
-    CommandData.push(data as Required<CommandDataObj>);
+    CommandData[name] = data.data;
+    CommandHandlers[name] = data.handler;
 });
