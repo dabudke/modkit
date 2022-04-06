@@ -5,46 +5,26 @@ import { CommandData, CommandHandlers } from "./commands/loader";
 import { server } from "./meta/config";
 
 // declare client
-const bot = new Client({ intents: [ Intents.FLAGS.GUILDS ] });
+const bot = new Client({ intents: [ Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS ] });
 
-export const isDevelopment = process.env.ENV.match(/dev(elop(ment)?)?/i);
+export const isDevelopment = process.env.ENV && process.env.ENV.match(/dev(elop(ment)?)?/i);
+if (isDevelopment) console.warn("Development mode active.");
 
 bot.once("ready", async () => {
     console.log(`Connected to Discord (${bot.user.tag})`);
     bot.user.setPresence({ status: "idle", activities: [{ name: "Starting up, please wait.", type: "PLAYING" }] });
 
-    // check registered commands
-    const registered = [];
-    if (isDevelopment) {
-        await bot.guilds.fetch();
-        const commandGuild = await bot.guilds.cache.get(server);
-        await commandGuild.commands.fetch();
-        commandGuild.commands.cache.forEach( async command => {
-            if (!Object.keys(CommandData).includes(command.name)) await command.delete();
-            else registered.push(command.name);
-        });
-    } else {
-        await bot.application.commands.fetch();
-        bot.application.commands.cache.forEach( async command => {
-            if (!Object.keys(CommandData).includes(command.name)) await command.delete();
-            else registered.push(command.name);
-        });
-    }
-    for (let command in CommandData) {
-        if (registered.includes(command)) continue;
-        await bot.application.commands.create(CommandData[command], isDevelopment ? server : undefined).catch(() => console.warn(`Could not create command '${command}'`));
-    }
-    console.log("Commands Registered");
-
+    const allCommands = [];
+    allCommands.push(...Object.values(CommandData));
     // TODO: user actions
-
     // TODO: message actions
+    bot.application.commands.set(allCommands, isDevelopment ? server : null);
+    bot.application.commands.set([], isDevelopment ? null : server);
+    console.log("Actions registered");
 
-    console.log("All actions registered");
     await bot.user.setPresence({ status: "online", activities: [{ name: "all the servers", type: "WATCHING" }] });
     console.log("Ready!");
 });
-
 
 bot.on("interactionCreate", async interaction => {
     if (interaction.channel.isVoice()) return;
