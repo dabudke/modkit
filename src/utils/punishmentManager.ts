@@ -17,35 +17,33 @@ export interface Punishment {
     endDate?: Date,
 }
 
-export function addPunishment (msg: Message, punishedUser: User, punishmentType: PunishmentType, execute: boolean, reason?: string, endDate?: Date): void {
+export function addPunishment (guild: Guild, punishingUser: User, punishedUser: User, punishmentType: PunishmentType, reason?: string, endDate?: Date): number {
     const Punishment: Punishment = {
         type: punishmentType,
         user: punishedUser,
         date: new Date(),
-        punisher: msg.author,
+        punisher: punishingUser,
         reason: reason,
         endDate: endDate
     };
 
-    const LGuild = GuildDb.get(msg.guild.id);
+    const LGuild = GuildDb.get(guild.id);
     const LPunishedUser = UserDb.get(punishedUser.id);
 
     switch (punishmentType) {
         case PunishmentType.Warning: {
-            const punishmentIndex = LGuild.modHistory.push(Punishment);
+            const punishmentId = LGuild.modHistory.push(Punishment);
             if (!LGuild.userModHistory.has(punishedUser.id)) {
                 LGuild.userModHistory.set(punishedUser.id, []);
             }
             const lguildUser = LGuild.userModHistory.get(punishedUser.id);
-            lguildUser.push(punishmentIndex);
+            lguildUser.push(punishmentId);
             LGuild.userModHistory.set(punishedUser.id, lguildUser);
-            GuildDb.update(msg.guild.id, LGuild);
+            GuildDb.update(guild.id, LGuild);
             LPunishedUser.modHistory.warnings += 1;
             UserDb.update(punishedUser.id, LPunishedUser);
-            if (reason) msg.reply(`${punishedUser.username} has been warned for ${reason}`);
-            else msg.reply(`${punishedUser.username} has been warned.`);
-            logPunishment(Punishment, msg.guild);
-            break;
+            logPunishment(Punishment, guild);
+            return punishmentId;
         }
     }
 }
