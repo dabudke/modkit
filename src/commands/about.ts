@@ -1,10 +1,11 @@
-import { ApplicationCommandData, CommandInteraction, MessageEmbed } from "discord.js";
+import { ChatInputApplicationCommandData, CommandInteraction, MessageEmbed } from "discord.js";
 import { isDevelopment } from "../main";
 import { name, url, team, color, version } from "../meta/config";
 
-export const data: ApplicationCommandData = {
+export const data: ChatInputApplicationCommandData = {
     name: "about",
-    description: `Get info about ${name} and it's developers`
+    description: `Get info about ${name} and it's developers`,
+    type: "CHAT_INPUT"
 };
 
 export function handler ( interaction: CommandInteraction ): void {

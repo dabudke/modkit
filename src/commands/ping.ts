@@ -1,8 +1,9 @@
-import { ApplicationCommandData, CommandInteraction } from "discord.js";
+import { ChatInputApplicationCommandData, CommandInteraction } from "discord.js";
 
-export const data: ApplicationCommandData = {
+export const data: ChatInputApplicationCommandData = {
 	name: "ping",
-	description: "Ping the bot"
+	description: "Ping the bot",
+	type: "CHAT_INPUT"
 };
 
 export function handler(interaction: CommandInteraction) {

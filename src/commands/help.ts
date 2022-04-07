@@ -1,9 +1,10 @@
-import { ApplicationCommandData, CommandInteraction } from "discord.js";
+import { ChatInputApplicationCommandData, CommandInteraction } from "discord.js";
 import { name, url } from "../meta/config";
 
-export const data: ApplicationCommandData = {
+export const data: ChatInputApplicationCommandData = {
     name: "help",
-    description: `Get help with configuring and using ${name}`
+    description: `Get help with configuring and using ${name}`,
+    type: "CHAT_INPUT"
 };
 
 export function handler(interaction: CommandInteraction) {

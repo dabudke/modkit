@@ -17,7 +17,8 @@ export const data: ApplicationCommandData = {
             description: "Reason to warn the target",
             type: "STRING"
         }
-    ]
+    ],
+    type: "CHAT_INPUT"
 };
 
 export async function handler (interaction: CommandInteraction): Promise<void> {
