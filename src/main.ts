@@ -1,8 +1,12 @@
 // get libraries and modules
 import { Client, Intents } from "discord.js";
 import { readFile } from "fs";
+import { promisify } from "util";
 import { CommandData, CommandHandlers } from "./commands/loader";
+import { CommandData as MessageContextData, CommandHandlers as MessageContextHandlers } from "./messageActions/loader";
 import { server } from "./meta/config";
+
+export const timeout = promisify(setTimeout);
 
 // declare client
 const bot = new Client({ intents: [ Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS ] });
@@ -17,7 +21,7 @@ bot.once("ready", async () => {
     const allCommands = [];
     allCommands.push(...Object.values(CommandData));
     // TODO: user actions
-    // TODO: message actions
+    allCommands.push(...Object.values(MessageContextData));
     bot.application.commands.set(allCommands, isDevelopment ? server : null);
     bot.application.commands.set([], isDevelopment ? null : server);
     console.log("Actions registered");
@@ -30,6 +34,10 @@ bot.on("interactionCreate", async interaction => {
     if (interaction.channel.isVoice()) return;
     if (interaction.isCommand()) {
         const handler = CommandHandlers[interaction.commandName];
+        if (handler) handler(interaction);
+        else interaction.reply({ content: "An internal error occoured, try again later.", ephemeral: true });
+    } else if (interaction.isMessageContextMenu()) {
+        const handler = MessageContextHandlers[interaction.commandName];
         if (handler) handler(interaction);
         else interaction.reply({ content: "An internal error occoured, try again later.", ephemeral: true });
     }
