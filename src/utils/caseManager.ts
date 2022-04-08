@@ -6,14 +6,16 @@ export enum Action {
     Warn,
     Kick,
     Ban,
+    Unban,
     Timeout,
     ViewCases,
     UpdateCase,
+    ExpungeCase,
     Settings
 }
 
 export type CaseId = number;
-export interface CaseData {
+export interface CaseInfo {
     type: Action,
     user: User,
     target?: User,
@@ -21,6 +23,7 @@ export interface CaseData {
     reason?: string,
     endDate?: Date,
 }
+export type CaseData = CaseInfo | null;
 
 export function newCase (guild: Guild, user: User, action: Action, reason?: string, target?: User, endDate?: Date): CaseId {
     const data: CaseData = {
