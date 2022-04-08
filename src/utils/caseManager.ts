@@ -1,4 +1,4 @@
-import { Guild, User } from "discord.js";
+import { Guild, Snowflake, User } from "discord.js";
 import { GuildDb } from "../databases/manager";
 
 export enum Action {
@@ -13,6 +13,19 @@ export enum Action {
     ExpungeCase,
     Settings
 }
+
+export const Colors: Record<Action, number> = {
+    [Action.Purge]: 0x7621ff,
+    [Action.Warn]: 0xffd321,
+    [Action.Kick]: 0xff7621,
+    [Action.Ban]: 0xff1919,
+    [Action.Unban]: 0x51ff21,
+    [Action.Timeout]: 0xff21c0,
+    [Action.ViewCases]: 0x000000,
+    [Action.UpdateCase]: 0x000000,
+    [Action.ExpungeCase]: 0x000000,
+    [Action.Settings]: 0x000000,
+};
 
 export type CaseId = number;
 export interface CaseInfo {
@@ -51,6 +64,11 @@ export function newCase (guild: Guild, user: User, action: Action, reason?: stri
             return caseId;
         }
     }
+}
+
+export async function getCase(guildId: Snowflake, caseId: CaseId): Promise<CaseData> {
+    const lGuild = GuildDb.get(guildId);
+    return lGuild.modHistory[caseId -1];
 }
 
 // export function sendLogMessage (punishment: Punishment, guild: Guild): void {
