@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync, existsSync } from "fs";
 import { BooleanSetting, RoleSetting, SettingValues, TextChannelSetting } from "../utils/settingManager";
-import { Punishment, PunishmentId } from "../utils/punishmentManager";
+import { CaseData, CaseId } from "../utils/caseManager";
 import { Snowflake } from "discord.js";
 
 enum DataType {
@@ -135,9 +135,9 @@ export interface LocalGuild {
         settings: PermIndex
     },
     points: Map<Snowflake, {level: number, points: number, lastUpdated: number}>,
-    modHistory: Array<Punishment>,
-    userModHistory: Map<Snowflake, Array<PunishmentId>>,
-    activePunishments: Array<PunishmentId>
+    modHistory: Array<CaseData>,
+    userModHistory: Map<Snowflake, Array<CaseId>>,
+    activePunishments: Array<CaseId>
 }
 
 export const DefaultUser: LocalUser = {

@@ -1,25 +1,19 @@
-import { Guild, GuildMember, Permissions, Snowflake } from "discord.js";
-import { GuildDb, PermIndex } from "../databases/manager";
+import { Guild, Snowflake } from "discord.js";
+import { Action } from "./caseManager";
 
-export enum Actions {
-    Purge = "purge",
-    WarnUser = "warn",
-    KickUser = "kick",
-    BanUser = "ban",
-    Mute = "mute",
-    ViewHistory = "viewHistory",
-    ClearHistory = "clearHistory",
-    Settings = "settings"
-}
-
-export function hasPermission ( permissions: Permissions, command: Actions): boolean {
-
-    if (permissions.has("ADMINISTRATOR")) return true;
+export async function hasPermission ( guild: Guild, userId: Snowflake, command: Action): Promise<boolean> {
+    if (guild.ownerId === userId) return true;
+    const user = await guild.members.fetch(userId);
+    if (user.permissions.has("ADMINISTRATOR")) return true;
 
     switch (command) {
-        case Actions.WarnUser:
-            if (!permissions.has("MODERATE_MEMBERS")) return false;
+        case Action.Warn:
+            if (!user.permissions.has("MODERATE_MEMBERS")) return false;
+            break;
+        case Action.Purge:
+            if (!user.permissions.has("MANAGE_MESSAGES")) return false;
+            break;
+        default:
+            return false;
     }
-
-    return false;
 }
