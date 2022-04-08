@@ -1,6 +1,6 @@
 import { ApplicationCommandData, CommandInteraction, GuildMember } from "discord.js";
-import { Actions, hasPermission } from "../utils/checkPerms";
-import { addPunishment, PunishmentType } from "../utils/punishmentManager";
+import { hasPermission } from "../utils/checkPerms";
+import { Action, newCase } from "../utils/caseManager";
 import { displaynameAndTag } from "../utils/userToString";
 
 export const data: ApplicationCommandData = {
@@ -24,33 +24,36 @@ export const data: ApplicationCommandData = {
 export async function handler (interaction: CommandInteraction): Promise<void> {
     await interaction.deferReply();
 
-    const user = await interaction.member as GuildMember;
-    const target = await interaction.options.getMember("target") as GuildMember;
+    const user = await interaction.user;
+    const guser = await interaction.guild.members.fetch(user);
+    const target = await interaction.options.getUser("target");
+    const gtarget = await interaction.guild.members.fetch(target);
 
-    if (!hasPermission(user.permissions, Actions.WarnUser)) {
+    if (!hasPermission(interaction.guild, user.id, Action.Warn)) {
         interaction.editReply({ content: ":no_entry_sign: You cannot use that command."});
         return;
     }
 
-    if (user === target) {
-        interaction.editReply({ content: ":exclamation: You cannot warn yourself!"});
+    if (user.id === target.id) {
+        interaction.editReply({ content: ":x: You cannot warn yourself!"});
+        return;
+    }
+    if (target.bot) {
+        interaction.editReply({ content: ":x: You cannot warn bots!"});
         return;
     }
 
-    if (target.user.bot) {
-        interaction.editReply({ content: ":exclamation: You cannot warn bots!"});
-    }
-
-    if (!target.moderatable) {
-        interaction.editReply({ content: `:warning: I cannot moderate ${displaynameAndTag(target)}, try moving my role(s) above theirs.` });
+    if (!gtarget.moderatable) {
+        interaction.editReply({ content: `:warning: I cannot moderate ${displaynameAndTag(gtarget)}, try moving my role(s) above theirs.` });
         return;
     }
-    if (user.roles.highest.comparePositionTo(target.roles.highest) <= 0) {
-        interaction.editReply({ content: `:no_entry_sign: You cannot moderate ${displaynameAndTag(target)}.` });
+
+    if (interaction.guild.ownerId !== user.id && guser.roles.highest.comparePositionTo(gtarget.roles.highest) <= 0) {
+        interaction.editReply({ content: `:no_entry_sign: You cannot moderate ${displaynameAndTag(gtarget)}.` });
         return;
     }
     
     const reason = interaction.options.getString("reason",false);
-    const caseId = addPunishment(interaction.guild,user.user,target.user,PunishmentType.Warning,reason);
-    await interaction.editReply({ content: `${displaynameAndTag(target)} has been warned${reason ? ` for '${reason}'` : ""}. (Case #${caseId})`});
+    const caseId = newCase(interaction.guild,user,Action.Warn,reason,target);
+    await interaction.editReply({ content: `${displaynameAndTag(gtarget)} has been warned${reason ? ` for '${reason}'` : ""}. (Case #${caseId})`});
 }
