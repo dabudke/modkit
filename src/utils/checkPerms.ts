@@ -8,12 +8,19 @@ export async function hasPermission ( guild: Guild, userId: Snowflake, command: 
 
     switch (command) {
         case Action.Warn:
-            if (!user.permissions.has("MODERATE_MEMBERS")) return false;
+            if (user.permissions.has("MODERATE_MEMBERS")) return true;
             break;
         case Action.Purge:
-            if (!user.permissions.has("MANAGE_MESSAGES")) return false;
+            if (user.permissions.has("MANAGE_MESSAGES")) return true;
             break;
-        default:
-            return false;
+        case Action.ViewCases:
+            if (user.permissions.has("VIEW_AUDIT_LOG")) return true;
+            break;
+        case Action.UpdateCase:
+        case Action.ExpungeCase:
+            if (user.permissions.has("MANAGE_GUILD")) return true;
+            break;
     }
+
+    return false;
 }

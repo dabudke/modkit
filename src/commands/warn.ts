@@ -29,7 +29,7 @@ export async function handler (interaction: CommandInteraction): Promise<void> {
     const target = await interaction.options.getUser("target");
     const gtarget = await interaction.guild.members.fetch(target);
 
-    if (!hasPermission(interaction.guild, user.id, Action.Warn)) {
+    if (!await hasPermission(interaction.guild, user.id, Action.Warn)) {
         interaction.editReply({ content: ":no_entry_sign: You cannot use that command."});
         return;
     }

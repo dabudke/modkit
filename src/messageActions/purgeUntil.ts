@@ -11,7 +11,13 @@ export const data: MessageApplicationCommandData = {
 export async function handler(interaction: MessageContextMenuInteraction): Promise<void> {
     await interaction.deferReply();
     const reply = await interaction.fetchReply();
-    if (!hasPermission(interaction.guild, interaction.user.id, Action.Purge)) {await interaction.editReply({ content: ":no_entry_sign: You cannot use that command."}); return;}
+    if (!await hasPermission(interaction.guild, interaction.user.id, Action.Purge)) {
+        await interaction.editReply({ content: ":no_entry_sign: You cannot use that command."});
+        await timeout(2000);
+        interaction.deleteReply();
+        return;
+    }
+    
     if (interaction.channel instanceof TextChannel) {
         await interaction.channel.messages.fetch();
         const message = await interaction.channel.messages.fetch(interaction.targetId);
