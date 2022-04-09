@@ -87,6 +87,16 @@ export function newCase (guild: Guild, user: User, action: Action, reason?: stri
     }
 }
 
+export async function getCases(guildId: Snowflake): Promise<{ data: CaseData, index: CaseId}[]> {
+    const lGuild = GuildDb.get(guildId);
+    return lGuild.modHistory.map((v,i) => {
+        return {
+            data: v,
+            index: i
+        };
+    });
+}
+
 export async function getCase(guildId: Snowflake, caseId: CaseId): Promise<CaseData> {
     const lGuild = GuildDb.get(guildId);
     return lGuild.modHistory[caseId -1];

@@ -1,6 +1,8 @@
 import { ChatInputApplicationCommandData, CommandInteraction, MessageEmbed } from "discord.js";
-import { usernameAndTagWithId } from "../utils/userToString";
+import { timeout } from "../main";
+import { color } from "../meta/config";
 import { Action, Colors, getCase, getCases, renderCase } from "../utils/caseManager";
+import { hasPermission } from "../utils/checkPerms";
 
 export const data: ChatInputApplicationCommandData = {
     name: "case",
@@ -50,6 +52,21 @@ export const data: ChatInputApplicationCommandData = {
                 }
             ]
         }, {
+            name: "list",
+            description: "List cases in guild",
+            type: "SUB_COMMAND",
+            options: [
+                {
+                    name: "page",
+                    description: "Page of cases to get",
+                    type: "INTEGER"
+                }, {
+                    name: "hidden",
+                    description: "Only send this info to you (default: false)",
+                    type: "BOOLEAN",
+                }
+            ]
+        }, {
             name: "update",
             description: "Update the reason for a specific case",
             type: "SUB_COMMAND",
@@ -87,11 +104,44 @@ export const data: ChatInputApplicationCommandData = {
 };
 
 export async function handler(interaction: CommandInteraction) {
-    const hidden = interaction.options.getBoolean("hidden") ?? true;
+    const hidden = interaction.options.getBoolean("hidden") ?? false;
     await interaction.deferReply( { ephemeral: hidden });
     switch (await interaction.options.getSubcommand()) {
+        case "list": {
+            if (!await hasPermission(interaction.guild,interaction.user.id,Action.ViewCases)) {
+                await interaction.editReply({ content: ":no_entry_sign: You cannot use this command." });
+                await timeout(3000);
+                interaction.deleteReply();
+                return;
+            }
+            const page = await interaction.options.getInteger("page") ?? 1;
+            const allCases = (await getCases(interaction.guildId)).reverse();
+            const start = (page -1) *5, end = page*5 >= allCases.length ? allCases.length : page*5;
+            if (start >= allCases.length) {
+                await interaction.editReply({ content: ":x: That page does not exist." });
+                await timeout(3000);
+                interaction.deleteReply();
+                return;
+            }
+            const embed = new MessageEmbed()
+                .setTitle(`Cases ${start +1} - ${end} out of ${allCases.length}`)
+                .setDescription("To see more info about a specific case, use `/case get one [id]` with the ID of the case you want.")
+                .setColor(color);
+            const cases = allCases.slice((page -1)*5, page*5);
+            cases.forEach( ({ data, index }) => {
+                embed.addField(`Case ${index +1}`,renderCase(data));
+            });
+            interaction.editReply({ embeds: [embed] });
+            break;
+        }
+
         case "one": {
-            if (!await hasPermission(interaction.guild,interaction.user.id,Action.ViewCases)) { interaction.editReply({ content: ":no_entry_sign: You cannot use this command." }); return; }
+            if (!await hasPermission(interaction.guild,interaction.user.id,Action.ViewCases)) {
+                await interaction.editReply({ content: ":no_entry_sign: You cannot use this command." });
+                await timeout(3000);
+                interaction.deleteReply();
+                return;
+            }
             const caseId = await interaction.options.getInteger("case");
             const caseData = await getCase(interaction.guildId,caseId);
             if (!caseData) {
@@ -105,10 +155,5 @@ export async function handler(interaction: CommandInteraction) {
             interaction.editReply({ embeds: [embed] });
             break;
         }
-    }
-}
 
-export function renderCase(caseData: CaseData): string {
-    if (caseData === null) return "Case expunged.";
-    return `**${ActionText[caseData.type]}** issued by ${usernameAndTagWithId(caseData.user)}\n**Reason:** ${caseData.reason ?? "*none given*"}${caseData.target ? `\n**User:** ${usernameAndTagWithId(caseData.target)}` : ""}`;
 }
