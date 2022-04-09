@@ -121,7 +121,13 @@ export async function updateCase(guildId: Snowflake, caseId: CaseId, reason: str
     return true;
 }
 
-export async function expungeCase(guildId: Snowflake, caseId: CaseId): Promise<void> { /* TODO */ }
+export async function expungeCase(guildId: Snowflake, caseId: CaseId): Promise<boolean> {
+    const lGuild = GuildDb.get(guildId);
+    if (!lGuild.modHistory[caseId-1]) return false;
+    lGuild.modHistory[caseId-1] = null;
+    GuildDb.update(guildId,lGuild);
+    return true;
+}
 
 // export function sendLogMessage (punishment: Punishment, guild: Guild): void {
 //     const GuildSettings = GuildDb.get(guild.id).settings;

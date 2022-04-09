@@ -1,7 +1,7 @@
 import { ChatInputApplicationCommandData, CommandInteraction, MessageEmbed } from "discord.js";
 import { timeout } from "../main";
 import { color } from "../meta/config";
-import { Action, CaseId, CaseInfo, Colors, getCase, getCases, getModCases, getTargetCases, renderCase, updateCase } from "../utils/caseManager";
+import { Action, CaseId, CaseInfo, Colors, expungeCase, getCase, getCases, getModCases, getTargetCases, renderCase, updateCase } from "../utils/caseManager";
 import { hasPermission } from "../utils/checkPerms";
 
 export const data: ChatInputApplicationCommandData = {
@@ -117,6 +117,10 @@ export const data: ChatInputApplicationCommandData = {
                     description: "Case to expunge from the record",
                     type: "INTEGER",
                     required: true,
+                }, {
+                    name: "hidden",
+                    description: "Only send this info to you (default: false)",
+                    type: "BOOLEAN",
                 }
             ]
         }
@@ -146,8 +150,8 @@ async function paginateCases(interaction: CommandInteraction, cases: { data: Cas
 }
 
 export async function handler(interaction: CommandInteraction) {
-    const hidden = interaction.options.getBoolean("hidden") ?? false;
-    await interaction.deferReply( { ephemeral: hidden });
+    const hidden = interaction.options.getBoolean("hidden") ?? true;
+    await interaction.deferReply({ ephemeral: hidden });
     switch (await interaction.options.getSubcommand()) {
         case "list": {
             if (!await hasPermission(interaction.guild,interaction.user.id,Action.ViewCases)) {
@@ -206,17 +210,36 @@ export async function handler(interaction: CommandInteraction) {
         case "update": {
             const caseId = await interaction.options.getInteger("case"), caseData = await getCase(interaction.guildId, caseId), reason = await interaction.options.getString("reason");
             if (caseData.user.id !== interaction.user.id && !await hasPermission(interaction.guild,interaction.user.id,Action.UpdateCase)) {
-                await interaction.editReply({ content: ":no_entry_sign: You cannot use this command."});
+                await interaction.editReply({ content: ":no_entry_sign: You cannot use this command." });
                 await timeout(2000);
                 return interaction.deleteReply();
             }
-            updateCase(interaction.guildId,caseId,reason);
-            interaction.editReply({ content: `:white_check_mark: Reason updated to '${reason}'`});
-            break;
+            const success = await updateCase(interaction.guildId,caseId,reason);
+            if (!success) {
+                await interaction.editReply({ content: `:x: That case does not exist.` });
+                await timeout(2000);
+                return interaction.deleteReply();
+            }
+            await interaction.editReply({ content: `:white_check_mark: Reason updated to '${reason}'`});
+            await timeout(2000);
+            return interaction.deleteReply();
         }
 
-        case "expunge":
-            // TODO
-            break;
+        case "expunge": {
+            if (!await hasPermission(interaction.guild,interaction.user.id,Action.ExpungeCase)) {
+                await interaction.editReply({ content: ":no_entry_sign: You cannot use this command." });
+                await timeout(2000);
+                return interaction.deleteReply();
+            }
+            const success = await expungeCase(interaction.guildId,interaction.options.getInteger("case"));
+            if (!success) {
+                await interaction.editReply({ content: `:x: That case does not exist.` });
+                await timeout(2000);
+                return interaction.deleteReply();
+            }
+            await interaction.editReply({ content: ":white_check_mark: Case expunged." });
+            await timeout(2000);
+            return interaction.deleteReply();
+        }
     }
 }
