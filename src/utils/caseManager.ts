@@ -1,5 +1,6 @@
 import { Guild, Snowflake, User } from "discord.js";
 import { GuildDb } from "../databases/manager";
+import { usernameAndTagWithId } from "./userToString";
 
 export enum Action {
     Purge,
@@ -25,6 +26,19 @@ export const Colors: Record<Action, number> = {
     [Action.UpdateCase]: 0x000000,
     [Action.ExpungeCase]: 0x000000,
     [Action.Settings]: 0x000000,
+};
+
+const ActionText: Record<Action, string> = {
+    [Action.Purge]: "Purge",
+    [Action.Warn]: "Warning",
+    [Action.Kick]: "Kick",
+    [Action.Ban]: "Ban",
+    [Action.Unban]: "Unban",
+    [Action.Timeout]: "Timeout",
+    [Action.ViewCases]: "you cant see this haha",
+    [Action.UpdateCase]: "source code warrior",
+    [Action.ExpungeCase]: "ohoho delete lol",
+    [Action.Settings]: "setting change aahahah",
 };
 
 export type CaseId = number;
@@ -117,3 +131,8 @@ export async function getCase(guildId: Snowflake, caseId: CaseId): Promise<CaseD
 
 //     // LogChannel.send({ embed: embed });
 // }
+
+export function renderCase(caseData: CaseData): string {
+    if (caseData === null) return "Case expunged.";
+    return `**${ActionText[caseData.type]}** issued by ${usernameAndTagWithId(caseData.user)}\n**Reason:** ${caseData.reason ?? "*none given*"}${caseData.target ? `\n**User:** ${usernameAndTagWithId(caseData.target)}` : ""}`;
+}

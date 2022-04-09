@@ -1,6 +1,6 @@
 import { ChatInputApplicationCommandData, CommandInteraction, MessageEmbed } from "discord.js";
-import { Action, CaseData, CaseId, Colors, getCase } from "../utils/caseManager";
 import { usernameAndTagWithId } from "../utils/userToString";
+import { Action, Colors, getCase, getCases, renderCase } from "../utils/caseManager";
 
 export const data: ChatInputApplicationCommandData = {
     name: "case",
@@ -84,19 +84,6 @@ export const data: ChatInputApplicationCommandData = {
             ]
         }
     ]
-};
-
-const ActionText: Record<Action, string> = {
-    [Action.Purge]: "Purge",
-    [Action.Warn]: "Warning",
-    [Action.Kick]: "Kick",
-    [Action.Ban]: "Ban",
-    [Action.Unban]: "Unban",
-    [Action.Timeout]: "Timeout",
-    [Action.ViewCases]: "you cant see this haha",
-    [Action.UpdateCase]: "source code warrior",
-    [Action.ExpungeCase]: "ohoho delete lol",
-    [Action.Settings]: "setting change aahahah",
 };
 
 export async function handler(interaction: CommandInteraction) {
