@@ -1,7 +1,7 @@
 import { ChatInputApplicationCommandData, CommandInteraction, MessageEmbed } from "discord.js";
 import { timeout } from "../main";
 import { color } from "../meta/config";
-import { Action, Colors, getCase, getCases, renderCase } from "../utils/caseManager";
+import { Action, CaseId, CaseInfo, Colors, getCase, getCases, getModCases, getTargetCases, renderCase } from "../utils/caseManager";
 import { hasPermission } from "../utils/checkPerms";
 
 export const data: ChatInputApplicationCommandData = {
@@ -30,8 +30,28 @@ export const data: ChatInputApplicationCommandData = {
                         }
                     ]
                 }, {
-                    name: "user",
-                    description: "Get information on a user's cases",
+                    name: "mod",
+                    description: "Get information on a user's cases where they have been the punisher",
+                    type: "SUB_COMMAND",
+                    options: [
+                        {
+                            name: "user",
+                            description: "User to get cases for",
+                            type: "USER",
+                            required: true
+                        }, {
+                            name: "page",
+                            description: "Page of cases to get",
+                            type: "INTEGER",
+                        }, {
+                            name: "hidden",
+                            description: "Only send this info to you (default: false)",
+                            type: "BOOLEAN",
+                        }
+                    ]
+                }, {
+                    name: "target",
+                    description: "Get information on a user's cases where they were punished",
                     type: "SUB_COMMAND",
                     options: [
                         {
@@ -103,6 +123,28 @@ export const data: ChatInputApplicationCommandData = {
     ]
 };
 
+async function paginateCases(interaction: CommandInteraction, cases: { data: CaseInfo, index: CaseId }[], page: number) {
+    const start = (page-1)*5, end = page*5 >= cases.length ? cases.length -1 : page*5;
+    if (cases.length === 0) {
+        await interaction.editReply({ content: ":x: No cases were found." });
+        await timeout(3000);
+        return interaction.deleteReply();
+    }
+    if (start >= cases.length) {
+        await interaction.editReply({ content: ":x: That page does not exist." });
+        await timeout(3000);
+        return interaction.deleteReply();
+    }
+    const embed = new MessageEmbed()
+        .setTitle(`Cases ${start+1} - ${end+1} out of ${cases.length}`)
+        .setDescription("Use the `page` option to select different pages")
+        .setColor(color);
+    cases.slice(start,end+1).forEach( ({data,index}) => {
+        embed.addField(`Case ${index+1}`,renderCase(data));
+    });
+    interaction.editReply({ embeds: [embed] });
+}
+
 export async function handler(interaction: CommandInteraction) {
     const hidden = interaction.options.getBoolean("hidden") ?? false;
     await interaction.deferReply( { ephemeral: hidden });
@@ -111,27 +153,11 @@ export async function handler(interaction: CommandInteraction) {
             if (!await hasPermission(interaction.guild,interaction.user.id,Action.ViewCases)) {
                 await interaction.editReply({ content: ":no_entry_sign: You cannot use this command." });
                 await timeout(3000);
-                interaction.deleteReply();
-                return;
+                return interaction.deleteReply();
             }
             const page = await interaction.options.getInteger("page") ?? 1;
             const allCases = (await getCases(interaction.guildId)).reverse();
-            const start = (page -1) *5, end = page*5 >= allCases.length ? allCases.length : page*5;
-            if (start >= allCases.length) {
-                await interaction.editReply({ content: ":x: That page does not exist." });
-                await timeout(3000);
-                interaction.deleteReply();
-                return;
-            }
-            const embed = new MessageEmbed()
-                .setTitle(`Cases ${start +1} - ${end} out of ${allCases.length}`)
-                .setDescription("To see more info about a specific case, use `/case get one [id]` with the ID of the case you want.")
-                .setColor(color);
-            const cases = allCases.slice((page -1)*5, page*5);
-            cases.forEach( ({ data, index }) => {
-                embed.addField(`Case ${index +1}`,renderCase(data));
-            });
-            interaction.editReply({ embeds: [embed] });
+            paginateCases(interaction,allCases,page);
             break;
         }
 
@@ -139,8 +165,7 @@ export async function handler(interaction: CommandInteraction) {
             if (!await hasPermission(interaction.guild,interaction.user.id,Action.ViewCases)) {
                 await interaction.editReply({ content: ":no_entry_sign: You cannot use this command." });
                 await timeout(3000);
-                interaction.deleteReply();
-                return;
+                return interaction.deleteReply();
             }
             const caseId = await interaction.options.getInteger("case");
             const caseData = await getCase(interaction.guildId,caseId);
@@ -156,4 +181,34 @@ export async function handler(interaction: CommandInteraction) {
             break;
         }
 
+        case "mod": {
+            if (!await hasPermission(interaction.guild,interaction.user.id,Action.ViewCases)) {
+                await interaction.editReply({ content: ":no_entry_sign: You cannot use this command." });
+                await timeout(3000);
+                return interaction.deleteReply();
+            }
+            const user = (await interaction.options.getUser("user")).id, page = await interaction.options.getInteger("page") ?? 1, allCases = (await getModCases(interaction.guildId,user));
+            paginateCases(interaction,allCases,page);
+            break;
+        }
+
+        case "target":{
+            if (!await hasPermission(interaction.guild,interaction.user.id,Action.ViewCases)) {
+                await interaction.editReply({ content: ":no_entry_sign: You cannot use this command." });
+                await timeout(3000);
+                return interaction.deleteReply();
+            }
+            const user = (await interaction.options.getUser("user")).id, page = await interaction.options.getInteger("page") ?? 1, allCases = (await getTargetCases(interaction.guildId,user));
+            paginateCases(interaction,allCases,page);
+            break;
+        }
+
+        case "update":
+            // TODO
+            break;
+
+        case "expunge":
+            // TODO
+            break;
+    }
 }

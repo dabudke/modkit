@@ -87,7 +87,7 @@ export function newCase (guild: Guild, user: User, action: Action, reason?: stri
     }
 }
 
-export async function getCases(guildId: Snowflake): Promise<{ data: CaseData, index: CaseId}[]> {
+export async function getCases(guildId: Snowflake): Promise<{ data: CaseData, index: CaseId }[]> {
     const lGuild = GuildDb.get(guildId);
     return lGuild.modHistory.map((v,i) => {
         return {
@@ -101,6 +101,27 @@ export async function getCase(guildId: Snowflake, caseId: CaseId): Promise<CaseD
     const lGuild = GuildDb.get(guildId);
     return lGuild.modHistory[caseId -1];
 }
+
+export async function getTargetCases(guildId: Snowflake, userId: Snowflake): Promise<{ data: CaseData, index: CaseId }[]> {
+    const allCases = await getCases(guildId);
+    return allCases.filter( ({ data }) => data.target && data.target.id === userId );
+}
+export async function getModCases(guildId: Snowflake, userId: Snowflake): Promise<{ data: CaseData, index: CaseId }[]> {
+    const allCases = await getCases(guildId);
+    return allCases.filter( ({ data }) => data.user.id === userId );
+}
+
+export async function updateCase(guildId: Snowflake, caseId: CaseId, reason: string): Promise<boolean> {
+    const lGuild = GuildDb.get(guildId);
+    const caseData = lGuild.modHistory[caseId];
+    if (!caseData) return false;
+    caseData.reason = reason;
+    lGuild.modHistory[caseId] = caseData;
+    GuildDb.update(guildId, lGuild);
+    return true;
+}
+
+export async function expungeCase(guildId: Snowflake, caseId: CaseId): Promise<void> { /* TODO */ }
 
 // export function sendLogMessage (punishment: Punishment, guild: Guild): void {
 //     const GuildSettings = GuildDb.get(guild.id).settings;
