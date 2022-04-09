@@ -104,6 +104,7 @@ export async function handler(interaction: CommandInteraction) {
     await interaction.deferReply( { ephemeral: hidden });
     switch (await interaction.options.getSubcommand()) {
         case "one": {
+            if (!await hasPermission(interaction.guild,interaction.user.id,Action.ViewCases)) { interaction.editReply({ content: ":no_entry_sign: You cannot use this command." }); return; }
             const caseId = await interaction.options.getInteger("case");
             const caseData = await getCase(interaction.guildId,caseId);
             if (!caseData) {
