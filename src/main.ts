@@ -4,6 +4,7 @@ import { readFile } from "fs";
 import { promisify } from "util";
 import { CommandData, CommandHandlers } from "./commands/loader";
 import { CommandData as MessageContextData, CommandHandlers as MessageContextHandlers } from "./messageActions/loader";
+import { CommandData as UserContextData, CommandHandlers as UserContextHandlers } from "./userActions/loader";
 import { server } from "./meta/config";
 
 export const timeout = promisify(setTimeout);
@@ -20,7 +21,7 @@ bot.once("ready", async () => {
 
     const allCommands = [];
     allCommands.push(...Object.values(CommandData));
-    // TODO: user actions
+    allCommands.push(...Object.values(UserContextData));
     allCommands.push(...Object.values(MessageContextData));
     bot.application.commands.set(allCommands, isDevelopment ? server : null);
     bot.application.commands.set([], isDevelopment ? null : server);
@@ -35,11 +36,15 @@ bot.on("interactionCreate", async interaction => {
     if (interaction.isCommand()) {
         const handler = CommandHandlers[interaction.commandName];
         if (handler) handler(interaction);
-        else interaction.reply({ content: "An internal error occoured, try again later.", ephemeral: true });
+        else interaction.reply({ content: ":warning: An internal error occoured, try again later.", ephemeral: true });
     } else if (interaction.isMessageContextMenu()) {
         const handler = MessageContextHandlers[interaction.commandName];
         if (handler) handler(interaction);
-        else interaction.reply({ content: "An internal error occoured, try again later.", ephemeral: true });
+        else interaction.reply({ content: ":warning: An internal error occoured, try again later.", ephemeral: true });
+    } else if (interaction.isUserContextMenu()) {
+        const handler = UserContextHandlers[interaction.commandName];
+        if (handler) handler(interaction);
+        else interaction.reply({ content: ":warning: An internal error occoured, try again later.", ephemeral: true });
     }
 });
 
