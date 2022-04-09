@@ -63,6 +63,13 @@ export function newCase (guild: Guild, user: User, action: Action, reason?: stri
             // sendLogMessage(guild, case);
             return caseId;
         }
+
+        case Action.Purge: {
+            const caseId = lGuild.modHistory.push(data);
+            GuildDb.update(guild.id, lGuild);
+            // sendLogMessage(guild, case);
+            return caseId;
+        }
     }
 }
 

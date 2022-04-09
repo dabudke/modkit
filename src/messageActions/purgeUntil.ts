@@ -1,6 +1,6 @@
 import { MessageApplicationCommandData, MessageContextMenuInteraction, TextChannel } from "discord.js";
 import { timeout } from "../main";
-import { Action } from "../utils/caseManager";
+import { Action, newCase } from "../utils/caseManager";
 import { hasPermission } from "../utils/checkPerms";
 
 export const data: MessageApplicationCommandData = {
@@ -17,7 +17,6 @@ export async function handler(interaction: MessageContextMenuInteraction): Promi
         interaction.deleteReply();
         return;
     }
-    
     if (interaction.channel instanceof TextChannel) {
         await interaction.channel.messages.fetch();
         const message = await interaction.channel.messages.fetch(interaction.targetId);
@@ -25,9 +24,9 @@ export async function handler(interaction: MessageContextMenuInteraction): Promi
             return gotMsg.createdTimestamp > message.createdTimestamp && gotMsg.id !== reply.id;
         });
         const deleted = await interaction.channel.bulkDelete(toDelete);
-        // TODO case manager
-        await interaction.editReply({ content: `:white_check_mark: Purged **${deleted.size}** messages.`});
-        await timeout(4000);
+        const caseId = await newCase(interaction.guild,interaction.user,Action.Purge);
+        await interaction.editReply({ content: `:white_check_mark: Purged **${deleted.size}** messages. (Case #${caseId})`});
+        await timeout(3000);
         await interaction.deleteReply();
     } else await interaction.editReply({content: ":no_entry_sign: You cannot do that here."});
 }
