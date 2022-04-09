@@ -23,10 +23,6 @@ export const data: ChatInputApplicationCommandData = {
                             description: "ID of the case to get info for",
                             type: "INTEGER",
                             required: true
-                        }, {
-                            name: "hidden",
-                            description: "Only send this info to you (default: false)",
-                            type: "BOOLEAN",
                         }
                     ]
                 }, {
@@ -43,10 +39,6 @@ export const data: ChatInputApplicationCommandData = {
                             name: "page",
                             description: "Page of cases to get",
                             type: "INTEGER",
-                        }, {
-                            name: "hidden",
-                            description: "Only send this info to you (default: false)",
-                            type: "BOOLEAN",
                         }
                     ]
                 }, {
@@ -63,10 +55,6 @@ export const data: ChatInputApplicationCommandData = {
                             name: "page",
                             description: "Page of cases to get",
                             type: "INTEGER",
-                        }, {
-                            name: "hidden",
-                            description: "Only send this info to you (default: false)",
-                            type: "BOOLEAN",
                         }
                     ]
                 }
@@ -80,10 +68,6 @@ export const data: ChatInputApplicationCommandData = {
                     name: "page",
                     description: "Page of cases to get",
                     type: "INTEGER"
-                }, {
-                    name: "hidden",
-                    description: "Only send this info to you (default: false)",
-                    type: "BOOLEAN",
                 }
             ]
         }, {
@@ -101,10 +85,6 @@ export const data: ChatInputApplicationCommandData = {
                     description: "New reason for the case",
                     type: "STRING",
                     required: true,
-                }, {
-                    name: "hidden",
-                    description: "Only send this info to you (default: false)",
-                    type: "BOOLEAN",
                 }
             ]
         }, {
@@ -117,10 +97,6 @@ export const data: ChatInputApplicationCommandData = {
                     description: "Case to expunge from the record",
                     type: "INTEGER",
                     required: true,
-                }, {
-                    name: "hidden",
-                    description: "Only send this info to you (default: false)",
-                    type: "BOOLEAN",
                 }
             ]
         }
@@ -150,8 +126,7 @@ async function paginateCases(interaction: CommandInteraction, cases: { data: Cas
 }
 
 export async function handler(interaction: CommandInteraction) {
-    const hidden = interaction.options.getBoolean("hidden") ?? true;
-    await interaction.deferReply({ ephemeral: hidden });
+    await interaction.deferReply();
     switch (await interaction.options.getSubcommand()) {
         case "list": {
             if (!await hasPermission(interaction.guild,interaction.user.id,Action.ViewCases)) {
