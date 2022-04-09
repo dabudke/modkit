@@ -1,7 +1,7 @@
 import { ChatInputApplicationCommandData, CommandInteraction, MessageEmbed } from "discord.js";
 import { timeout } from "../main";
 import { color } from "../meta/config";
-import { Action, CaseId, CaseInfo, Colors, getCase, getCases, getModCases, getTargetCases, renderCase } from "../utils/caseManager";
+import { Action, CaseId, CaseInfo, Colors, getCase, getCases, getModCases, getTargetCases, renderCase, updateCase } from "../utils/caseManager";
 import { hasPermission } from "../utils/checkPerms";
 
 export const data: ChatInputApplicationCommandData = {
@@ -192,7 +192,7 @@ export async function handler(interaction: CommandInteraction) {
             break;
         }
 
-        case "target":{
+        case "target": {
             if (!await hasPermission(interaction.guild,interaction.user.id,Action.ViewCases)) {
                 await interaction.editReply({ content: ":no_entry_sign: You cannot use this command." });
                 await timeout(3000);
@@ -203,9 +203,17 @@ export async function handler(interaction: CommandInteraction) {
             break;
         }
 
-        case "update":
-            // TODO
+        case "update": {
+            const caseId = await interaction.options.getInteger("case"), caseData = await getCase(interaction.guildId, caseId), reason = await interaction.options.getString("reason");
+            if (caseData.user.id !== interaction.user.id && !await hasPermission(interaction.guild,interaction.user.id,Action.UpdateCase)) {
+                await interaction.editReply({ content: ":no_entry_sign: You cannot use this command."});
+                await timeout(2000);
+                return interaction.deleteReply();
+            }
+            updateCase(interaction.guildId,caseId,reason);
+            interaction.editReply({ content: `:white_check_mark: Reason updated to '${reason}'`});
             break;
+        }
 
         case "expunge":
             // TODO

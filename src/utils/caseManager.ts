@@ -113,10 +113,10 @@ export async function getModCases(guildId: Snowflake, userId: Snowflake): Promis
 
 export async function updateCase(guildId: Snowflake, caseId: CaseId, reason: string): Promise<boolean> {
     const lGuild = GuildDb.get(guildId);
-    const caseData = lGuild.modHistory[caseId];
+    const caseData = lGuild.modHistory[caseId -1];
     if (!caseData) return false;
     caseData.reason = reason;
-    lGuild.modHistory[caseId] = caseData;
+    lGuild.modHistory[caseId -1] = caseData;
     GuildDb.update(guildId, lGuild);
     return true;
 }
