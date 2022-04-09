@@ -1,15 +1,10 @@
 {
-    "name": "Ally",
-    "prefix": "^",
-    "version": "indev",
-    "dbpath": "./js/databases/",
-    "color": "#0099FF",
-    "url": "https://allydiscord.github.io",
+    "name": "ModKit",
+    "version": "0.0.0",
+    "color": 26367,
+    "url": "https://modkit-discord.github.io",
     "icon": "/assets/icons/logo.png",
-    "team": [
-        {
-            "name": "LittleKitacho",
-            "members": [ "Owner", "Head Developer", "Support Team Lead" ]
-        }
-    ]
+    "team": [],
+    "owner": "357170506870554624",
+    "server": "704823661776863365"
 }

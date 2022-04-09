@@ -1,33 +1,20 @@
-import { ApplicationCommandData, CommandInteraction, GuildMember } from "discord.js";
-import { hasPermission } from "../utils/checkPerms";
-import { Action, newCase } from "../utils/caseManager";
-import { displaynameAndTag } from "../utils/userToString";
+import { UserApplicationCommandData, UserContextMenuInteraction } from "discord.js";
 import { timeout } from "../main";
+import { Action, newCase } from "../utils/caseManager";
+import { hasPermission } from "../utils/checkPerms";
+import { displaynameAndTag } from "../utils/userToString";
 
-export const data: ApplicationCommandData = {
-    name: "warn",
-    description: "Warn a user",
-    options: [
-        {
-            name: "target",
-            description: "User to warn",
-            type: "USER",
-            required: true
-        }, {
-            name: "reason",
-            description: "Reason to warn the target",
-            type: "STRING"
-        }
-    ],
-    type: "CHAT_INPUT"
+export const data: UserApplicationCommandData = {
+    name: "Warn",
+    type: "USER"
 };
 
-export async function handler (interaction: CommandInteraction): Promise<void> {
+export async function handler(interaction: UserContextMenuInteraction) {
     await interaction.deferReply();
 
     const user = await interaction.user;
     const guser = await interaction.guild.members.fetch(user);
-    const target = await interaction.options.getUser("target");
+    const target = await interaction.targetUser;
     const gtarget = await interaction.guild.members.fetch(target);
 
     if (!await hasPermission(interaction.guild, user.id, Action.Warn)) {
@@ -58,10 +45,9 @@ export async function handler (interaction: CommandInteraction): Promise<void> {
         await timeout(2000);
         return interaction.deleteReply();
     }
-    
-    const reason = interaction.options.getString("reason",false);
-    const caseId = newCase(interaction.guild,user,Action.Warn,reason,target);
-    await interaction.editReply({ content: `${displaynameAndTag(gtarget)} has been warned${reason ? ` for '${reason}'` : ""}. (Case #${caseId})`});
+
+    const caseId = newCase(interaction.guild,user,Action.Warn,null,target);
+    await interaction.editReply({ content: `${displaynameAndTag(gtarget)} has been warned.  (Case #${caseId})`});
     await timeout(2000);
     return interaction.deleteReply();
 }

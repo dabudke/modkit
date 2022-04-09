@@ -1,8 +1,7 @@
 {
     "compilerOptions": {
         "outDir": "js",
-        "allowJs": true,
-        "checkJs": true,
+        "allowJs": false,
         "rootDir": "src",
         "sourceMap": true,
         "removeComments": true,

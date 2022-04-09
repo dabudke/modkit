@@ -1,14 +1,11 @@
-import { Message } from "discord.js";
-import { HelpEmbeds } from "../meta/embeds";
+import { ChatInputApplicationCommandData, CommandInteraction } from "discord.js";
 
-export function handle ( message: Message ): void {
-    message.reply('pong!');
+export const data: ChatInputApplicationCommandData = {
+	name: "ping",
+	description: "Ping the bot",
+	type: "CHAT_INPUT"
+};
+
+export function handler(interaction: CommandInteraction) {
+	interaction.reply({ content: "Pong!", ephemeral: true });
 }
-
-export const helpEmbed: HelpEmbeds = [
-	{
-		title: `ping`,
-		description: "Ping the bot.  (pong!)",
-		url: "/docs/commands/other/ping/"
-	}
-]
