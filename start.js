@@ -1,4 +1,2 @@
-// TODO dotenv
-process.env.ENV = "dev";
-
+require("dotenv").config();
 require("./js/main");
