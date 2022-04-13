@@ -18,7 +18,8 @@
   "homepage": "allydiscord.github.io",
   "dependencies": {
     "discord.js": "^13.6.0",
-    "dotenv": "^16.0.0"
+    "dotenv": "^16.0.0",
+    "mongodb": "^4.5.0"
   },
   "devDependencies": {
     "@types/node": "^14.14.37",
