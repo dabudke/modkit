@@ -1,5 +1,5 @@
 import { GuildResolvable, RoleResolvable, Snowflake, TextChannelResolvable } from "discord.js";
-import { GuildDb, DefaultGuild } from "../databases/manager";
+import { GuildDb, DefaultGuild } from "./database";
 
 export enum SettingValues {
     TextChannel = "Text Channel",

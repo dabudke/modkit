@@ -1,6 +1,6 @@
 import { ApplicationCommandData, CommandInteraction, GuildMember } from "discord.js";
 import { hasPermission } from "../utils/checkPerms";
-import { Action, newCase } from "../utils/caseManager";
+import { Action, newCase } from "../dataManagers/caseManager";
 import { displaynameAndTag } from "../utils/userToString";
 import { timeout } from "../main";
 

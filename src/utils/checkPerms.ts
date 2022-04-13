@@ -1,5 +1,5 @@
 import { Guild, Snowflake } from "discord.js";
-import { Action } from "./caseManager";
+import { Action } from "../dataManagers/caseManager";
 
 export async function hasPermission ( guild: Guild, userId: Snowflake, command: Action): Promise<boolean> {
     if (guild.ownerId === userId) return true;

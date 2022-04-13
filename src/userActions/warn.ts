@@ -1,6 +1,6 @@
 import { UserApplicationCommandData, UserContextMenuInteraction } from "discord.js";
 import { timeout } from "../main";
-import { Action, newCase } from "../utils/caseManager";
+import { Action, newCase } from "../dataManagers/caseManager";
 import { hasPermission } from "../utils/checkPerms";
 import { displaynameAndTag } from "../utils/userToString";
 

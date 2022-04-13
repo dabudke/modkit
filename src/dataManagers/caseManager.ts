@@ -1,6 +1,6 @@
 import { Guild, Snowflake, User } from "discord.js";
-import { GuildDb } from "../databases/manager";
-import { usernameAndTagWithId } from "./userToString";
+import { db } from "../dataManagers/manager";
+import { usernameAndTagWithId } from "../utils/userToString";
 
 export enum Action {
     Purge,
@@ -41,11 +41,16 @@ const ActionText: Record<Action, string> = {
     [Action.Settings]: "setting change aahahah",
 };
 
+type BasicUser = {
+    name: string,
+    id: Snowflake
+}
+
 export type CaseId = number;
 export interface CaseInfo {
     type: Action,
-    user: User,
-    target?: User,
+    user: BasicUser,
+    target?: BasicUser,
     date: Date
     reason?: string,
     endDate?: Date,
@@ -55,8 +60,8 @@ export type CaseData = CaseInfo | null;
 export function newCase (guild: Guild, user: User, action: Action, reason?: string, target?: User, endDate?: Date): CaseId {
     const data: CaseData = {
         type: action,
-        user: user,
-        target: target,
+        user: { id: user.id, name: user.tag },
+        target: target ? { id: target.id, name: target.tag } : null,
         date: new Date(),
         reason: reason,
         endDate: endDate

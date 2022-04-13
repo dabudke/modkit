@@ -1,0 +1,56 @@
+import { GuildChannelResolvable, Snowflake } from "discord.js";
+import { MongoClient } from "mongodb";
+import { name } from "../meta/config";
+import { CaseData, CaseId } from "./caseManager";
+
+export interface LocalGuildSettings {
+    modlog: {
+        enabled: boolean,
+        channel: Snowflake,
+        sendMessageDeleteLogs: boolean,
+        sendMessageMassDeleteLogs: boolean,
+        sendMessageEditLogs: boolean,
+        sendUserWarningLogs: boolean,
+        sendUserTimeoutLogs: boolean,
+        sendUserKickLogs: boolean,
+        sendUserBanLogs: boolean,
+        sendUserUnbanLogs: boolean
+    }
+}
+
+export interface LocalGuild {
+    settings: LocalGuildSettings,
+    cases: CaseData[]
+}
+
+const defaultGuild: LocalGuild = {
+    settings: {
+        modlog: {
+            enabled: false,
+            channel: null,
+            sendMessageDeleteLogs: false,
+            sendMessageMassDeleteLogs: false,
+            sendMessageEditLogs: false,
+            sendUserWarningLogs: false,
+            sendUserTimeoutLogs: false,
+            sendUserKickLogs: false,
+            sendUserBanLogs: false,
+            sendUserUnbanLogs: false
+        }
+    },
+    cases: []
+};
+
+const db = new MongoClient( process.env.DB_PORT, {
+    appName: name.toLowerCase().replace(" ","-"),
+    retryWrites: true,
+}).db(process.env.DB_NAME);
+
+export async function getGuild(id: Snowflake): Promise<LocalGuild> {
+    const result =  await db.collection<LocalGuild>("guilds").findOne({ id: id });
+    if (result === null) {
+        await db.collection("guilds").insertOne({ id: id, ...defaultGuild });
+        return defaultGuild;
+    }
+    return result;
+}
