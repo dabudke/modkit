@@ -1,5 +1,5 @@
 import { Guild, Snowflake, User } from "discord.js";
-import { db } from "../dataManagers/manager";
+import { getGuild, updateGuild } from "./database";
 import { usernameAndTagWithId } from "../utils/userToString";
 
 export enum Action {
@@ -58,35 +58,29 @@ export interface CaseInfo {
 }
 export type CaseData = CaseInfo | null;
 
-export function newCase (guild: Guild, user: User, action: Action, reason?: string, target?: User, endDate?: Date): CaseId {
+export async function newCase (guild: Guild, user: User, action: Action, reason?: string, target?: User, endDate?: Date): Promise<CaseId> {
     const data: CaseData = {
         type: action,
-        user: { id: user.id, name: user.tag },
-        target: target ? { id: target.id, name: target.tag } : null,
+        user: { id: user.id, tag: user.tag, username: user.username },
+        target: target ? { id: target.id, tag: target.tag, username: user.username } : null,
         date: new Date(),
         reason: reason,
         endDate: endDate
     };
 
-    const lGuild = GuildDb.get(guild.id);
+    const lGuild = await getGuild(guild.id);
 
     switch (action) {
         case Action.Warn: {
-            const caseId = lGuild.modHistory.push(data);
-            if (!lGuild.userModHistory.has(target.id)) {
-                lGuild.userModHistory.set(target.id, []);
-            }
-            const lUser = lGuild.userModHistory.get(target.id);
-            lUser.push(caseId);
-            lGuild.userModHistory.set(target.id, lUser);
-            GuildDb.update(guild.id, lGuild);
+            const caseId = lGuild.cases.push(data);
+            updateGuild(guild.id, lGuild);
             // sendLogMessage(guild, case);
             return caseId;
         }
 
         case Action.Purge: {
-            const caseId = lGuild.modHistory.push(data);
-            GuildDb.update(guild.id, lGuild);
+            const caseId = lGuild.cases.push(data);
+            updateGuild(guild.id, lGuild);
             // sendLogMessage(guild, case);
             return caseId;
         }
@@ -94,8 +88,8 @@ export function newCase (guild: Guild, user: User, action: Action, reason?: stri
 }
 
 export async function getCases(guildId: Snowflake): Promise<{ data: CaseData, index: CaseId }[]> {
-    const lGuild = GuildDb.get(guildId);
-    return lGuild.modHistory.map((v,i) => {
+    const lGuild = await getGuild(guildId);
+    return lGuild.cases.map((v,i) => {
         return {
             data: v,
             index: i
@@ -104,8 +98,8 @@ export async function getCases(guildId: Snowflake): Promise<{ data: CaseData, in
 }
 
 export async function getCase(guildId: Snowflake, caseId: CaseId): Promise<CaseData> {
-    const lGuild = GuildDb.get(guildId);
-    return lGuild.modHistory[caseId -1];
+    const lGuild = await getGuild(guildId);
+    return lGuild.cases[caseId -1];
 }
 
 export async function getTargetCases(guildId: Snowflake, userId: Snowflake): Promise<{ data: CaseData, index: CaseId }[]> {
@@ -118,20 +112,20 @@ export async function getModCases(guildId: Snowflake, userId: Snowflake): Promis
 }
 
 export async function updateCase(guildId: Snowflake, caseId: CaseId, reason: string): Promise<boolean> {
-    const lGuild = GuildDb.get(guildId);
-    const caseData = lGuild.modHistory[caseId -1];
+    const lGuild = await getGuild(guildId);
+    const caseData = lGuild.cases[caseId -1];
     if (!caseData) return false;
     caseData.reason = reason;
-    lGuild.modHistory[caseId -1] = caseData;
-    GuildDb.update(guildId, lGuild);
+    lGuild.cases[caseId -1] = caseData;
+    updateGuild(guildId, lGuild);
     return true;
 }
 
 export async function expungeCase(guildId: Snowflake, caseId: CaseId): Promise<boolean> {
-    const lGuild = GuildDb.get(guildId);
-    if (!lGuild.modHistory[caseId-1]) return false;
-    lGuild.modHistory[caseId-1] = null;
-    GuildDb.update(guildId,lGuild);
+    const lGuild = await getGuild(guildId);
+    if (!lGuild.cases[caseId-1]) return false;
+    lGuild.cases[caseId-1] = null;
+    updateGuild(guildId,lGuild);
     return true;
 }
 

@@ -60,7 +60,7 @@ export async function handler (interaction: CommandInteraction): Promise<void> {
     }
     
     const reason = interaction.options.getString("reason",false);
-    const caseId = newCase(interaction.guild,user,Action.Warn,reason,target);
+    const caseId = await newCase(interaction.guild,user,Action.Warn,reason,target);
     await interaction.editReply({ content: `${displaynameAndTag(gtarget)} has been warned${reason ? ` for '${reason}'` : ""}. (Case #${caseId})`});
     await timeout(2000);
     return interaction.deleteReply();

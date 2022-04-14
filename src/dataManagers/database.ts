@@ -1,5 +1,5 @@
-import { GuildChannelResolvable, Snowflake } from "discord.js";
-import { MongoClient } from "mongodb";
+import { Snowflake } from "discord.js";
+import { Db, MongoClient } from "mongodb";
 import { name } from "../meta/config";
 import { CaseData, CaseId } from "./caseManager";
 
