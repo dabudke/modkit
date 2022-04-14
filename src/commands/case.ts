@@ -1,4 +1,4 @@
-import { ChatInputApplicationCommandData, CommandInteraction, MessageEmbed } from "discord.js";
+import { ChatInputApplicationCommandData, CommandInteraction, MessageActionRow, MessageButton, MessageEmbed } from "discord.js";
 import { timeout } from "../main";
 import { color } from "../meta/config";
 import { Action, CaseId, CaseInfo, Colors, expungeCase, getCase, getCases, getModCases, getTargetCases, renderCase, updateCase } from "../dataManagers/caseManager";
@@ -11,63 +11,60 @@ export const data: ChatInputApplicationCommandData = {
         {
             name: "get",
             description: "Get information on a case[s]",
-            type: "SUB_COMMAND_GROUP",
+            type: "SUB_COMMAND",
             options: [
                 {
-                    name: "one",
-                    description: "Get information on a specific case",
-                    type: "SUB_COMMAND",
-                    options: [
-                        {
-                            name: "case",
-                            description: "ID of the case to get info for",
-                            type: "INTEGER",
-                            required: true
-                        }
-                    ]
-                }, {
-                    name: "mod",
-                    description: "Get information on a user's cases where they have been the punisher",
-                    type: "SUB_COMMAND",
-                    options: [
-                        {
-                            name: "user",
-                            description: "User to get cases for",
-                            type: "USER",
-                            required: true
-                        }, {
-                            name: "page",
-                            description: "Page of cases to get",
-                            type: "INTEGER",
-                        }
-                    ]
-                }, {
-                    name: "target",
-                    description: "Get information on a user's cases where they were punished",
-                    type: "SUB_COMMAND",
-                    options: [
-                        {
-                            name: "user",
-                            description: "User to get cases for",
-                            type: "USER",
-                            required: true
-                        }, {
-                            name: "page",
-                            description: "Page of cases to get",
-                            type: "INTEGER",
-                        }
-                    ]
+                    name: "id",
+                    type: "INTEGER",
+                    description: "Case ID to get information for"
                 }
             ]
         }, {
             name: "list",
             description: "List cases in guild",
-            type: "SUB_COMMAND",
+            type: "SUB_COMMAND_GROUP",
             options: [
                 {
-                    name: "page",
-                    description: "Page of cases to get",
-                    type: "INTEGER"
+                    name: "all",
+                    description: "Get all cases for this server",
+                    type: "SUB_COMMAND",
+                    options: [
+                        {
+                            name: "page",
+                            description: "Page of cases to get",
+                            type: "INTEGER"
+                        }
+                    ]
+                }, {
+                    name: "user",
+                    description: "Get all cases for a user",
+                    type: "SUB_COMMAND",
+                    options: [
+                        {
+                            name: "user",
+                            description: "User to get cases for",
+                            type: "USER"
+                        }, {
+                            name: "page",
+                            description: "Page of cases to get",
+                            type: "INTEGER"
+                        }
+                    ]
+                }, {
+                    name: "mod",
+                    description: "Get all cases of which a user was the moderator",
+                    type: "SUB_COMMAND",
+                    options: [
+                        {
+                            name: "user",
+                            description: "Moderator to get cases for",
+                            type: "USER"
+                        }, {
+                            name: "page",
+                            description: "Page of cases to get",
+                            type: "INTEGER"
+                        }
+                    ]
                 }
             ]
         }, {
@@ -128,19 +125,7 @@ async function paginateCases(interaction: CommandInteraction, cases: { data: Cas
 export async function handler(interaction: CommandInteraction) {
     await interaction.deferReply();
     switch (await interaction.options.getSubcommand()) {
-        case "list": {
-            if (!await hasPermission(interaction.guild,interaction.user.id,Action.ViewCases)) {
-                await interaction.editReply({ content: ":no_entry_sign: You cannot use this command." });
-                await timeout(3000);
-                return interaction.deleteReply();
-            }
-            const page = await interaction.options.getInteger("page") ?? 1;
-            const allCases = (await getCases(interaction.guildId)).reverse();
-            paginateCases(interaction,allCases,page);
-            break;
-        }
-
-        case "one": {
+        case "get": {
             if (!await hasPermission(interaction.guild,interaction.user.id,Action.ViewCases)) {
                 await interaction.editReply({ content: ":no_entry_sign: You cannot use this command." });
                 await timeout(3000);
@@ -160,6 +145,29 @@ export async function handler(interaction: CommandInteraction) {
             break;
         }
 
+        case "all": {
+            if (!await hasPermission(interaction.guild,interaction.user.id,Action.ViewCases)) {
+                await interaction.editReply({ content: ":no_entry_sign: You cannot use this command." });
+                await timeout(3000);
+                return interaction.deleteReply();
+            }
+            const page = await interaction.options.getInteger("page") ?? 1;
+            const allCases = (await getCases(interaction.guildId)).reverse();
+            paginateCases(interaction,allCases,page);
+            break;
+        }
+
+        case "user": {
+            if (!await hasPermission(interaction.guild,interaction.user.id,Action.ViewCases)) {
+                await interaction.editReply({ content: ":no_entry_sign: You cannot use this command." });
+                await timeout(3000);
+                return interaction.deleteReply();
+            }
+            const user = (await interaction.options.getUser("user")).id, page = await interaction.options.getInteger("page") ?? 1, allCases = (await getTargetCases(interaction.guildId,user));
+            paginateCases(interaction,allCases,page);
+            break;
+        }
+
         case "mod": {
             if (!await hasPermission(interaction.guild,interaction.user.id,Action.ViewCases)) {
                 await interaction.editReply({ content: ":no_entry_sign: You cannot use this command." });
@@ -167,17 +175,6 @@ export async function handler(interaction: CommandInteraction) {
                 return interaction.deleteReply();
             }
             const user = (await interaction.options.getUser("user")).id, page = await interaction.options.getInteger("page") ?? 1, allCases = (await getModCases(interaction.guildId,user));
-            paginateCases(interaction,allCases,page);
-            break;
-        }
-
-        case "target": {
-            if (!await hasPermission(interaction.guild,interaction.user.id,Action.ViewCases)) {
-                await interaction.editReply({ content: ":no_entry_sign: You cannot use this command." });
-                await timeout(3000);
-                return interaction.deleteReply();
-            }
-            const user = (await interaction.options.getUser("user")).id, page = await interaction.options.getInteger("page") ?? 1, allCases = (await getTargetCases(interaction.guildId,user));
             paginateCases(interaction,allCases,page);
             break;
         }
