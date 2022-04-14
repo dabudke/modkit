@@ -41,10 +41,13 @@ const defaultGuild: LocalGuild = {
     cases: []
 };
 
-const db = new MongoClient( process.env.DB_PORT, {
+let db: Db, mongo: MongoClient;
+
+new MongoClient( process.env.DB_PORT, {
     appName: name.toLowerCase().replace(" ","-"),
     retryWrites: true,
-}).db(process.env.DB_NAME);
+}).connect().then(client => {mongo = client, db = mongo.db(process.env.DB_NAME); });
+
 
 export async function getGuild(id: Snowflake): Promise<LocalGuild> {
     const result =  await db.collection<LocalGuild>("guilds").findOne({ id: id });
@@ -53,4 +56,8 @@ export async function getGuild(id: Snowflake): Promise<LocalGuild> {
         return defaultGuild;
     }
     return result;
+}
+
+export async function updateGuild(id: Snowflake, data: LocalGuild) {
+    await db.collection("guilds").replaceOne({ id: id }, data);
 }
