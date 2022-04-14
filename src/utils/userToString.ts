@@ -1,18 +1,19 @@
 import { GuildMember, User } from "discord.js";
+import { BasicUser } from "../dataManagers/caseManager";
 
-export function username(user: User): string {
+export function username(user: User | BasicUser, bold: boolean = true): string {
     return `**${user.username}**`;
 }
 
-export function usernameWithId(user: User): string {
+export function usernameWithId(user: User | BasicUser, bold: boolean = true): string {
     return `**${user.username}** (${user.id})`;
 }
 
-export function usernameAndTag(user: User): string {
+export function usernameAndTag(user: User | BasicUser): string {
     return `**${user.tag}**`;
 }
 
-export function usernameAndTagWithId(user: User): string {
+export function usernameAndTagWithId(user: User | BasicUser): string {
     return `**${user.tag}** (${user.id})`;
 }
 

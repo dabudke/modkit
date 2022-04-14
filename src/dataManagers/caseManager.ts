@@ -41,8 +41,9 @@ const ActionText: Record<Action, string> = {
     [Action.Settings]: "setting change aahahah",
 };
 
-type BasicUser = {
-    name: string,
+export type BasicUser = {
+    username: string,
+    tag: string,
     id: Snowflake
 }
 
