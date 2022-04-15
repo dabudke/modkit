@@ -169,7 +169,7 @@ export async function expungeCase(guildId: Snowflake, caseId: CaseId): Promise<b
 //     // LogChannel.send({ embed: embed });
 // }
 
-export function renderCase(caseData: CaseData): string {
+export function renderCase(caseData: CaseData,date: boolean = false): string {
     if (caseData === null) return "Case expunged.";
-    return `**${ActionText[caseData.type]}** issued by ${usernameAndTagWithId(caseData.user)}\n**Reason:** ${caseData.reason ?? "*none given*"}${caseData.target ? `\n**User:** ${usernameAndTagWithId(caseData.target)}` : ""}`;
+    return `**${ActionText[caseData.type]}** issued by ${usernameAndTagWithId(caseData.user)}\n**Reason:** ${caseData.reason ?? "*none given*"}${caseData.target ? `\n**User:** ${usernameAndTagWithId(caseData.target)}` : ""}${date ? `\n**Date:** <t:${Math.floor(caseData.date.getTime() / 1000)}:d> <t:${Math.floor(caseData.date.getTime() /1000)}:t>` : ""}`;
 }

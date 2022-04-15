@@ -10,13 +10,14 @@ export const data: ChatInputApplicationCommandData = {
     options: [
         {
             name: "get",
-            description: "Get information on a case[s]",
+            description: "Get information on a single case",
             type: "SUB_COMMAND",
             options: [
                 {
                     name: "id",
                     type: "INTEGER",
-                    description: "Case ID to get information for"
+                    description: "Case ID to get information for",
+                    required: true
                 }
             ]
         }, {
@@ -118,7 +119,7 @@ function buttonAction( page: number, cases: CaseInfoObj[] ) {
 type CaseInfoObj = { data: CaseInfo, index: CaseId };
 
 async function paginate(interaction: MessageComponentInteraction | CommandInteraction, cases: CaseInfoObj[], page: number) {
-    const start = (page-1)*5, end = page*5 >= cases.length ? cases.length -1 : page*5;
+    const start = (page-1)*5, end = page*5 >= cases.length ? cases.length : page*5;
     if (cases.length === 0) {
         await interaction.editReply({ content: ":x: No cases were found."});
         await timeout(3000);
@@ -137,14 +138,14 @@ async function paginate(interaction: MessageComponentInteraction | CommandIntera
     const buttons = new MessageActionRow()
         .addComponents(
             new MessageButton({ emoji: "◀️", style: "SECONDARY", customId: "back", disabled: page <= 1 }),
-            new MessageButton({ emoji: "▶️", style: "SECONDARY", customId: "forward", disabled: end === cases.length -1 })
+            new MessageButton({ emoji: "▶️", style: "SECONDARY", customId: "forward", disabled: end === cases.length })
         );
     const embed = new MessageEmbed()
         .setTitle(`Cases ${start+1} - ${end+1} out of ${cases.length}`)
         .setDescription("Use the `page` option to select different pages")
         .setColor(color);
-    cases.slice(start,end+1).forEach( ({data,index}) => {
-        embed.addField(`Case ${index+1}`,renderCase(data));
+    cases.slice(start,end).forEach( ({data,index}) => {
+        embed.addField(`Case ${index+1}`,renderCase(data,true));
     });
     const reply = await interaction.editReply({ embeds: [embed], components: [buttons] });
     interaction.channel.createMessageComponentCollector({ max: 1, message: reply }).on("collect",buttonAction(page,cases));
@@ -159,7 +160,7 @@ export async function handler(interaction: CommandInteraction) {
                 await timeout(3000);
                 return interaction.deleteReply();
             }
-            const caseId = await interaction.options.getInteger("case");
+            const caseId = await interaction.options.getInteger("id");
             const caseData = await getCase(interaction.guildId,caseId);
             if (!caseData) {
                 await interaction.editReply({ content: ":x: No case with that ID exists." });
@@ -168,7 +169,8 @@ export async function handler(interaction: CommandInteraction) {
             const embed = new MessageEmbed()
                 .setTitle(`Case ${caseId}`)
                 .setDescription(renderCase(caseData))
-                .setColor(Colors[caseData.type]);
+                .setColor(Colors[caseData.type])
+                .setTimestamp(caseData.date);
             interaction.editReply({ embeds: [embed] });
             break;
         }
