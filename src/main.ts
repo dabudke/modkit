@@ -53,4 +53,4 @@ bot.on("error", async error => {
 });
 
 // TODO: legacy code
-bot.login(process.env.TOKEN).catch(err => console.error("There was a problem logging into Discord, most likely a bad token or no network connection.\n\nHere's what was recieved from Discord:\n", err))
+bot.login(process.env.TOKEN).catch(err => console.error("There was a problem logging into Discord, most likely a bad token or no network connection.\n\nHere's what was recieved from Discord:\n", err));

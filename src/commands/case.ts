@@ -1,4 +1,4 @@
-import { ChatInputApplicationCommandData, CommandInteraction, MessageActionRow, MessageButton, MessageEmbed } from "discord.js";
+import { ChatInputApplicationCommandData, CommandInteraction, MessageActionRow, MessageButton, MessageComponentInteraction, MessageEmbed } from "discord.js";
 import { timeout } from "../main";
 import { color } from "../meta/config";
 import { Action, CaseId, CaseInfo, Colors, expungeCase, getCase, getCases, getModCases, getTargetCases, renderCase, updateCase } from "../dataManagers/caseManager";
@@ -100,10 +100,27 @@ export const data: ChatInputApplicationCommandData = {
     ]
 };
 
-async function paginateCases(interaction: CommandInteraction, cases: { data: CaseInfo, index: CaseId }[], page: number) {
+function buttonAction( page: number, cases: CaseInfoObj[] ) {
+    return async (interaction: MessageComponentInteraction) => {
+        await interaction.deferUpdate();
+        switch (interaction.customId) {
+            case "back":
+                paginate(interaction, cases, page -1);
+                break;
+            case "forward": {
+                paginate(interaction,cases,page +1);
+                break;
+            }
+        }
+    };
+}
+
+type CaseInfoObj = { data: CaseInfo, index: CaseId };
+
+async function paginate(interaction: MessageComponentInteraction | CommandInteraction, cases: CaseInfoObj[], page: number) {
     const start = (page-1)*5, end = page*5 >= cases.length ? cases.length -1 : page*5;
     if (cases.length === 0) {
-        await interaction.editReply({ content: ":x: No cases were found." });
+        await interaction.editReply({ content: ":x: No cases were found."});
         await timeout(3000);
         return interaction.deleteReply();
     }
@@ -112,6 +129,16 @@ async function paginateCases(interaction: CommandInteraction, cases: { data: Cas
         await timeout(3000);
         return interaction.deleteReply();
     }
+    if (start > end) {
+        await interaction.editReply({ content: ":x: That page does not exist." });
+        await timeout(3000);
+        return interaction.deleteReply();
+    }
+    const buttons = new MessageActionRow()
+        .addComponents(
+            new MessageButton({ emoji: "◀️", style: "SECONDARY", customId: "back", disabled: page <= 1 }),
+            new MessageButton({ emoji: "▶️", style: "SECONDARY", customId: "forward", disabled: end === cases.length -1 })
+        );
     const embed = new MessageEmbed()
         .setTitle(`Cases ${start+1} - ${end+1} out of ${cases.length}`)
         .setDescription("Use the `page` option to select different pages")
@@ -119,7 +146,8 @@ async function paginateCases(interaction: CommandInteraction, cases: { data: Cas
     cases.slice(start,end+1).forEach( ({data,index}) => {
         embed.addField(`Case ${index+1}`,renderCase(data));
     });
-    interaction.editReply({ embeds: [embed] });
+    const reply = await interaction.editReply({ embeds: [embed], components: [buttons] });
+    interaction.channel.createMessageComponentCollector({ max: 1, message: reply }).on("collect",buttonAction(page,cases));
 }
 
 export async function handler(interaction: CommandInteraction) {
@@ -153,7 +181,7 @@ export async function handler(interaction: CommandInteraction) {
             }
             const page = await interaction.options.getInteger("page") ?? 1;
             const allCases = (await getCases(interaction.guildId)).reverse();
-            paginateCases(interaction,allCases,page);
+            paginate(interaction,allCases,page);
             break;
         }
 
@@ -164,7 +192,7 @@ export async function handler(interaction: CommandInteraction) {
                 return interaction.deleteReply();
             }
             const user = (await interaction.options.getUser("user")).id, page = await interaction.options.getInteger("page") ?? 1, allCases = (await getTargetCases(interaction.guildId,user));
-            paginateCases(interaction,allCases,page);
+            paginate(interaction,allCases,page);
             break;
         }
 
@@ -175,7 +203,7 @@ export async function handler(interaction: CommandInteraction) {
                 return interaction.deleteReply();
             }
             const user = (await interaction.options.getUser("user")).id, page = await interaction.options.getInteger("page") ?? 1, allCases = (await getModCases(interaction.guildId,user));
-            paginateCases(interaction,allCases,page);
+            paginate(interaction,allCases,page);
             break;
         }
 
