@@ -1,25 +1,11 @@
 import { Snowflake } from "discord.js";
 import { Db, MongoClient } from "mongodb";
 import { name } from "../meta/config";
-import { CaseData, CaseId } from "./caseManager";
-
-export interface LocalGuildSettings {
-    modlog: {
-        enabled: boolean,
-        channel: Snowflake,
-        sendMessageDeleteLogs: boolean,
-        sendMessageMassDeleteLogs: boolean,
-        sendMessageEditLogs: boolean,
-        sendUserWarningLogs: boolean,
-        sendUserTimeoutLogs: boolean,
-        sendUserKickLogs: boolean,
-        sendUserBanLogs: boolean,
-        sendUserUnbanLogs: boolean
-    }
-}
+import { CaseData } from "./caseManager";
+import { GuildSettings } from "./settingManager";
 
 export interface LocalGuild {
-    settings: LocalGuildSettings,
+    settings: GuildSettings,
     cases: CaseData[]
 }
 
@@ -43,10 +29,10 @@ const defaultGuild: LocalGuild = {
 
 let db: Db, mongo: MongoClient;
 
-new MongoClient( process.env.DB_PORT, {
+new MongoClient( process.env.DB_ADDR, {
     appName: name.toLowerCase().replace(" ","-"),
     retryWrites: true,
-}).connect().then(client => {mongo = client, db = mongo.db(process.env.DB_NAME); });
+}).connect().then(client => { mongo = client, db = mongo.db(process.env.DB_NAME); console.log(`Logged into MongoDB (server: ${process.env.DB_ADDR}, database ${process.env.DB_NAME})`); });
 
 
 export async function getGuild(id: Snowflake): Promise<LocalGuild> {
@@ -55,7 +41,7 @@ export async function getGuild(id: Snowflake): Promise<LocalGuild> {
         await db.collection("guilds").insertOne({ id: id, ...defaultGuild });
         return defaultGuild;
     }
-    return result;
+    return Object.assign(defaultGuild,result);
 }
 
 export async function updateGuild(id: Snowflake, data: LocalGuild) {

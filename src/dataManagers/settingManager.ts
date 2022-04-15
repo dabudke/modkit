@@ -1,63 +1,71 @@
-import { GuildResolvable, RoleResolvable, Snowflake, TextChannelResolvable } from "discord.js";
-import { GuildDb, DefaultGuild } from "./database";
+import { Snowflake } from "discord.js";
+import { getGuild, updateGuild } from "./database";
 
-export enum SettingValues {
-    TextChannel = "Text Channel",
-    Boolean = "`yes`, `no`",
-    Role = "Role"
-}
-
-interface PureSetting {
-    readonly description: string,
-    readonly type: SettingValues
-    value: unknown
-}
-
-abstract class Setting implements PureSetting {
-    public readonly description: string;
-    public readonly type: SettingValues;
-    public value: unknown;
-
-    constructor(setting: PureSetting) {
-        this.description = setting.description;
-        this.type = setting.type;
-        this.value = setting.value;
-    }
-
-    isTextChannel(): this is TextChannelSetting {
-        return this.type == SettingValues.TextChannel;
-    }
-    isBoolean(): this is BooleanSetting {
-        return this.type == SettingValues.Boolean;
-    }
-    isRole(): this is RoleSetting {
-        return this.type == SettingValues.Role;
+export interface GuildSettings {
+    modlog: {
+        enabled: boolean,
+        channel: Snowflake,
+        sendMessageDeleteLogs: boolean,
+        sendMessageMassDeleteLogs: boolean,
+        sendMessageEditLogs: boolean,
+        sendUserWarningLogs: boolean,
+        sendUserTimeoutLogs: boolean,
+        sendUserKickLogs: boolean,
+        sendUserBanLogs: boolean,
+        sendUserUnbanLogs: boolean
     }
 }
 
-export class TextChannelSetting extends Setting {
-    public value: TextChannelResolvable | null
-}
-export class BooleanSetting extends Setting {
-    public value: boolean;
-}
-export class RoleSetting extends Setting {
-    public value: RoleResolvable | null;
+export enum SettingType {
+    Boolean,
+    Channel
 }
 
-export function settingValid( setting: string ): boolean {
-    return DefaultGuild.settings[setting] != undefined;
+type NewValueType<T,V> = {
+    [P in keyof T]: T[P] extends object ? NewValueType<T[P],V> : V
 }
 
-export async function getSetting( guildid: Snowflake, setting: string ): Promise<Setting> {
-    if (!settingValid(setting)) {
-        return Promise.reject("That setting does not exist!");
+export const types: NewValueType<GuildSettings, SettingType> = {
+    modlog: {
+        enabled: SettingType.Boolean,
+        channel: SettingType.Channel,
+        sendMessageDeleteLogs: SettingType.Boolean,
+        sendMessageMassDeleteLogs: SettingType.Boolean,
+        sendMessageEditLogs: SettingType.Boolean,
+        sendUserWarningLogs: SettingType.Boolean,
+        sendUserTimeoutLogs: SettingType.Boolean,
+        sendUserKickLogs: SettingType.Boolean,
+        sendUserBanLogs: SettingType.Boolean,
+        sendUserUnbanLogs: SettingType.Boolean
     }
-    const guild = GuildDb.get(guildid);
-    return Promise.resolve(guild.settings[setting]);
+};
+
+export const settings = [];
+Object.entries(types).map(([k,v]) => {
+    for (const i in Object.keys(v)) {
+        settings.push(`${k}.${Object.keys(v)[i]}`);
+    }
+});
+
+type Setting = typeof settings[number];
+
+export const typeText: Record<SettingType, string> = {
+    [SettingType.Boolean]: "true/false",
+    [SettingType.Channel]: "text channel"
+};
+
+export async function getSettingValue<T>(id: Snowflake, setting: Setting): Promise<T | null> {
+    const guild = await getGuild(id), sindex = setting.split(".");
+    return guild.settings[sindex[0]][sindex[1]];
 }
 
-// export async function setValue( guildid: GuildResolvable, setting: string, value: unknown ): Promise<boolean> {
-//     if (!settingValid(setting)) return Promise.reject("That setting does not exist!");
-//     if ()
-// }
+export function getSettingType(setting: Setting): SettingType | null {
+    const sindex = setting.split(".");
+    return types[sindex[0]][sindex[1]];
+}
+
+export async function setSetting(id: Snowflake, setting: Setting, value: any) {
+    const guild = await getGuild(id), sindex = setting.split(".");
+    guild.settings[sindex[0]][sindex[1]] = value;
+    updateGuild(id,guild);
+}
