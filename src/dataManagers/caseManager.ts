@@ -1,6 +1,7 @@
-import { Guild, Snowflake, User } from "discord.js";
+import { Guild, MessageEmbed, Snowflake, User } from "discord.js";
 import { getGuild, updateGuild } from "./database";
 import { usernameAndTagWithId } from "../utils/userToString";
+import { getSettingValue } from "./settingManager";
 
 export enum Action {
     Purge,
@@ -66,25 +67,9 @@ export async function newCase (guild: Guild, user: User, action: Action, reason?
         date: new Date(),
         reason: reason,
         endDate: endDate
-    };
-
-    const lGuild = await getGuild(guild.id);
-
-    switch (action) {
-        case Action.Warn: {
-            const caseId = lGuild.cases.push(data);
-            updateGuild(guild.id, lGuild);
-            // sendLogMessage(guild, case);
-            return caseId;
-        }
-
-        case Action.Purge: {
-            const caseId = lGuild.cases.push(data);
-            updateGuild(guild.id, lGuild);
-            // sendLogMessage(guild, case);
-            return caseId;
-        }
-    }
+    }, lGuild = await getGuild(guild.id), caseId = lGuild.cases.push(data);
+    updateGuild(guild.id,lGuild);
+    return caseId;
 }
 
 export async function getCases(guildId: Snowflake): Promise<{ data: CaseData, index: CaseId }[]> {
