@@ -18,6 +18,7 @@ export async function hasPermission ( guild: Guild, userId: Snowflake, command: 
             break;
         case Action.UpdateCase:
         case Action.ExpungeCase:
+        case Action.Settings:
             if (user.permissions.has("MANAGE_GUILD")) return true;
             break;
     }
