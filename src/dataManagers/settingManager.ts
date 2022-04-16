@@ -5,8 +5,9 @@ export interface GuildSettings {
     modlog: {
         enabled: boolean,
         channel: Snowflake,
-        sendMessageDeleteLogs: boolean,
         sendMessageMassDeleteLogs: boolean,
+        sendMessageDeleteLogs: boolean,
+        sendMessagePurgeLogs: boolean,
         sendMessageEditLogs: boolean,
         sendUserWarningLogs: boolean,
         sendUserTimeoutLogs: boolean,
@@ -29,8 +30,9 @@ export const types: NewValueType<GuildSettings, SettingType> = {
     modlog: {
         enabled: SettingType.Boolean,
         channel: SettingType.Channel,
-        sendMessageDeleteLogs: SettingType.Boolean,
         sendMessageMassDeleteLogs: SettingType.Boolean,
+        sendMessageDeleteLogs: SettingType.Boolean,
+        sendMessagePurgeLogs: SettingType.Boolean,
         sendMessageEditLogs: SettingType.Boolean,
         sendUserWarningLogs: SettingType.Boolean,
         sendUserTimeoutLogs: SettingType.Boolean,

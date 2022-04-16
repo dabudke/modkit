@@ -69,6 +69,7 @@ export async function newCase (guild: Guild, user: User, action: Action, reason?
         endDate: endDate
     }, lGuild = await getGuild(guild.id), caseId = lGuild.cases.push(data);
     updateGuild(guild.id,lGuild);
+    sendLogMessage(caseId,data,guild);
     return caseId;
 }
 
@@ -114,45 +115,35 @@ export async function expungeCase(guildId: Snowflake, caseId: CaseId): Promise<b
     return true;
 }
 
-// export function sendLogMessage (punishment: Punishment, guild: Guild): void {
-//     const GuildSettings = GuildDb.get(guild.id).settings;
-//     if (!GuildSettings.modLogChannel.value) return;
-//     const LogChannel = guild.channels.resolve(GuildSettings.modLogChannel.value as string);
-//     if (!LogChannel) return;
-//     if (!LogChannel.isText()) return;
+const logSetting: Record<Action,string> = {
+    [Action.Purge]: "modlog.sendMessagePurgeLogs",
+    [Action.Warn]: "modlog.sendUserWarnLogs",
+    [Action.Kick]: "modlog.sendUserKickMessage",
+    [Action.Ban]: "modlog.sendUserBanMessage",
+    [Action.Unban]: "modlog.sendUserUnbanMessage",
+    [Action.Timeout]: "modlog.sendUserTimeoutMessage",
+    [Action.ViewCases]: "",
+    [Action.UpdateCase]: "",
+    [Action.ExpungeCase]: "",
+    [Action.Settings]: "",
+};
 
-//     let embed: MessageEmbed;
-//     let extraFields: EmbedFieldData[];
+async function sendLogMessage(id: CaseId, caseData: CaseData, guild: Guild) {
+    if (!getSettingValue(guild.id,"modlog.enabled")) return;
+    if (!getSettingValue(guild.id,logSetting[caseData.type])) return;
+    const channel = guild.channels.resolve(await getSettingValue<Snowflake>(guild.id,"modlog.channel"));
+    if (!channel) return;
+    if (!channel.isText()) return;
+    channel.send({ embeds: [renderCaseEmbed(caseData,id)] });
+}
 
-//     switch (punishment.type) { // punishment-specific fields set in here
-//         case PunishmentType.Warning:
-//             if (!GuildSettings.logUserWarns.value) return;
-//             embed = new MessageEmbed();
-//             embed.setColor(0xFFFF00);
-//             embed.setAuthor("User Warned", punishment.user.avatarURL());
-//     }
-
-//     embed.setTimestamp(new Date());
-//     embed.addFields([
-//         {
-//             name: "Punished User",
-//             value: `${punishment.user.username}#${punishment.user.discriminator} (${punishment.user.id})`
-//         },
-//         {
-//             name: "Reason",
-//             value: punishment.reason ? punishment.reason : "None given",
-//             inline: true
-//         },
-//         {
-//             name: "Punishing User",
-//             value: `${punishment.punisher.username}#${punishment.punisher.discriminator} (${punishment.punisher.id})`,
-//             inline: true
-//         }
-//     ]);
-//     if (extraFields) embed.addFields(extraFields);
-
-//     // LogChannel.send({ embed: embed });
-// }
+export function renderCaseEmbed(caseData: CaseData, id: CaseId): MessageEmbed {
+    return new MessageEmbed()
+        .setTitle(`Case ${id}`)
+        .setDescription(renderCase(caseData))
+        .setColor(Colors[caseData.type])
+        .setTimestamp(caseData.date);
+}
 
 export function renderCase(caseData: CaseData,date: boolean = false): string {
     if (caseData === null) return "Case expunged.";

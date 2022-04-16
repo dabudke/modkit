@@ -16,6 +16,7 @@ const defaultGuild: LocalGuild = {
             channel: null,
             sendMessageDeleteLogs: false,
             sendMessageMassDeleteLogs: false,
+            sendMessagePurgeLogs: false,
             sendMessageEditLogs: false,
             sendUserWarningLogs: false,
             sendUserTimeoutLogs: false,

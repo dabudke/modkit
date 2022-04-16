@@ -1,7 +1,7 @@
 import { ChatInputApplicationCommandData, CommandInteraction, MessageActionRow, MessageButton, MessageComponentInteraction, MessageEmbed } from "discord.js";
 import { timeout } from "../main";
 import { color } from "../meta/config";
-import { Action, CaseId, CaseInfo, Colors, expungeCase, getCase, getCases, getModCases, getTargetCases, renderCase, updateCase } from "../dataManagers/caseManager";
+import { Action, CaseId, CaseInfo, Colors, expungeCase, getCase, getCases, getModCases, getTargetCases, renderCase, renderCaseEmbed, updateCase } from "../dataManagers/caseManager";
 import { hasPermission } from "../utils/checkPerms";
 
 export const data: ChatInputApplicationCommandData = {
@@ -166,12 +166,7 @@ export async function handler(interaction: CommandInteraction) {
                 await interaction.editReply({ content: ":x: No case with that ID exists." });
                 return;
             }
-            const embed = new MessageEmbed()
-                .setTitle(`Case ${caseId}`)
-                .setDescription(renderCase(caseData))
-                .setColor(Colors[caseData.type])
-                .setTimestamp(caseData.date);
-            interaction.editReply({ embeds: [embed] });
+            interaction.editReply({ embeds: [renderCaseEmbed(caseData,caseId)] });
             break;
         }
 
