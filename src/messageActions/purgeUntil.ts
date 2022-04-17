@@ -2,6 +2,7 @@ import { MessageApplicationCommandData, MessageContextMenuInteraction, TextChann
 import { timeout } from "../main";
 import { Action, newCase } from "../dataManagers/caseManager";
 import { hasPermission } from "../utils/checkPerms";
+import { handle } from "../dataManagers/errorManager";
 
 export const data: MessageApplicationCommandData = {
     name: "Purge Until Here",
@@ -14,7 +15,7 @@ export async function handler(interaction: MessageContextMenuInteraction): Promi
     if (!await hasPermission(interaction.guild, interaction.user.id, Action.Purge)) {
         await interaction.editReply({ content: ":no_entry_sign: You cannot use that command."});
         await timeout(2000);
-        interaction.deleteReply();
+        interaction.deleteReply().catch(handle("purgeUntilMessage_replyDeleted"));
         return;
     }
     if (interaction.channel instanceof TextChannel) {
@@ -27,6 +28,6 @@ export async function handler(interaction: MessageContextMenuInteraction): Promi
         const caseId = await newCase(interaction.guild,interaction.user,Action.Purge);
         await interaction.editReply({ content: `:white_check_mark: Purged **${deleted.size}** messages. (Case #${caseId})`});
         await timeout(3000);
-        await interaction.deleteReply();
+        interaction.deleteReply().catch(handle("purgeUntilMessage_replyDeleted"));
     } else await interaction.editReply({content: ":no_entry_sign: You cannot do that here."});
 }

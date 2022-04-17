@@ -3,6 +3,7 @@ import { timeout } from "../main";
 import { Action, newCase } from "../dataManagers/caseManager";
 import { hasPermission } from "../utils/checkPerms";
 import { displaynameAndTag } from "../utils/userToString";
+import { handle } from "../dataManagers/errorManager";
 
 export const data: UserApplicationCommandData = {
     name: "Warn",
@@ -20,34 +21,34 @@ export async function handler(interaction: UserContextMenuInteraction) {
     if (!await hasPermission(interaction.guild, user.id, Action.Warn)) {
         await interaction.editReply({ content: ":no_entry_sign: You cannot use that command." });
         await timeout(2000);
-        return interaction.deleteReply();
+        return interaction.deleteReply().catch(handle("warnUser_replyDeleted"));
     }
 
     if (user.id === target.id) {
         await interaction.editReply({ content: ":x: You cannot warn yourself." });
         await timeout(2000);
-        return interaction.deleteReply();
+        return interaction.deleteReply().catch(handle("warnUser_replyDeleted"));
     }
     if (target.bot) {
         await interaction.editReply({ content: ":x: You cannot warn bots." });
         await timeout(2000);
-        return interaction.deleteReply();
+        return interaction.deleteReply().catch(handle("warnUser_replyDeleted"));
     }
 
     if (!gtarget.moderatable) {
         await interaction.editReply({ content: `:warning: I cannot moderate ${displaynameAndTag(gtarget)}`});
         await timeout(2000);
-        return interaction.deleteReply();
+        return interaction.deleteReply().catch(handle("warnUser_replyDeleted"));
     }
 
     if (interaction.guild.ownerId !== user.id && guser.roles.highest.comparePositionTo(gtarget.roles.highest) <= 0) {
         await interaction.editReply({ content: `:no_entry_sign: You cannot moderate ${displaynameAndTag(gtarget)}`});
         await timeout(2000);
-        return interaction.deleteReply();
+        return interaction.deleteReply().catch(handle("warnUser_replyDeleted"));
     }
 
     const caseId = await newCase(interaction.guild,user,Action.Warn,null,target);
     await interaction.editReply({ content: `:white_check_box: ${displaynameAndTag(gtarget)} has been warned.  (Case #${caseId})`});
     await timeout(2000);
-    return interaction.deleteReply();
+    return interaction.deleteReply().catch(handle("warnUser_replyDeleted"));
 }

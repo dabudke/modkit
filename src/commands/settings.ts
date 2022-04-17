@@ -1,5 +1,6 @@
 import { ChatInputApplicationCommandData, CommandInteraction, Guild, MessageEmbed } from "discord.js";
 import { Action } from "../dataManagers/caseManager";
+import { handle } from "../dataManagers/errorManager";
 import { getSettingType, getSettingValue, setSetting, settings, SettingType, typeText } from "../dataManagers/settingManager";
 import { timeout } from "../main";
 import { hasPermission } from "../utils/checkPerms";
@@ -49,7 +50,7 @@ export async function handler(interaction: CommandInteraction) {
     if (!await hasPermission(interaction.guild,interaction.user.id,Action.Settings)) {
         await interaction.editReply({ content: ":no_entry_sign: You cannot use this command"});
         await timeout(3000);
-        return interaction.deleteReply();
+        return interaction.deleteReply().catch(handle("settings_replyDeleted"));
     }
     const setting = interaction.options.getString("setting");
     switch(interaction.options.getSubcommand()) {
@@ -85,7 +86,7 @@ export async function handler(interaction: CommandInteraction) {
                 }
             }
             await timeout(3000);
-            return interaction.deleteReply();
+            return interaction.deleteReply().catch(handle("settings_replyDeleted"));
         }
     }
 }
