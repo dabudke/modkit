@@ -28,6 +28,7 @@ bot.once("ready", async () => {
     console.log("Actions registered");
 
     await bot.user.setPresence({ status: "online", activities: [{ name: "all the servers", type: "WATCHING" }] });
+    setInterval(()=>bot.user.setPresence({status:"online",activities:[{name:"all the servers",type:"WATCHING"}]}),3600000);
     console.log("Ready!");
 });
 
