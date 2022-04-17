@@ -148,6 +148,18 @@ export async function handler(interaction: CommandInteraction) {
                 interaction.channel.messages.delete(reply).catch(handle("purgeAmount_deletedReply"));
                 break;
             }
+            case "until": {
+                const messageId = interaction.options.getString("message"), message = await interaction.channel.messages.fetch(messageId), reply = await interaction.fetchReply(), reason = interaction.options.getString("reason");
+                await interaction.channel.messages.fetch();
+                const toDelete = await interaction.channel.messages.cache.clone().filter( gotMsg => {
+                    return gotMsg.createdTimestamp > message.createdTimestamp && gotMsg.id !== reply.id;
+                }), deleted = await interaction.channel.bulkDelete(toDelete);
+                const caseId = await newCase(interaction.guild,interaction.user,Action.Purge,reason);
+                await interaction.editReply({ content: `:white_check_mark: Purged **${deleted.size}** messages${reason ? ` for ${reason}` : ""}.  (Case #${caseId})`});
+                await timeout(3000);
+                interaction.deleteReply().catch(handle("purgeUntil_deletedReply"));
+                break;
+            }
         }
     } else {
         await interaction.editReply({ content: ":x: You cannot do that here" });
