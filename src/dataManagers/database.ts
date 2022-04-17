@@ -37,6 +37,7 @@ new MongoClient( process.env.DB_ADDR, {
 
 
 export async function getGuild(id: Snowflake): Promise<LocalGuild> {
+    if (!(await db.listCollections({ name: "guilds" }))) await db.createCollection("guilds");
     const result =  await db.collection<LocalGuild>("guilds").findOne({ id: id });
     if (result === null) {
         await db.collection("guilds").insertOne({ id: id, ...defaultGuild });
@@ -47,4 +48,9 @@ export async function getGuild(id: Snowflake): Promise<LocalGuild> {
 
 export async function updateGuild(id: Snowflake, data: LocalGuild) {
     await db.collection("guilds").replaceOne({ id: id }, data);
+}
+
+export async function addError(module: string, err) {
+    if (!(await db.listCollections({ name: "errors" }))) await db.createCollection("errors");
+    await db.collection("errors").insertOne({ module: module, timestamp: Date.now(), data: err });
 }
