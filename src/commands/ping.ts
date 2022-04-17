@@ -7,5 +7,5 @@ export const data: ChatInputApplicationCommandData = {
 };
 
 export function handler(interaction: CommandInteraction) {
-	interaction.reply({ content: "Pong!", ephemeral: true });
+	interaction.reply({ content: `:ping_pong: Pong!\nResponse time: **${(Date.now() - interaction.createdTimestamp).toString()}ms**` });
 }
