@@ -47,7 +47,7 @@ export async function handler(interaction: UserContextMenuInteraction) {
     }
 
     const caseId = await newCase(interaction.guild,user,Action.Warn,null,target);
-    await interaction.editReply({ content: `${displaynameAndTag(gtarget)} has been warned.  (Case #${caseId})`});
+    await interaction.editReply({ content: `:white_check_box: ${displaynameAndTag(gtarget)} has been warned.  (Case #${caseId})`});
     await timeout(2000);
     return interaction.deleteReply();
 }
