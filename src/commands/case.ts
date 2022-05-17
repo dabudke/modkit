@@ -3,7 +3,7 @@ import { timeout } from "../main";
 import { color } from "../meta/config";
 import { Action, CaseId, CaseInfo, expungeCase, getCase, getCases, getModCases, getTargetCases, renderCase, renderCaseEmbed, updateCase } from "../dataManagers/caseManager";
 import { hasPermission } from "../utils/checkPerms";
-import { errorMessage, permissionError, successMessage, waitToDelete } from "../utils/messageUtils";
+import { errorMessage, permissionError, successMessage, waitToDeleteInteraction } from "../utils/messageUtils";
 
 export const data: ChatInputApplicationCommandData = {
     name: "case",
@@ -123,15 +123,15 @@ async function paginate(interaction: MessageComponentInteraction | CommandIntera
     const start = (page-1)*5, end = page*5 >= cases.length ? cases.length : page*5;
     if (cases.length === 0) {
         await interaction.editReply({ content: errorMessage("No cases were found.") });
-        return deleteMsg(interaction);
+        return waitToDeleteInteraction(interaction);
     }
     if (start >= cases.length) {
         await interaction.editReply({ content: errorMessage("No page was found.") });
-        return deleteMsg(interaction);
+        return waitToDeleteInteraction(interaction);
     }
     if (start > end) {
         await interaction.editReply({ content: errorMessage("No page was found.") });
-        return deleteMsg(interaction);
+        return waitToDeleteInteraction(interaction);
     }
     const buttons = new MessageActionRow()
         .addComponents(
@@ -155,22 +155,22 @@ export async function handler(interaction: CommandInteraction) {
         case "get": {
             if (!await hasPermission(interaction.guild,interaction.user.id,Action.ViewCases)) {
                 await interaction.editReply({ content: permissionError });
-                return deleteMsg(interaction);
+                return waitToDeleteInteraction(interaction);
             }
             const caseId = await interaction.options.getInteger("id");
             const caseData = await getCase(interaction.guildId,caseId);
             if (!caseData) {
                 await interaction.editReply({ content: errorMessage("That case cannot be found.") });
-                return deleteMsg(interaction);
+                return waitToDeleteInteraction(interaction);
             }
             await interaction.editReply({ embeds: [renderCaseEmbed(caseData,caseId)] });
-            return deleteMsg(interaction);
+            return waitToDeleteInteraction(interaction);
         }
 
         case "all": {
             if (!await hasPermission(interaction.guild,interaction.user.id,Action.ViewCases)) {
                 await interaction.editReply({ content: permissionError });
-                return deleteMsg(interaction);
+                return waitToDeleteInteraction(interaction);
             }
             const page = await interaction.options.getInteger("page") ?? 1;
             const allCases = (await getCases(interaction.guildId)).reverse();
@@ -181,7 +181,7 @@ export async function handler(interaction: CommandInteraction) {
         case "user": {
             if (!await hasPermission(interaction.guild,interaction.user.id,Action.ViewCases)) {
                 await interaction.editReply({ content: permissionError });
-                return deleteMsg(interaction);
+                return waitToDeleteInteraction(interaction);
             }
             const user = (await interaction.options.getUser("user")).id, page = await interaction.options.getInteger("page") ?? 1, allCases = (await getTargetCases(interaction.guildId,user));
             paginate(interaction,allCases,page);
@@ -191,7 +191,7 @@ export async function handler(interaction: CommandInteraction) {
         case "mod": {
             if (!await hasPermission(interaction.guild,interaction.user.id,Action.ViewCases)) {
                 await interaction.editReply({ content: permissionError });
-                return deleteMsg(interaction);
+                return waitToDeleteInteraction(interaction);
             }
             const user = (await interaction.options.getUser("user")).id, page = await interaction.options.getInteger("page") ?? 1, allCases = (await getModCases(interaction.guildId,user));
             paginate(interaction,allCases,page);
@@ -202,34 +202,29 @@ export async function handler(interaction: CommandInteraction) {
             const caseId = await interaction.options.getInteger("case"), caseData = await getCase(interaction.guildId, caseId), reason = await interaction.options.getString("reason");
             if (caseData.user.id !== interaction.user.id && !await hasPermission(interaction.guild,interaction.user.id,Action.UpdateCase)) {
                 await interaction.editReply({ content: permissionError });
-                return deleteMsg(interaction);
+                return waitToDeleteInteraction(interaction);
             }
             const success = await updateCase(interaction.guildId,caseId,reason);
             if (!success) {
                 await interaction.editReply({ content: errorMessage("That case could not be found.") });
-                return deleteMsg(interaction);
+                return waitToDeleteInteraction(interaction);
             }
             await interaction.editReply({ content: successMessage(`Reason updated to '${reason}'`)});
-            return deleteMsg(interaction);
+            return waitToDeleteInteraction(interaction);
         }
 
         case "expunge": {
             if (!await hasPermission(interaction.guild,interaction.user.id,Action.ExpungeCase)) {
                 await interaction.editReply({ content: permissionError });
-                return deleteMsg(interaction);
+                return waitToDeleteInteraction(interaction);
             }
             const success = await expungeCase(interaction.guildId,interaction.options.getInteger("case"));
             if (!success) {
                 await interaction.editReply({ content: errorMessage("That case could not be found.") });
-                return deleteMsg(interaction);
+                return waitToDeleteInteraction(interaction);
             }
             await interaction.editReply({ content: successMessage(`Case ${interaction.options.getInteger("case")} expunged.`) });
-            return deleteMsg(interaction);
+            return waitToDeleteInteraction(interaction);
         }
     }
-}
-
-async function deleteMsg(interaction: CommandInteraction | MessageComponentInteraction): Promise<void> {
-    await timeout(3000);
-    interaction.fetchReply().then(()=>interaction.deleteReply());
 }
