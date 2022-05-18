@@ -1,8 +1,7 @@
 import { ChatInputApplicationCommandData, CommandInteraction, TextChannel } from "discord.js";
 import { Action, newCase } from "../dataManagers/caseManager";
-import { handle } from "../dataManagers/errorManager";
-import { timeout } from "../main";
 import { hasPermission } from "../utils/checkPerms";
+import { errorMessage, permissionError, successMessage, waitToDeleteInteraction, waitToDeleteMessage } from "../utils/messageUtils";
 import { parsePast } from "../utils/timeParser";
 
 export const data: ChatInputApplicationCommandData = {
@@ -135,18 +134,16 @@ export const data: ChatInputApplicationCommandData = {
 export async function handler(interaction: CommandInteraction) {
     await interaction.deferReply();
     if (!await hasPermission(interaction.guild,interaction.user.id,Action.Purge)) {
-        await interaction.editReply({ content: ":no_entry_sign: You cannot use that command." });
-        await timeout(2000);
-        return interaction.deleteReply().catch(handle("purge_deletedReply"));
+        await interaction.editReply({ content: permissionError });
+        return waitToDeleteInteraction(interaction);
     }
     if (interaction.channel instanceof TextChannel) {
         switch (interaction.options.getSubcommand()) {
             case "amount": {
                 const amount = interaction.options.getInteger("number") +1, reason = interaction.options.getString("reason"), deleted = await interaction.channel.bulkDelete(amount);
                 const caseId = await newCase(interaction.guild,interaction.user,Action.Purge,reason);
-                const reply = await interaction.channel.send({ content: `:white_check_mark: Purged **${deleted.size -1}** messages${reason ? ` for '${reason}'` : ""}.  (Case #${caseId})`});
-                await timeout(3000);
-                return interaction.channel.messages.delete(reply).catch(handle("purgeAmount_deletedReply"));
+                const reply = await interaction.channel.send({ content: successMessage(`Purged **${deleted.size -1}** messages${reason ? ` for '${reason}'` : ""}.  (Case #${caseId})`)});
+                return waitToDeleteMessage(await interaction.channel.messages.resolve(reply));
             }
             case "until": {
                 const messageId = interaction.options.getString("message"), message = await interaction.channel.messages.fetch(messageId), reply = await interaction.fetchReply(), reason = interaction.options.getString("reason");
@@ -155,9 +152,8 @@ export async function handler(interaction: CommandInteraction) {
                     return gotMsg.createdTimestamp > message.createdTimestamp && gotMsg.id !== reply.id;
                 }), deleted = await interaction.channel.bulkDelete(toDelete);
                 const caseId = await newCase(interaction.guild,interaction.user,Action.Purge,reason);
-                await interaction.editReply({ content: `:white_check_mark: Purged **${deleted.size}** messages${reason ? ` for ${reason}` : ""}.  (Case #${caseId})`});
-                await timeout(3000);
-                return interaction.deleteReply().catch(handle("purgeUntil_deletedReply"));
+                await interaction.editReply({ content: successMessage(`Purged **${deleted.size}** messages${reason ? ` for ${reason}` : ""}.  (Case #${caseId})`)});
+                return waitToDeleteInteraction(interaction);
             }
             case "last": {
                 await interaction.channel.messages.fetch();
@@ -167,14 +163,12 @@ export async function handler(interaction: CommandInteraction) {
                 toDelete = await interaction.channel.messages.cache.clone().filter(msg=>msg.createdTimestamp>=time.getTime()&&msg.id!==reply.id),
                 deleted = await interaction.channel.bulkDelete(toDelete),
                 caseId = await newCase(interaction.guild,interaction.user,Action.Purge,reason);
-                await interaction.editReply({ content: `:white_check_mark: Purged **${deleted.size}** messages${reason ? ` for '${reason}'` : ''}  (Case #${caseId})`});
-                await timeout(3000);
-                return interaction.deleteReply().catch(handle("purgeLast_deletedReply"));
+                await interaction.editReply({ content: successMessage(`Purged **${deleted.size}** messages${reason ? ` for '${reason}'` : ''}  (Case #${caseId})`)});
+                return waitToDeleteInteraction(interaction);
             }
         }
     } else {
-        await interaction.editReply({ content: ":x: You cannot do that here" });
-        await timeout(3000);
-        interaction.deleteReply().catch(handle("purge_deletedReply"));
+        await interaction.editReply({ content: errorMessage("You cannot do that here.") });
+        return waitToDeleteInteraction(interaction);
     }
 }
