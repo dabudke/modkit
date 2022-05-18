@@ -1,5 +1,4 @@
 import { ChatInputApplicationCommandData, CommandInteraction, MessageActionRow, MessageButton, MessageComponentInteraction, MessageEmbed } from "discord.js";
-import { timeout } from "../main";
 import { color } from "../meta/config";
 import { Action, CaseId, CaseInfo, expungeCase, getCase, getCases, getModCases, getTargetCases, renderCase, renderCaseEmbed, updateCase } from "../dataManagers/caseManager";
 import { hasPermission } from "../utils/checkPerms";
