@@ -11,11 +11,11 @@
         "node": true
     },
     "extends": [
-        "eslint:recommended"
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended"
     ],
     "rules": {
         "semi": "warn",
-        "no-unused-vars": "off",
         "no-unreachable": "error"
     }
 }
