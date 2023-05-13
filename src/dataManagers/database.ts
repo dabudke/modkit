@@ -1,12 +1,12 @@
 import { Snowflake } from "discord.js";
 import { Db, MongoClient } from "mongodb";
 import { name } from "../meta/config";
-import { CaseData } from "./caseManager";
+import { BaseAction } from "./caseManager";
 import { GuildSettings } from "./settingManager";
 
 export interface LocalGuild {
     settings: GuildSettings,
-    cases: CaseData[]
+    cases: BaseAction[]
 }
 
 const defaultGuild: LocalGuild = {
@@ -46,11 +46,11 @@ export async function getGuild(id: Snowflake): Promise<LocalGuild> {
     return Object.assign(defaultGuild,result);
 }
 
-export async function updateGuild(id: Snowflake, data: LocalGuild) {
+export async function updateGuild(id: Snowflake, data: LocalGuild): Promise<void> {
     await db.collection("guilds").replaceOne({ id: id }, data);
 }
 
-export async function addError(module: string, err) {
+export async function addError(module: string, err: unknown): Promise<void> {
     if (!(await db.listCollections({ name: "errors" }))) await db.createCollection("errors");
     await db.collection("errors").insertOne({ module: module, timestamp: Date.now(), data: err });
 }

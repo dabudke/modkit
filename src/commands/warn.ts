@@ -1,6 +1,6 @@
-import { ApplicationCommandData, CommandInteraction, GuildMember } from "discord.js";
+import { ApplicationCommandData, CommandInteraction } from "discord.js";
 import { hasPermission } from "../utils/checkPerms";
-import { Action, newCase } from "../dataManagers/caseManager";
+import { UserActionType, addCase } from "../dataManagers/caseManager";
 import { displaynameAndTag } from "../utils/userToString";
 import { timeout } from "../main";
 import { handle } from "../dataManagers/errorManager";
@@ -31,7 +31,7 @@ export async function handler (interaction: CommandInteraction): Promise<void> {
     const target = await interaction.options.getUser("target");
     const gtarget = await interaction.guild.members.fetch(target);
 
-    if (!await hasPermission(interaction.guild, user.id, Action.Warn)) {
+    if (!await hasPermission(interaction.guild, user.id, UserActionType.Warn)) {
         await interaction.editReply({ content: ":no_entry_sign: You cannot use that command." });
         await timeout(2000);
         return interaction.deleteReply().catch(handle("warn_replyDeleted"));
@@ -61,7 +61,7 @@ export async function handler (interaction: CommandInteraction): Promise<void> {
     }
     
     const reason = interaction.options.getString("reason",false);
-    const caseId = await newCase(interaction.guild,user,Action.Warn,reason,target);
+    const caseId = await addCase(interaction.guild,user,UserActionType.Warn,new Date(),target,reason);
     await interaction.editReply({ content: `:white_check_mark: ${displaynameAndTag(gtarget)} has been warned${reason ? ` for '${reason}'` : ""}. (Case #${caseId})`});
     await timeout(2000);
     return interaction.deleteReply().catch(handle("warn_replyDeleted"));

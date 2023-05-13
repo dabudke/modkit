@@ -1,5 +1,5 @@
 import { ChatInputApplicationCommandData, CommandInteraction, TextChannel } from "discord.js";
-import { Action, newCase } from "../dataManagers/caseManager";
+import { addCase, MessageActionType } from "../dataManagers/caseManager";
 import { hasPermission } from "../utils/checkPerms";
 import { errorMessage, permissionError, successMessage, waitToDeleteInteraction, waitToDeleteMessage } from "../utils/messageUtils";
 import { parsePast } from "../utils/timeParser";
@@ -131,9 +131,9 @@ export const data: ChatInputApplicationCommandData = {
     ]
 };
 
-export async function handler(interaction: CommandInteraction) {
+export async function handler(interaction: CommandInteraction): Promise<void> {
     await interaction.deferReply();
-    if (!await hasPermission(interaction.guild,interaction.user.id,Action.Purge)) {
+    if (!await hasPermission(interaction.guild,interaction.user.id,MessageActionType.Purge)) {
         await interaction.editReply({ content: permissionError });
         return waitToDeleteInteraction(interaction);
     }
@@ -141,7 +141,7 @@ export async function handler(interaction: CommandInteraction) {
         switch (interaction.options.getSubcommand()) {
             case "amount": {
                 const amount = interaction.options.getInteger("number") +1, reason = interaction.options.getString("reason"), deleted = await interaction.channel.bulkDelete(amount);
-                const caseId = await newCase(interaction.guild,interaction.user,Action.Purge,reason);
+                const caseId = await addCase(interaction.guild,interaction.user,MessageActionType.Purge,new Date(), deleted.size -1, reason);
                 const reply = await interaction.channel.send({ content: successMessage(`Purged **${deleted.size -1}** messages${reason ? ` for '${reason}'` : ""}.  (Case #${caseId})`)});
                 return waitToDeleteMessage(await interaction.channel.messages.resolve(reply));
             }
@@ -151,7 +151,7 @@ export async function handler(interaction: CommandInteraction) {
                 const toDelete = await interaction.channel.messages.cache.clone().filter( gotMsg => {
                     return gotMsg.createdTimestamp > message.createdTimestamp && gotMsg.id !== reply.id;
                 }), deleted = await interaction.channel.bulkDelete(toDelete);
-                const caseId = await newCase(interaction.guild,interaction.user,Action.Purge,reason);
+                const caseId = await addCase(interaction.guild,interaction.user,MessageActionType.Purge,new Date(),deleted.size-1,reason);
                 await interaction.editReply({ content: successMessage(`Purged **${deleted.size}** messages${reason ? ` for ${reason}` : ""}.  (Case #${caseId})`)});
                 return waitToDeleteInteraction(interaction);
             }
@@ -162,7 +162,7 @@ export async function handler(interaction: CommandInteraction) {
                 reply = await interaction.fetchReply(),
                 toDelete = await interaction.channel.messages.cache.clone().filter(msg=>msg.createdTimestamp>=time.getTime()&&msg.id!==reply.id),
                 deleted = await interaction.channel.bulkDelete(toDelete),
-                caseId = await newCase(interaction.guild,interaction.user,Action.Purge,reason);
+                caseId = await addCase(interaction.guild,interaction.user,MessageActionType.Purge,new Date(),deleted.size-1,reason);
                 await interaction.editReply({ content: successMessage(`Purged **${deleted.size}** messages${reason ? ` for '${reason}'` : ''}  (Case #${caseId})`)});
                 return waitToDeleteInteraction(interaction);
             }

@@ -1,9 +1,9 @@
-import { ChatInputApplicationCommandData, CommandInteraction, Guild, MessageEmbed } from "discord.js";
-import { Action } from "../dataManagers/caseManager";
+import { ChatInputApplicationCommandData, CommandInteraction, Guild, MessageEmbed, Snowflake } from "discord.js";
 import { handle } from "../dataManagers/errorManager";
 import { getSettingType, getSettingValue, setSetting, settings, SettingType, typeText } from "../dataManagers/settingManager";
 import { timeout } from "../main";
-import { hasPermission } from "../utils/checkPerms";
+import { hasPermission, PermAction } from "../utils/checkPerms";
+import { permissionError, waitToDeleteInteraction } from "../utils/messageUtils";
 
 export const data: ChatInputApplicationCommandData = {
     name: "setting",
@@ -39,18 +39,18 @@ export const data: ChatInputApplicationCommandData = {
                     description: "New value of the setting",
                     type: "STRING",
                     required: true,
+                    autocomplete: true
                 }
             ]
         }
     ]
 };
 
-export async function handler(interaction: CommandInteraction) {
+export async function handler(interaction: CommandInteraction): Promise<void> {
     await interaction.deferReply();
-    if (!await hasPermission(interaction.guild,interaction.user.id,Action.Settings)) {
-        await interaction.editReply({ content: ":no_entry_sign: You cannot use this command"});
-        await timeout(3000);
-        return interaction.deleteReply().catch(handle("settings_replyDeleted"));
+    if (!await hasPermission(interaction.guild,interaction.user.id,PermAction.ManageSettings)) {
+        await interaction.editReply({ content: permissionError });
+        return waitToDeleteInteraction(interaction);
     }
     const setting = interaction.options.getString("setting");
     switch(interaction.options.getSubcommand()) {
@@ -91,7 +91,7 @@ export async function handler(interaction: CommandInteraction) {
     }
 }
 
-function getColor(value:any,type:SettingType): number {
+function getColor(value:unknown,type:SettingType): number {
     switch(type) {
         case SettingType.Boolean:
             if (value as boolean) return 0x3dff71;
@@ -102,13 +102,13 @@ function getColor(value:any,type:SettingType): number {
     }
 }
 
-function renderValue(guild: Guild,value:any,type:SettingType): string {
+function renderValue(guild: Guild,value:unknown,type:SettingType): string {
     switch (type) {
         case SettingType.Boolean:
             if (value as boolean) return "true";
             else return "false";
         case SettingType.Channel: {
-            const channel = guild.channels.resolve(value);
+            const channel = guild.channels.resolve(value as Snowflake);
             return channel ? `<#${channel.id}>` : "*none set*";
         }
     }

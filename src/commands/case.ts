@@ -1,7 +1,7 @@
 import { ChatInputApplicationCommandData, CommandInteraction, MessageActionRow, MessageButton, MessageComponentInteraction, MessageEmbed } from "discord.js";
 import { color } from "../meta/config";
-import { Action, CaseId, CaseInfo, expungeCase, getCase, getCases, getModCases, getTargetCases, renderCase, renderCaseEmbed, updateCase } from "../dataManagers/caseManager";
-import { hasPermission } from "../utils/checkPerms";
+import { expungeCase, getCase, renderCase, renderCaseEmbed, updateCase, InPlaceAction, getAllCases, getAllUserCases, getAllModCases } from "../dataManagers/caseManager";
+import { hasPermission, PermAction } from "../utils/checkPerms";
 import { errorMessage, permissionError, successMessage, waitToDeleteInteraction } from "../utils/messageUtils";
 
 export const data: ChatInputApplicationCommandData = {
@@ -101,7 +101,7 @@ export const data: ChatInputApplicationCommandData = {
     ]
 };
 
-function buttonAction( page: number, cases: CaseInfoObj[] ) {
+function buttonAction( page: number, cases: InPlaceAction[] ) {
     return async (interaction: MessageComponentInteraction) => {
         await interaction.deferUpdate();
         switch (interaction.customId) {
@@ -116,9 +116,7 @@ function buttonAction( page: number, cases: CaseInfoObj[] ) {
     };
 }
 
-type CaseInfoObj = { data: CaseInfo, index: CaseId };
-
-async function paginate(interaction: MessageComponentInteraction | CommandInteraction, cases: CaseInfoObj[], page: number) {
+async function paginate(interaction: MessageComponentInteraction | CommandInteraction, cases: InPlaceAction[], page: number) {
     const start = (page-1)*5, end = page*5 >= cases.length ? cases.length : page*5;
     if (cases.length === 0) {
         await interaction.editReply({ content: errorMessage("No cases were found.") });
@@ -148,11 +146,11 @@ async function paginate(interaction: MessageComponentInteraction | CommandIntera
     interaction.channel.createMessageComponentCollector({ max: 1, message: reply }).on("collect",buttonAction(page,cases));
 }
 
-export async function handler(interaction: CommandInteraction) {
+export async function handler(interaction: CommandInteraction): Promise<void> {
     await interaction.deferReply();
     switch (await interaction.options.getSubcommand()) {
         case "get": {
-            if (!await hasPermission(interaction.guild,interaction.user.id,Action.ViewCases)) {
+            if (!await hasPermission(interaction.guild,interaction.user.id,PermAction.ViewCase)) {
                 await interaction.editReply({ content: permissionError });
                 return waitToDeleteInteraction(interaction);
             }
@@ -167,39 +165,39 @@ export async function handler(interaction: CommandInteraction) {
         }
 
         case "all": {
-            if (!await hasPermission(interaction.guild,interaction.user.id,Action.ViewCases)) {
+            if (!await hasPermission(interaction.guild,interaction.user.id,PermAction.ViewCase)) {
                 await interaction.editReply({ content: permissionError });
                 return waitToDeleteInteraction(interaction);
             }
             const page = await interaction.options.getInteger("page") ?? 1;
-            const allCases = (await getCases(interaction.guildId)).reverse();
+            const allCases = (await getAllCases(interaction.guildId)).reverse();
             paginate(interaction,allCases,page);
             break;
         }
 
         case "user": {
-            if (!await hasPermission(interaction.guild,interaction.user.id,Action.ViewCases)) {
+            if (!await hasPermission(interaction.guild,interaction.user.id,PermAction.ViewCase)) {
                 await interaction.editReply({ content: permissionError });
                 return waitToDeleteInteraction(interaction);
             }
-            const user = (await interaction.options.getUser("user")).id, page = await interaction.options.getInteger("page") ?? 1, allCases = (await getTargetCases(interaction.guildId,user));
+            const user = (await interaction.options.getUser("user")).id, page = await interaction.options.getInteger("page") ?? 1, allCases = (await getAllUserCases(interaction.guildId,user));
             paginate(interaction,allCases,page);
             break;
         }
 
         case "mod": {
-            if (!await hasPermission(interaction.guild,interaction.user.id,Action.ViewCases)) {
+            if (!await hasPermission(interaction.guild,interaction.user.id,PermAction.ViewCase)) {
                 await interaction.editReply({ content: permissionError });
                 return waitToDeleteInteraction(interaction);
             }
-            const user = (await interaction.options.getUser("user")).id, page = await interaction.options.getInteger("page") ?? 1, allCases = (await getModCases(interaction.guildId,user));
+            const user = (await interaction.options.getUser("user")).id, page = await interaction.options.getInteger("page") ?? 1, allCases = (await getAllModCases(interaction.guildId,user));
             paginate(interaction,allCases,page);
             break;
         }
 
         case "update": {
             const caseId = await interaction.options.getInteger("case"), caseData = await getCase(interaction.guildId, caseId), reason = await interaction.options.getString("reason");
-            if (caseData.user.id !== interaction.user.id && !await hasPermission(interaction.guild,interaction.user.id,Action.UpdateCase)) {
+            if (caseData.user.id !== interaction.user.id && !await hasPermission(interaction.guild,interaction.user.id,PermAction.UpdateCase)) {
                 await interaction.editReply({ content: permissionError });
                 return waitToDeleteInteraction(interaction);
             }
@@ -213,7 +211,7 @@ export async function handler(interaction: CommandInteraction) {
         }
 
         case "expunge": {
-            if (!await hasPermission(interaction.guild,interaction.user.id,Action.ExpungeCase)) {
+            if (!await hasPermission(interaction.guild,interaction.user.id,PermAction.UpdateCase)) {
                 await interaction.editReply({ content: permissionError });
                 return waitToDeleteInteraction(interaction);
             }

@@ -1,6 +1,5 @@
 // get libraries and modules
 import { Client, Intents } from "discord.js";
-import { readFile } from "fs";
 import { promisify } from "util";
 import { CommandData, CommandHandlers } from "./commands/loader";
 import { CommandData as MessageContextData, CommandHandlers as MessageContextHandlers } from "./messageActions/loader";

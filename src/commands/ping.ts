@@ -6,6 +6,6 @@ export const data: ChatInputApplicationCommandData = {
 	type: "CHAT_INPUT"
 };
 
-export function handler(interaction: CommandInteraction) {
+export function handler(interaction: CommandInteraction): void {
 	interaction.reply({ content: `:ping_pong: Pong!\nResponse time: **${(Date.now() - interaction.createdTimestamp).toString()}ms**` });
 }

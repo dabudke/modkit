@@ -1,6 +1,6 @@
 import { UserApplicationCommandData, UserContextMenuInteraction } from "discord.js";
 import { timeout } from "../main";
-import { Action, newCase } from "../dataManagers/caseManager";
+import { UserActionType, addCase } from "../dataManagers/caseManager";
 import { hasPermission } from "../utils/checkPerms";
 import { displaynameAndTag } from "../utils/userToString";
 import { handle } from "../dataManagers/errorManager";
@@ -10,7 +10,7 @@ export const data: UserApplicationCommandData = {
     type: "USER"
 };
 
-export async function handler(interaction: UserContextMenuInteraction) {
+export async function handler(interaction: UserContextMenuInteraction): Promise<void> {
     await interaction.deferReply();
 
     const user = await interaction.user;
@@ -18,7 +18,7 @@ export async function handler(interaction: UserContextMenuInteraction) {
     const target = await interaction.targetUser;
     const gtarget = await interaction.guild.members.fetch(target);
 
-    if (!await hasPermission(interaction.guild, user.id, Action.Warn)) {
+    if (!await hasPermission(interaction.guild, user.id, UserActionType.Warn)) {
         await interaction.editReply({ content: ":no_entry_sign: You cannot use that command." });
         await timeout(2000);
         return interaction.deleteReply().catch(handle("warnUser_replyDeleted"));
@@ -47,7 +47,7 @@ export async function handler(interaction: UserContextMenuInteraction) {
         return interaction.deleteReply().catch(handle("warnUser_replyDeleted"));
     }
 
-    const caseId = await newCase(interaction.guild,user,Action.Warn,null,target);
+    const caseId = await addCase(interaction.guild,user,UserActionType.Warn,new Date(),target);
     await interaction.editReply({ content: `:white_check_box: ${displaynameAndTag(gtarget)} has been warned.  (Case #${caseId})`});
     await timeout(2000);
     return interaction.deleteReply().catch(handle("warnUser_replyDeleted"));

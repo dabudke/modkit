@@ -23,7 +23,7 @@ export enum SettingType {
 }
 
 type NewValueType<T,V> = {
-    [P in keyof T]: T[P] extends object ? NewValueType<T[P],V> : V
+    [P in keyof T]: T[P] extends Record<string,unknown> ? NewValueType<T[P],V> : V
 }
 
 export const types: NewValueType<GuildSettings, SettingType> = {
@@ -66,7 +66,7 @@ export function getSettingType(setting: Setting): SettingType | null {
     return types[sindex[0]][sindex[1]];
 }
 
-export async function setSetting(id: Snowflake, setting: Setting, value: any) {
+export async function setSetting(id: Snowflake, setting: Setting, value: unknown): Promise<void> {
     const guild = await getGuild(id), sindex = setting.split(".");
     guild.settings[sindex[0]][sindex[1]] = value;
     updateGuild(id,guild);
